@@ -1,8 +1,15 @@
-package com.ghosttech.kptrafficapp;
+package com.ghosttech.kptrafficapp.activities;
 
+import android.app.ActionBar;
 import android.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.TextView;
+
+import com.ghosttech.kptrafficapp.R;
+import com.ghosttech.kptrafficapp.fragments.RegistrationFragment;
 
 public class RegistrationActivity extends AppCompatActivity {
     Fragment fragment;
@@ -12,6 +19,7 @@ public class RegistrationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_registration);
         fragment = new RegistrationFragment();
         getFragmentManager().beginTransaction().replace(R.id.fragment_container,fragment).
-                addToBackStack("tag").commit();
+               commit();
+
     }
 }

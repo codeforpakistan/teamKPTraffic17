@@ -2,32 +2,20 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:float="http://schemas.android.com/tools"
     android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <ImageView
-            android:id="@+id/imageView9"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:src="@drawable/test_image" />
-
-        <TextView
-            android:id="@+id/textView6"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:text="Thank you for Signing up!"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:orientation="vertical"
+        android:padding="5dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:layout_marginBottom="10dp">
 
             <ImageView
                 android:id="@+id/imageView10"
@@ -35,7 +23,7 @@
                 android:layout_height="32dp"
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="30dp"
-                android:src="@drawable/test_image" />
+                android:src="@drawable/user_icon" />
 
             <com.wrapp.floatlabelededittext.FloatLabeledEditText
                 android:id="@+id/view"
@@ -50,9 +38,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Name         "
+                    android:backgroundTint="#fff"
                     android:singleLine="true"
                     android:inputType="none"
-                    android:textColor="#000" />
+                    android:maxLength="20"
+                    android:textColorHint="#fff"
+                    android:textColor="#fff" />
 
             </com.wrapp.floatlabelededittext.FloatLabeledEditText>
 
@@ -61,7 +52,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:layout_marginBottom="10dp">
 
             <ImageView
                 android:id="@+id/imageView2"
@@ -69,7 +61,7 @@
                 android:layout_height="32dp"
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="30dp"
-                android:src="@drawable/test_image" />
+                android:src="@drawable/phone_number_icon" />
 
             <com.wrapp.floatlabelededittext.FloatLabeledEditText
                 android:id="@+id/view1"
@@ -85,7 +77,10 @@
                     android:layout_height="wrap_content"
                     android:hint="Phone Number"
                     android:inputType="number"
-                    android:textColor="#000" />
+                    android:backgroundTint="#fff"
+                    android:maxLength="13"
+                    android:textColorHint="#fff"
+                    android:textColor="#fff"/>
 
             </com.wrapp.floatlabelededittext.FloatLabeledEditText>
 
@@ -94,7 +89,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:layout_marginBottom="10dp">
 
             <ImageView
                 android:id="@+id/imageView8"
@@ -102,7 +98,7 @@
                 android:layout_height="32dp"
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="30dp"
-                android:src="@drawable/test_image" />
+                android:src="@drawable/cnic_icon" />
 
             <com.wrapp.floatlabelededittext.FloatLabeledEditText
                 android:id="@+id/view8"
@@ -116,15 +112,19 @@
                     android:id="@+id/et_cnic"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="CNIC"
+                    android:hint="CNIC without dashes(-)"
                     android:inputType="number"
-                    android:textColor="#000" />
+                    android:maxLength="13"
+                    android:backgroundTint="#fff"
+                    android:textColorHint="#fff"
+                    android:textColor="#fff" />
             </com.wrapp.floatlabelededittext.FloatLabeledEditText>
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:layout_marginBottom="10dp">
 
             <ImageView
                 android:id="@+id/imageView100"
@@ -132,7 +132,7 @@
                 android:layout_height="32dp"
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="30dp"
-                android:src="@drawable/test_image" />
+                android:src="@drawable/password_icon" />
 
             <com.wrapp.floatlabelededittext.FloatLabeledEditText
                 android:id="@+id/view9"
@@ -147,14 +147,17 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Password"
-                    android:inputType="numberPassword"
-                    android:textColor="#000" />
+                    android:backgroundTint="#fff"
+                    android:inputType="textPassword"
+                    android:textColorHint="#fff"
+                    android:textColor="#fff"/>
             </com.wrapp.floatlabelededittext.FloatLabeledEditText>
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:layout_marginBottom="10dp">
 
             <ImageView
                 android:id="@+id/imageView101"
@@ -162,7 +165,7 @@
                 android:layout_height="32dp"
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="30dp"
-                android:src="@drawable/test_image" />
+                android:src="@drawable/password_icon" />
 
             <com.wrapp.floatlabelededittext.FloatLabeledEditText
                 android:id="@+id/view10"
@@ -170,23 +173,27 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
-                android:layout_marginTop="10dp">
+                android:layout_marginTop="10dp"
+                float:fletTextAppearance="@style/AppTheme">
 
                 <EditText
                     android:id="@+id/et_confirm_password"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Confirm Password"
+                    android:backgroundTint="#fff"
                     android:inputType="textPassword"
-                    android:textColor="#000" />
+                    android:textColorHint="#fff"
+                    android:textColor="#fff" />
             </com.wrapp.floatlabelededittext.FloatLabeledEditText>
         </LinearLayout>
         <Button
             android:id="@+id/btn_submit"
-            android:layout_width="150dp"
+            android:layout_width="250dp"
             android:layout_height="40dp"
             android:layout_gravity="center_horizontal"
-            android:text="Submit"
+            android:layout_marginTop="10dp"
+            android:text="Register"
             android:textColor="#fff"
             android:background="@drawable/round_corner"
             android:textSize="18sp" />
@@ -200,6 +207,8 @@
             android:text="Already a member?  "
             android:layout_toEndOf="@+id/btnSubmit"
             android:layout_toRightOf="@+id/btnSubmit"
+            android:textColor="#fff"
+            android:layout_marginTop="10dp"
             android:textAppearance="?android:attr/textAppearanceSmall"
              />
         <TextView
@@ -208,6 +217,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:text="login"
+            android:textColor="#fff"
             android:layout_gravity="center"
             android:layout_marginBottom="10dp"
             android:layout_toEndOf="@+id/btnSubmit"
