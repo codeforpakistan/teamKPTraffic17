@@ -18,8 +18,8 @@
         android:textAllCaps="true"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="#fff"
-        android:paddingTop="3dp"
+        android:paddingTop="5dp"
+        android:textSize="15sp"
         android:layout_marginLeft="10dp"
-        android:text="zma app"
-        android:textStyle="bold" />
+        />
 </LinearLayout>

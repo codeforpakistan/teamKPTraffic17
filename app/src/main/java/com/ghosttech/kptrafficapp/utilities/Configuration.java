@@ -6,4 +6,5 @@ package com.ghosttech.kptrafficapp.utilities;
 
 public class Configuration {
     public static final String END_POINT_LIVE = "http://40.68.163.100/api_new/Services/EService.svc/";
+    public static final String LOG_IN_API = "";
 }

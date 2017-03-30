@@ -7,29 +7,36 @@ import android.os.Bundle;
 import android.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
 import android.text.SpannableString;
+import android.text.TextWatcher;
 import android.text.style.UnderlineSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.ghosttech.kptrafficapp.R;
+import com.ghosttech.kptrafficapp.utilities.Configuration;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.w3c.dom.Text;
 
-
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link LoginFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link LoginFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class LoginFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -46,6 +53,8 @@ public class LoginFragment extends Fragment {
     Fragment fragment;
     ProgressDialog dialog;
     private OnFragmentInteractionListener mListener;
+    RequestQueue mRequestQueue;
+    String strCNIC, strPassword;
 
     public LoginFragment() {
         // Required empty public constructor
@@ -80,6 +89,7 @@ public class LoginFragment extends Fragment {
         SpannableString content = new SpannableString("Forgot Password?");
         content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
         tvForgotPassword = (TextView) view.findViewById(R.id.tv_forgot_password);
+        mRequestQueue = Volley.newRequestQueue(getActivity());
         tvForgotPassword.setText(content);
         dialog = new ProgressDialog(getActivity());
         dialog.setMessage("Please wait...");
@@ -119,9 +129,10 @@ public class LoginFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 formValidation();
-                /*fragment = new MainFragment();
-                getFragmentManager().beginTransaction().replace(R.id.fragment_container,fragment).
-                        commit();*/
+                apiCall();
+                fragment = new MainFragment();
+                getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).
+                        commit();
             }
         });
     }
@@ -129,14 +140,49 @@ public class LoginFragment extends Fragment {
     public void formValidation() {
         etCNIC = (EditText) view.findViewById(R.id.et_cnic_login);
         etPassword = (EditText) view.findViewById(R.id.et_password_login);
-        String strPassword = etPassword.getText().toString();
-        String strCNIC = etCNIC.getText().toString();
+        strPassword = etPassword.getText().toString();
+        strCNIC = etCNIC.getText().toString();
+        Animation shake = AnimationUtils.loadAnimation(getActivity(), R.anim.shake);
         if (strCNIC.equals("") || strCNIC.length() < 13) {
-            etCNIC.setError("Please insert your Complete CNIC");
+            etCNIC.startAnimation(shake);
         } else if (strPassword.equals("") || strPassword.length() < 6) {
-            etPassword.setError("Password should be six characters long");
+            etPassword.startAnimation(shake);
         }
     }
+
+    public void apiCall() {
+        String url = Configuration.END_POINT_LIVE + "/kp-traffic-police/login/?cnic=" + strCNIC + "&password=" + strPassword;
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    if (response.getBoolean("status")) {
+                        fragment = new MainFragment();
+                        getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).
+                                commit();
+                        Log.d("zma status registration", String.valueOf(response.getBoolean("status")));
+                        dialog.dismiss();
+
+                    }else {
+
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d("zma error registration", String.valueOf(error));
+
+            }
+        });
+        request.setRetryPolicy(new DefaultRetryPolicy(200000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        mRequestQueue.add(request);
+    }
+
 
     public void customActionBar() {
         android.support.v7.app.ActionBar mActionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();

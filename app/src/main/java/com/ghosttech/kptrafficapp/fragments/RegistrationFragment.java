@@ -11,6 +11,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -55,7 +57,7 @@ public class RegistrationFragment extends Fragment {
     String strPassword, strCNIC, strPhoneNumber, strName, strConfirmPassword;
     EditText etName, etPhoneNumber, etCNIC, etPassword, etConfirmPassword;
     private OnFragmentInteractionListener mListener;
-
+    Animation shake;
     public RegistrationFragment() {
         // Required empty public constructor
     }
@@ -93,6 +95,7 @@ public class RegistrationFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_registration, container, false);
         tvSkip = (TextView) view.findViewById(R.id.tvSkip);
         mRequestQueue = Volley.newRequestQueue(getActivity());
+        shake = AnimationUtils.loadAnimation(getActivity(), R.anim.shake);
         SpannableString content = new SpannableString("Login");
         content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
         dialog = new ProgressDialog(getActivity());
@@ -138,6 +141,7 @@ public class RegistrationFragment extends Fragment {
             public void onClick(View view) {
                // dialog.show();
                 formValidation();
+                apiCall();
                 /*fragment = new LoginFragment();
                 getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment)
                         .commit();*/
@@ -157,16 +161,18 @@ public class RegistrationFragment extends Fragment {
         strConfirmPassword = etConfirmPassword.getText().toString();
         strPhoneNumber = etPhoneNumber.getText().toString();
         if (strName.equals("") || strName.length() < 3) {
-            etName.setError("Please enter a valid name");
+            etName.startAnimation(shake);
         } else if (strPhoneNumber.equals("") || strPhoneNumber.length() < 5) {
-            etPhoneNumber.setError("Please enter a valid number");
+            etPhoneNumber.startAnimation(shake);
         } else if (strCNIC.equals("") || strCNIC.length() < 13) {
-            etCNIC.setError("Please insert your Complete CNIC");
+            etCNIC.startAnimation(shake);
         } else if (strPassword.equals("") || strCNIC.length() < 6) {
-            etPassword.setError("Password should be six characters long");
+            etPassword.startAnimation(shake);
         } else if (!strConfirmPassword.equals(strPassword)) {
-            etConfirmPassword.setError("Password doesn't match");
+            etConfirmPassword.startAnimation(shake);
         }
+    }
+    public void apiCall(){
         String url = Configuration.END_POINT_LIVE + "/kp-traffic-police/signup/?name=" + strName + "&cnic=" + strCNIC + "&password=" + strPassword
                 + "&phone_no=" + strPhoneNumber;
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, new Response.Listener<JSONObject>() {

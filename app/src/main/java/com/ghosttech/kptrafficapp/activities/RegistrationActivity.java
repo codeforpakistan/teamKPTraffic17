@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.ghosttech.kptrafficapp.R;
+import com.ghosttech.kptrafficapp.fragments.ComplaintFragment;
 import com.ghosttech.kptrafficapp.fragments.RegistrationFragment;
 
 public class RegistrationActivity extends AppCompatActivity {
@@ -17,7 +18,7 @@ public class RegistrationActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
-        fragment = new RegistrationFragment();
+        fragment = new ComplaintFragment();
         getFragmentManager().beginTransaction().replace(R.id.fragment_container,fragment).
                commit();
 

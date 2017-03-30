@@ -1,9 +1,66 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="16dp"
     tools:context="com.ghosttech.kptrafficapp.fragments.ComplaintFragment">
 
     <!-- TODO: Update blank fragment layout -->
+<TableLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        >
+    <com.jaredrummler.materialspinner.MaterialSpinner
+        android:id="@+id/spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
+    </LinearLayout>
+<LinearLayout android:layout_height="wrap_content"
+    android:layout_width="wrap_content">
+    <com.wrapp.floatlabelededittext.FloatLabeledEditText
+        android:id="@+id/view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="44dp"
+        android:layout_below="@+id/spinner"
+        android:layout_centerHorizontal="true">
 
-</FrameLayout>
+        <EditText
+            android:id="@+id/et_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Write to us         "
+            android:backgroundTint="#fff"
+            android:maxLines="10"
+            android:inputType="none"
+            android:maxLength="20"
+            android:textColorHint="#fff"
+            android:textColor="#fff" />
+
+    </com.wrapp.floatlabelededittext.FloatLabeledEditText>
+</LinearLayout>
+    <LinearLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp">
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:src="@drawable/photo_camera"
+            android:layout_weight="1" />
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:src="@drawable/video_camera"
+            android:layout_weight="1" />
+
+    </LinearLayout>
+</TableLayout>
+</ScrollView>
