@@ -1,89 +1,114 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:orientation="vertical"
     android:layout_height="match_parent"
+    android:background="#617e8c"
+    android:orientation="vertical"
+    android:padding="16dp"
     tools:context="com.ghosttech.kptrafficapp.fragments.MainFragment">
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
+        android:layout_weight="1">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            app:srcCompat="@drawable/test_image"
+            android:id="@+id/imageView4"
+            android:layout_weight="1" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="5dp"
         android:layout_weight="1"
-        android:layout_marginBottom="10dp">
+        android:orientation="horizontal">
 
-        <Button
-            android:text="Complaint"
-            android:layout_width="113dp"
-            android:layout_height="80dp"
-            android:id="@+id/btn_complaint"
+        <LinearLayout
+            android:id="@+id/lL_complaint_module"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="5dp"
             android:layout_weight="1"
-            android:drawableBottom="@mipmap/ic_launcher"
-            android:textColor="#fff"
-            android:layout_marginLeft="5dp"/>
 
-        <Button
-            android:text="Emergency"
-            android:layout_width="113dp"
-            android:layout_height="80dp"
-            android:id="@+id/btn_emergency"
+            android:background="@drawable/test_image"
+            android:orientation="vertical"></LinearLayout>
+        <View
+            android:layout_width="1dp"
+            android:layout_margin="20dp"
+            android:layout_height="fill_parent"
+            android:background="#FFF" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="5dp"
             android:layout_weight="1"
-            android:drawableBottom="@mipmap/ic_launcher"
-            android:textColor="#fff"
-            android:layout_marginRight="5dp"/>
+            android:background="@drawable/test_image"
+            android:orientation="vertical"></LinearLayout>
+
     </LinearLayout>
 
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1">
+        android:layout_margin="5dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
 
-        <Button
-            android:text="Live Updates"
-            android:layout_width="113dp"
-            android:layout_height="80dp"
-            android:id="@+id/btn_live_updates"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="5dp"
             android:layout_weight="1"
-            android:drawableBottom="@mipmap/ic_launcher"
-            android:textColor="#fff" />
-
-        <Button
-            android:text="License Verfiication"
-            android:layout_width="113dp"
-            android:layout_height="80dp"
-            android:id="@+id/btn_license_veri"
+            android:background="@drawable/test_image"
+            android:orientation="vertical"></LinearLayout>
+        <View
+            android:layout_width="1dp"
+            android:layout_margin="20dp"
+            android:layout_height="fill_parent"
+            android:background="#FFF" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="5dp"
             android:layout_weight="1"
-            android:drawableBottom="@mipmap/ic_launcher"
-            android:textColor="#fff" />
+            android:background="@drawable/test_image"
+            android:orientation="vertical"></LinearLayout>
     </LinearLayout>
 
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1">
+        android:layout_margin="5dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
 
-        <Button
-            android:text="Challan Tracking"
-            android:layout_width="113dp"
-            android:layout_height="80dp"
-            android:id="@+id/btn_challan_tracking"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="5dp"
             android:layout_weight="1"
-            android:drawableBottom="@mipmap/ic_launcher"
-            android:textColor="#fff" />
+            android:background="@drawable/test_image"
 
-        <Button
-            android:text="Traffic Education"
-            android:layout_width="113dp"
-            android:layout_height="80dp"
-            android:id="@+id/btn_traffic_edu"
+            android:orientation="vertical"></LinearLayout>
+        <View
+            android:layout_width="1dp"
+            android:layout_margin="20dp"
+            android:layout_height="fill_parent"
+            android:background="#FFF" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="5dp"
             android:layout_weight="1"
-            android:drawableBottom="@mipmap/ic_launcher"
-            android:textColor="#fff" />
+            android:background="@drawable/test_image"
+
+            android:orientation="vertical"></LinearLayout>
     </LinearLayout>
-
 </LinearLayout>

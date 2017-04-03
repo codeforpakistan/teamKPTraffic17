@@ -55,7 +55,7 @@ public class LoginFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
     RequestQueue mRequestQueue;
     String strCNIC, strPassword;
-
+    TextView tvSkip;
     public LoginFragment() {
         // Required empty public constructor
     }
@@ -89,6 +89,10 @@ public class LoginFragment extends Fragment {
         SpannableString content = new SpannableString("Forgot Password?");
         content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
         tvForgotPassword = (TextView) view.findViewById(R.id.tv_forgot_password);
+        tvSkip = (TextView) view.findViewById(R.id.tvSkip);
+        SpannableString contentRegister = new SpannableString("Register here");
+        contentRegister.setSpan(new UnderlineSpan(), 0, contentRegister.length(), 0);
+        tvSkip.setText(contentRegister);
         mRequestQueue = Volley.newRequestQueue(getActivity());
         tvForgotPassword.setText(content);
         dialog = new ProgressDialog(getActivity());
@@ -100,7 +104,14 @@ public class LoginFragment extends Fragment {
                 dialog.show();
             }
         });
-
+        tvSkip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                fragment = new RegistrationFragment();
+                getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment)
+                        .commit();
+            }
+        });
         onButtonClick();
         return view;
     }
@@ -184,6 +195,7 @@ public class LoginFragment extends Fragment {
     }
 
 
+
     public void customActionBar() {
         android.support.v7.app.ActionBar mActionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         mActionBar.setDisplayShowHomeEnabled(false);
@@ -192,15 +204,9 @@ public class LoginFragment extends Fragment {
         View mCustomView = mInflater.inflate(R.layout.custom_actionbar, null);
         TextView mTitleTextView = (TextView) mCustomView.findViewById(R.id.title_text);
         ImageView mBackArrow = (ImageView) mCustomView.findViewById(R.id.iv_back_arrow);
+        mBackArrow.setImageResource(R.mipmap.ic_launcher);
         mTitleTextView.setText("Sign In");
         mActionBar.setCustomView(mCustomView);
         mActionBar.setDisplayShowCustomEnabled(true);
-        mBackArrow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                fragment = new RegistrationFragment();
-                getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
-            }
-        });
     }
 }

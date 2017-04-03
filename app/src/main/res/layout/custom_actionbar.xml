@@ -19,6 +19,7 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="#fff"
         android:paddingTop="5dp"
+        android:text="fetching location..."
         android:textSize="15sp"
         android:layout_marginLeft="10dp"
         />

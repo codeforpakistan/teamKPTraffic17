@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.ghosttech.kptrafficapp.R;
@@ -45,8 +46,9 @@ public class MainFragment extends Fragment {
     private String mParam2;
     Fragment fragment;
     View view;
-    double strLat,strLon;
-    String strCityName;
+    double dblLat, dblLon;
+    LinearLayout lLComplaintModule;
+    String strCityName,strCheckLatLon;
     TextView mTitleTextView;
     private OnFragmentInteractionListener mListener;
 
@@ -89,13 +91,13 @@ public class MainFragment extends Fragment {
 
                     @Override
                     public void onLocationUpdated(Location location) {
-                        strLat = location.getLatitude();
-                        strLon = location.getLongitude();
-                        Log.d("Location : ", "" + strLat + " " + strLon);
+                        dblLat = location.getLatitude();
+                        dblLon = location.getLongitude();
+                        Log.d("Location : ", "" + dblLat + " " + dblLon);
                         Geocoder geoCoder = new Geocoder(getActivity(), Locale.getDefault());
                         StringBuilder builder = new StringBuilder();
                         try {
-                            List<Address> address = geoCoder.getFromLocation(strLat, strLon, 1);
+                            List<Address> address = geoCoder.getFromLocation(dblLat, dblLon, 1);
                             int maxLines = address.get(0).getMaxAddressLineIndex();
                             for (int i=0; i<maxLines; i++) {
                                 String addressStr = address.get(0).getAddressLine(i);
@@ -104,7 +106,7 @@ public class MainFragment extends Fragment {
                             }
 
                             strCityName = builder.toString(); //This is the complete address.
-                            mTitleTextView.setText("Welcome to "+strCityName);
+                            mTitleTextView.setText(" "+strCityName);
                             Log.d("zma city", strCityName);
                         } catch (IOException e) {}
                         catch (NullPointerException e) {}
@@ -130,8 +132,8 @@ public class MainFragment extends Fragment {
     }
 
     public void onClickButtons() {
-        btnComplaint = (Button) view.findViewById(R.id.btn_complaint);
-        btnComplaint.setOnClickListener(new View.OnClickListener() {
+        lLComplaintModule = (LinearLayout) view.findViewById(R.id.lL_complaint_module);
+        lLComplaintModule.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 fragment = new ComplaintFragment();

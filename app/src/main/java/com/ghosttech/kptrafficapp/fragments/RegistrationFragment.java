@@ -51,7 +51,7 @@ public class RegistrationFragment extends Fragment {
     private String mParam2;
     public static RequestQueue mRequestQueue;
     View view;
-    TextView tvSkip;
+
     Button btnSubmit;
     Fragment fragment;
     String strPassword, strCNIC, strPhoneNumber, strName, strConfirmPassword;
@@ -93,23 +93,14 @@ public class RegistrationFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_registration, container, false);
-        tvSkip = (TextView) view.findViewById(R.id.tvSkip);
         mRequestQueue = Volley.newRequestQueue(getActivity());
         shake = AnimationUtils.loadAnimation(getActivity(), R.anim.shake);
-        SpannableString content = new SpannableString("Login");
-        content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
+
         dialog = new ProgressDialog(getActivity());
         dialog.setMessage("Please wait...");
         dialog.setCancelable(false);
-        tvSkip.setText(content);
-        tvSkip.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                fragment = new LoginFragment();
-                getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment)
-                        .commit();
-            }
-        });
+
+
         onSubmitButton();
         customActionBar();
         // Inflate the layout for this fragment
@@ -207,10 +198,16 @@ public class RegistrationFragment extends Fragment {
         View mCustomView = mInflater.inflate(R.layout.custom_actionbar, null);
         TextView mTitleTextView = (TextView) mCustomView.findViewById(R.id.title_text);
         ImageView mBackArrow = (ImageView) mCustomView.findViewById(R.id.iv_back_arrow);
-        mBackArrow.setImageResource(R.mipmap.ic_launcher);
         mTitleTextView.setText("Sign Up");
         mActionBar.setCustomView(mCustomView);
         mActionBar.setDisplayShowCustomEnabled(true);
+        mBackArrow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                fragment = new LoginFragment();
+                getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
+            }
+        });
     }
 
 }

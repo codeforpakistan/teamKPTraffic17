@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     xmlns:float="http://schemas.android.com/tools"
     android:orientation="vertical"
-    android:background="#000">
+>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -190,7 +190,7 @@
         </LinearLayout>
         <Button
             android:id="@+id/btn_submit"
-            android:layout_width="250dp"
+            android:layout_width="200dp"
             android:layout_height="40dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="10dp"
@@ -199,31 +199,7 @@
             android:background="@drawable/round_corner"
             android:textSize="18sp" />
 
-        <TextView
-            android:id="@+id/tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_alignParentBottom="true"
-            android:text="Already a member?  "
-            android:layout_toEndOf="@+id/btnSubmit"
-            android:layout_toRightOf="@+id/btnSubmit"
-            android:textColor="#fff"
-            android:layout_marginTop="10dp"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-             />
-        <TextView
-            android:id="@+id/tvSkip"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:text="login"
-            android:textColor="#fff"
-            android:layout_gravity="center"
-            android:layout_marginBottom="10dp"
-            android:layout_toEndOf="@+id/btnSubmit"
-            android:layout_toRightOf="@+id/btnSubmit"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textStyle="bold" />
+
+
     </LinearLayout>
 </ScrollView>
