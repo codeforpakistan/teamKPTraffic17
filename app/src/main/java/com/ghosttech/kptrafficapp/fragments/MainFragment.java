@@ -1,5 +1,6 @@
 package com.ghosttech.kptrafficapp.fragments;
 
+import android.content.res.Resources;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -12,7 +13,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -40,16 +40,16 @@ public class MainFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    Button btnComplaint, btnEmergency, btnLiveUpdates, btnLicenseVeri, btnChallanTracking, btnTrafficEducation;
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
     Fragment fragment;
     View view;
     double dblLat, dblLon;
-    LinearLayout lLComplaintModule;
-    String strCityName,strCheckLatLon;
+    String strCityName, strCheckLatLon;
     TextView mTitleTextView;
+    ImageView btnComplaintSystem, btnLiveTrafficUpdates, btnChallanTracking, btnTrafficEducation,
+            btnLicenseVerification, btnEmergencyContacts;
     private OnFragmentInteractionListener mListener;
 
     public MainFragment() {
@@ -79,9 +79,10 @@ public class MainFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-         view = inflater.inflate(R.layout.fragment_main, container, false);
-        onClickButtons();
+        view = inflater.inflate(R.layout.fragment_main, container, false);
+        onButtonClick();
         customActionBar();
+        //((AppCompatActivity) getActivity()).getSupportActionBar().hide();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION,
                     android.Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
@@ -99,17 +100,18 @@ public class MainFragment extends Fragment {
                         try {
                             List<Address> address = geoCoder.getFromLocation(dblLat, dblLon, 1);
                             int maxLines = address.get(0).getMaxAddressLineIndex();
-                            for (int i=0; i<maxLines; i++) {
+                            for (int i = 0; i < maxLines; i++) {
                                 String addressStr = address.get(0).getAddressLine(i);
                                 builder.append(addressStr);
                                 builder.append(" ");
                             }
 
                             strCityName = builder.toString(); //This is the complete address.
-                            mTitleTextView.setText(" "+strCityName);
+                            mTitleTextView.setText(" " + strCityName);
                             Log.d("zma city", strCityName);
-                        } catch (IOException e) {}
-                        catch (NullPointerException e) {}
+                        } catch (IOException e) {
+                        } catch (NullPointerException e) {
+                        }
 
                     }
                 });
@@ -131,22 +133,29 @@ public class MainFragment extends Fragment {
         mListener = null;
     }
 
-    public void onClickButtons() {
-        lLComplaintModule = (LinearLayout) view.findViewById(R.id.lL_complaint_module);
-        lLComplaintModule.setOnClickListener(new View.OnClickListener() {
+    public void onButtonClick() {
+        /*btnComplaintSystem = (ImageView) view.findViewById(R.id.btn_complaint_system);
+        btnChallanTracking = (ImageView) view.findViewById(R.id.btn_challan_tracking);
+        btnEmergencyContacts = (ImageView) view.findViewById(R.id.btn_emergency_contacts);
+        btnLicenseVerification = (ImageView) view.findViewById(R.id.btn_license_verification);
+        btnLiveTrafficUpdates = (ImageView) view.findViewById(R.id.btn_live_updates);
+        btnTrafficEducation = (ImageView) view.findViewById(R.id.btn_traffic_education);
+        btnComplaintSystem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 fragment = new ComplaintFragment();
                 getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).
                         addToBackStack("tag").commit();
             }
-        });
+        });*/
+
     }
 
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+
     public void customActionBar() {
         android.support.v7.app.ActionBar mActionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         mActionBar.setDisplayShowHomeEnabled(false);

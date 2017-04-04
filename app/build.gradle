@@ -37,15 +37,15 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 
-    compile 'com.android.support:appcompat-v7:25.2.0'
-    compile 'com.android.support:support-v4:25.2.0'
-    compile 'io.nlopez.smartlocation:library:3.3.1'
-    compile 'com.wrapp.floatlabelededittext:library:0.0.6'
-    compile 'com.android.support:design:25.2.0'
-    compile 'com.mcxiaoke.volley:library:1.0.19'
-    compile 'com.jaredrummler:material-spinner:1.1.0'
     compile files('libs/httpclient-4.3.6.jar')
     compile files('libs/httpcore-4.3.3.jar')
     compile files('libs/httpmime-4.3.6.jar')
+    compile 'com.android.support:appcompat-v7:25.3.1'
+    compile 'com.android.support:support-v4:25.3.1'
+    compile 'io.nlopez.smartlocation:library:3.3.1'
+    compile 'com.wrapp.floatlabelededittext:library:0.0.6'
+    compile 'com.android.support:design:25.3.1'
+    compile 'com.mcxiaoke.volley:library:1.0.19'
+    compile 'com.jaredrummler:material-spinner:1.1.0'
     testCompile 'junit:junit:4.12'
 }

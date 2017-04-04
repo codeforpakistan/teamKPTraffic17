@@ -102,7 +102,7 @@ public class RegistrationFragment extends Fragment {
 
 
         onSubmitButton();
-        customActionBar();
+        //customActionBar();
         // Inflate the layout for this fragment
         return view;
     }
@@ -208,6 +208,7 @@ public class RegistrationFragment extends Fragment {
                 getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
             }
         });
+
     }
 
 }
