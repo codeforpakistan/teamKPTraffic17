@@ -48,7 +48,7 @@ public class MainFragment extends Fragment {
     double dblLat, dblLon;
     String strCityName, strCheckLatLon;
     TextView mTitleTextView;
-    ImageView btnComplaintSystem, btnLiveTrafficUpdates, btnChallanTracking, btnTrafficEducation,
+    LinearLayout btnComplaintSystem, btnLiveTrafficUpdates, btnChallanTracking, btnTrafficEducation,
             btnLicenseVerification, btnEmergencyContacts;
     private OnFragmentInteractionListener mListener;
 
@@ -134,12 +134,12 @@ public class MainFragment extends Fragment {
     }
 
     public void onButtonClick() {
-        /*btnComplaintSystem = (ImageView) view.findViewById(R.id.btn_complaint_system);
-        btnChallanTracking = (ImageView) view.findViewById(R.id.btn_challan_tracking);
-        btnEmergencyContacts = (ImageView) view.findViewById(R.id.btn_emergency_contacts);
-        btnLicenseVerification = (ImageView) view.findViewById(R.id.btn_license_verification);
-        btnLiveTrafficUpdates = (ImageView) view.findViewById(R.id.btn_live_updates);
-        btnTrafficEducation = (ImageView) view.findViewById(R.id.btn_traffic_education);
+        btnComplaintSystem = (LinearLayout) view.findViewById(R.id.linear_layout_cs);
+        btnChallanTracking = (LinearLayout) view.findViewById(R.id.linear_layout_ct);
+        btnEmergencyContacts = (LinearLayout) view.findViewById(R.id.linear_layout_ec);
+        btnLicenseVerification = (LinearLayout) view.findViewById(R.id.linear_layout_lv);
+        btnLiveTrafficUpdates = (LinearLayout) view.findViewById(R.id.linear_layout_lu);
+        btnTrafficEducation = (LinearLayout) view.findViewById(R.id.linear_layout_te);
         btnComplaintSystem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -147,7 +147,7 @@ public class MainFragment extends Fragment {
                 getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).
                         addToBackStack("tag").commit();
             }
-        });*/
+        });
 
     }
 

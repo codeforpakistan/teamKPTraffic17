@@ -149,45 +149,12 @@
                     android:layout_height="wrap_content"
                     android:hint="Password"
                     android:backgroundTint="#fff"
-                    android:inputType="textPassword"
+                    android:inputType="textEmailAddress"
                     android:textColorHint="#fff"
                     android:textColor="#fff"/>
             </com.wrapp.floatlabelededittext.FloatLabeledEditText>
         </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="10dp">
 
-            <ImageView
-                android:id="@+id/imageView101"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="30dp"
-                android:src="@drawable/password_icon" />
-
-            <com.wrapp.floatlabelededittext.FloatLabeledEditText
-                android:id="@+id/view10"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginTop="10dp"
-                float:fletTextAppearance="@style/AppTheme">
-
-                <EditText
-                    android:id="@+id/et_confirm_password"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Confirm Password"
-                    android:backgroundTint="#fff"
-                    android:inputType="textPassword"
-                    android:textColorHint="#fff"
-                    android:textColor="#fff" />
-            </com.wrapp.floatlabelededittext.FloatLabeledEditText>
-        </LinearLayout>
         <Button
             android:id="@+id/btn_submit"
             android:layout_width="200dp"

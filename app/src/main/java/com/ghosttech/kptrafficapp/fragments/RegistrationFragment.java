@@ -5,8 +5,6 @@ import android.app.ProgressDialog;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.text.SpannableString;
-import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,6 +29,9 @@ import com.ghosttech.kptrafficapp.R;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashMap;
+import java.util.Map;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -54,8 +55,8 @@ public class RegistrationFragment extends Fragment {
 
     Button btnSubmit;
     Fragment fragment;
-    String strPassword, strCNIC, strPhoneNumber, strName, strConfirmPassword;
-    EditText etName, etPhoneNumber, etCNIC, etPassword, etConfirmPassword;
+    String strEmail, strCNIC, strPhoneNumber, strName, strConfirmPassword;
+    EditText etName, etPhoneNumber, etCNIC, etEmail, etConfirmPassword;
     private OnFragmentInteractionListener mListener;
     Animation shake;
     public RegistrationFragment() {
@@ -95,7 +96,6 @@ public class RegistrationFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_registration, container, false);
         mRequestQueue = Volley.newRequestQueue(getActivity());
         shake = AnimationUtils.loadAnimation(getActivity(), R.anim.shake);
-
         dialog = new ProgressDialog(getActivity());
         dialog.setMessage("Please wait...");
         dialog.setCancelable(false);
@@ -130,9 +130,8 @@ public class RegistrationFragment extends Fragment {
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               // dialog.show();
+                dialog.show();
                 formValidation();
-                apiCall();
                 /*fragment = new LoginFragment();
                 getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment)
                         .commit();*/
@@ -142,30 +141,29 @@ public class RegistrationFragment extends Fragment {
     public void formValidation() {
         etName = (EditText) view.findViewById(R.id.et_name);
         etCNIC = (EditText) view.findViewById(R.id.et_cnic);
-        etPassword = (EditText) view.findViewById(R.id.et_password);
-        etConfirmPassword = (EditText) view.findViewById(R.id.et_confirm_password);
+        etEmail = (EditText) view.findViewById(R.id.et_password);
         etPhoneNumber = (EditText) view.findViewById(R.id.et_phone_number);
 
-        strPassword = etPassword.getText().toString();
-        strCNIC = etCNIC.getText().toString();
         strName = etName.getText().toString();
-        strConfirmPassword = etConfirmPassword.getText().toString();
+        strEmail = etEmail.getText().toString();
+        strCNIC = etCNIC.getText().toString();
         strPhoneNumber = etPhoneNumber.getText().toString();
+
         if (strName.equals("") || strName.length() < 3) {
             etName.startAnimation(shake);
         } else if (strPhoneNumber.equals("") || strPhoneNumber.length() < 5) {
             etPhoneNumber.startAnimation(shake);
         } else if (strCNIC.equals("") || strCNIC.length() < 13) {
             etCNIC.startAnimation(shake);
-        } else if (strPassword.equals("") || strCNIC.length() < 6) {
-            etPassword.startAnimation(shake);
-        } else if (!strConfirmPassword.equals(strPassword)) {
-            etConfirmPassword.startAnimation(shake);
+        } else if (strEmail.equals("") || strEmail.length() < 6) {
+            etEmail.startAnimation(shake);
+        } else{
+            apiCall();
         }
     }
     public void apiCall(){
-        String url = Configuration.END_POINT_LIVE + "/kp-traffic-police/signup/?name=" + strName + "&cnic=" + strCNIC + "&password=" + strPassword
-                + "&phone_no=" + strPhoneNumber;
+        String url = Configuration.END_POINT_LIVE + "signup/signup?";
+        Log.d("zma url",url);
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -184,7 +182,18 @@ public class RegistrationFragment extends Fragment {
                 Log.d("zma error registration",String.valueOf(error));
 
             }
-        });
+        }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("phone_no",strPhoneNumber);
+                params.put("name", strName);
+                params.put("email", strEmail);
+                params.put("cnic",strCNIC);
+                return params;
+            }
+
+        };
         request.setRetryPolicy(new DefaultRetryPolicy(200000,
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));

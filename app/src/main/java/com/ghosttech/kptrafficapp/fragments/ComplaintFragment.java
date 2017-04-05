@@ -4,17 +4,16 @@ import android.Manifest;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.location.Location;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.os.Environment;
-import android.os.RecoverySystem;
 import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.view.ActionMode;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,7 +25,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.ghosttech.kptrafficapp.R;
 import com.ghosttech.kptrafficapp.utilities.AndroidMultiPartEntity;
@@ -49,8 +47,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import static android.app.Activity.RESULT_CANCELED;
-import static android.app.Activity.RESULT_OK;
+import io.nlopez.smartlocation.OnLocationUpdatedListener;
+import io.nlopez.smartlocation.SmartLocation;
+
 import static android.provider.MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE;
 import static android.provider.MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO;
 
@@ -67,6 +66,8 @@ public class ComplaintFragment extends Fragment {
     View view;
     long totalSize = 0;
     MaterialSpinner spComlaintType;
+    String spinnerID, strDesciption;
+    double dblLat, dblLon;
     private OnFragmentInteractionListener mListener;
     Fragment fragment;
     private Uri fileUri;
@@ -114,7 +115,16 @@ public class ComplaintFragment extends Fragment {
         customActionBar();
         formValidation();
         onSendButton();
+        SmartLocation.with(getActivity()).location()
+                .start(new OnLocationUpdatedListener() {
 
+                    @Override
+                    public void onLocationUpdated(Location location) {
+                        dblLat = location.getLatitude();
+                        dblLon = location.getLongitude();
+                        Log.d("Location : ", "" + dblLat + " " + dblLon);
+                    }
+                });
         return view;
     }
 
@@ -149,7 +159,7 @@ public class ComplaintFragment extends Fragment {
         btnSend = (Button) view.findViewById(R.id.btn_send);
         if (spComlaintType.getText() == "Complaint type") {
             spComlaintType.startAnimation(shake);
-        }else {
+        } else {
             btnSend.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -162,12 +172,14 @@ public class ComplaintFragment extends Fragment {
     public void formValidation() {
         spComlaintType = (MaterialSpinner) view.findViewById(R.id.spinner);
         etDescription = (EditText) view.findViewById(R.id.et_description);
-        spComlaintType.setItems("Complaint type", "Traffic Jam", "Wardens Corruption", "Other");
+        spComlaintType.setItems("Complaint Type", "Traffic Jam", "Wardens Corruption", "Other");
         spComlaintType.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
 
             @Override
             public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
                 Snackbar.make(view, "Clicked " + item, Snackbar.LENGTH_LONG).show();
+                spinnerID = String.valueOf(position);
+                Log.d("zma id",spinnerID);
             }
         });
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
@@ -186,6 +198,10 @@ public class ComplaintFragment extends Fragment {
                 recordVideo();
             }
         });
+        strDesciption = etDescription.getText().toString();
+        if (strDesciption.length()<10){
+            etDescription.startAnimation(shake);
+        }
 
 
     }
@@ -214,6 +230,7 @@ public class ComplaintFragment extends Fragment {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         fileUri = getOutputMediaFileUri(MEDIA_TYPE_IMAGE);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
+        intent.putExtra("image","1");
         // start the image capture Intent
         startActivityForResult(intent, CAMERA_CAPTURE_IMAGE_REQUEST_CODE);
     }
@@ -223,6 +240,7 @@ public class ComplaintFragment extends Fragment {
         fileUri = getOutputMediaFileUri(MEDIA_TYPE_VIDEO);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
         // start the image capture Intent
+        intent.putExtra("video","2");
         startActivityForResult(intent, CAMERA_RECORD_VIDEO_REQUEST_CODE);
     }
 
@@ -296,7 +314,7 @@ public class ComplaintFragment extends Fragment {
         private String uploadFile() {
             String responseString = null;
             HttpClient httpclient = new DefaultHttpClient();
-            HttpPost httppost = new HttpPost(Configuration.FILE_UPLOAD_URL);
+            HttpPost httppost = new HttpPost(Configuration.COMPLAINT_MODULE_URL);
 
             try {
                 AndroidMultiPartEntity entity = new AndroidMultiPartEntity(
@@ -309,16 +327,20 @@ public class ComplaintFragment extends Fragment {
                         });
 
                 File sourceFile = new File(fileUri.getPath());
+                Intent intent = getActivity().getIntent();
+               /* if (intent.getStringExtra("image").equals("1")){
+                    entity.addPart("image", new FileBody(sourceFile));
 
+                }else if (intent.getStringExtra("video").equals("2")){
+                    entity.addPart("video", new FileBody(sourceFile));
+                }*/
                 // Adding file data to http body
                 entity.addPart("image", new FileBody(sourceFile));
-
                 // Extra parameters if you want to pass to server
-                entity.addPart("title", new StringBody(""));
-                entity.addPart("description", new StringBody(""));
-                entity.addPart("longitude", new StringBody(""));
-                entity.addPart("latitude", new StringBody(""));
-                entity.addPart("email", new StringBody(""));
+                entity.addPart("complaint_type_id ", new StringBody(spinnerID));
+                entity.addPart("latitude", new StringBody(String.valueOf(dblLat)));
+                entity.addPart("longitude", new StringBody(String.valueOf(dblLon)));
+                entity.addPart("description", new StringBody(strDesciption));
                 totalSize = entity.getContentLength();
                 httppost.setEntity(entity);
                 // Making server call
@@ -362,7 +384,7 @@ public class ComplaintFragment extends Fragment {
                 .setCancelable(false)
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        // do nothing
+                       getActivity().finish();
                     }
                 });
         AlertDialog alert = builder.create();

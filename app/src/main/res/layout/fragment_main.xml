@@ -10,16 +10,17 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.48"
+        android:layout_weight="0.6"
         android:background="#179e99"
         android:orientation="vertical">
 
         <ImageView
             android:id="@+id/imageView3"
             android:layout_width="96dp"
-            android:layout_height="96dp"
             android:layout_gravity="center"
-            app:srcCompat="@drawable/main_screen_logo" />
+            android:layout_margin="10dp"
+            app:srcCompat="@drawable/main_screen_logo"
+            android:layout_height="96dp" />
 
         <TextView
             android:layout_width="match_parent"
@@ -35,17 +36,21 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
+        android:layout_margin="10dp"
+        android:padding="10dp"
         android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="horizontal">
+            android:layout_height="0dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:layout_weight="1">
 
             <LinearLayout
+                android:id="@+id/linear_layout_cs"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:layout_weight="1"
                 android:orientation="vertical">
@@ -54,16 +59,18 @@
                     android:layout_width="64dp"
                     android:layout_height="64dp"
                     android:layout_gravity="center"
-                    app:srcCompat="@drawable/test_image" />
+                    app:srcCompat="@drawable/complaint_system_icon" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="TextView" />
+                    android:textSize="12sp"
+                    android:text="Complaint\nSystem" />
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/linear_layout_lu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
@@ -75,16 +82,19 @@
                     android:layout_height="64dp"
                     android:layout_weight="1"
                     android:layout_gravity="center"
-                    app:srcCompat="@drawable/test_image" />
+                    app:srcCompat="@drawable/live_updates_icon" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="TextView" />
+                    android:text="Live\nUpdates"
+                    android:textSize="12sp"
+                    />
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/linear_layout_lv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -96,27 +106,31 @@
                     android:layout_height="64dp"
                     android:layout_weight="1"
                     android:layout_gravity="center"
-                    app:srcCompat="@drawable/test_image" />
+                    app:srcCompat="@drawable/license_verification_icon" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="TextView" />
+                    android:textSize="12sp"
+
+                    android:text="License\nVerification" />
             </LinearLayout>
 
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="horizontal">
+            android:layout_height="0dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_weight="1">
 
             <LinearLayout
+                android:id="@+id/linear_layout_te"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:layout_weight="1"
                 android:orientation="vertical">
@@ -125,16 +139,19 @@
                     android:layout_width="64dp"
                     android:layout_height="64dp"
                     android:layout_gravity="center"
-                    app:srcCompat="@drawable/test_image" />
+                    app:srcCompat="@drawable/traffic_education_icon" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="TextView" />
+                    android:textSize="12sp"
+
+                    android:text="Traffic\nEducation" />
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/linear_layout_ct"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
@@ -146,17 +163,20 @@
                     android:layout_height="64dp"
                     android:layout_weight="1"
                     android:layout_gravity="center"
-                    app:srcCompat="@drawable/test_image" />
+                    app:srcCompat="@drawable/challan_tracking_icon" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="TextView" />
+                    android:textSize="12sp"
+
+                    android:text="Challan\nTracking" />
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/linear_layout_ec"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -168,14 +188,15 @@
                     android:layout_height="64dp"
                     android:layout_gravity="center"
                     android:layout_weight="1"
-                    app:srcCompat="@drawable/test_image" />
+                    app:srcCompat="@drawable/emergency_contacts_icon" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="TextView" />
+                    android:textSize="12sp"
+                    android:text="Emergency\nContacts" />
             </LinearLayout>
 
         </LinearLayout>
