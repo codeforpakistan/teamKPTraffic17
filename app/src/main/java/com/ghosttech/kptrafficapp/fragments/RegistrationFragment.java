@@ -179,6 +179,7 @@ public class RegistrationFragment extends Fragment {
                     if (response.getBoolean("status")) {
                         Log.d("zma status registration", String.valueOf(response.getBoolean("status")));
                         dialog.dismiss();
+
                          /*fragment = new LoginFragment();
                 getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment)
                         .commit();*/
