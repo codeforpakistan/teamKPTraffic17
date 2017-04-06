@@ -147,7 +147,7 @@
                     android:id="@+id/et_password"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Password"
+                    android:hint="Email"
                     android:backgroundTint="#fff"
                     android:inputType="textEmailAddress"
                     android:textColorHint="#fff"

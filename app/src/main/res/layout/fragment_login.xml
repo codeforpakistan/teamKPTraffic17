@@ -109,47 +109,18 @@
                 android:textColor="#fff"
                 android:background="@drawable/round_corner"
                 android:textSize="18sp" />
-
-        <TextView
-            android:id="@+id/tv_forgot_password"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="10dp"
-            android:layout_marginTop="20dp"
-            android:layout_toEndOf="@+id/btnSubmit"
-            android:layout_toRightOf="@+id/btnSubmit"
-            android:layout_gravity="center_horizontal"
-            android:text="forgot password"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="#fff"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="5dp"
-            android:layout_toEndOf="@+id/btnSubmit"
-            android:layout_toRightOf="@+id/btnSubmit"
-            android:text="Not register?  "
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="#fff" />
-
         <TextView
             android:id="@+id/tvSkip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="10dp"
+            android:layout_margin="30dp"
             android:layout_toEndOf="@+id/btnSubmit"
             android:layout_toRightOf="@+id/btnSubmit"
             android:text="register here"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="#fff"
+            android:textColor="#000"
             android:textStyle="bold" />
 </LinearLayout>
     </TableLayout>

@@ -59,6 +59,7 @@ public class RegistrationFragment extends Fragment {
     EditText etName, etPhoneNumber, etCNIC, etEmail, etConfirmPassword;
     private OnFragmentInteractionListener mListener;
     Animation shake;
+
     public RegistrationFragment() {
         // Required empty public constructor
     }
@@ -102,7 +103,7 @@ public class RegistrationFragment extends Fragment {
 
 
         onSubmitButton();
-        //customActionBar();
+        customActionBar();
         // Inflate the layout for this fragment
         return view;
     }
@@ -130,14 +131,12 @@ public class RegistrationFragment extends Fragment {
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dialog.show();
                 formValidation();
-                /*fragment = new LoginFragment();
-                getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment)
-                        .commit();*/
+
             }
         });
     }
+
     public void formValidation() {
         etName = (EditText) view.findViewById(R.id.et_name);
         etCNIC = (EditText) view.findViewById(R.id.et_cnic);
@@ -155,50 +154,53 @@ public class RegistrationFragment extends Fragment {
             etPhoneNumber.startAnimation(shake);
         } else if (strCNIC.equals("") || strCNIC.length() < 13) {
             etCNIC.startAnimation(shake);
-        } else if (strEmail.equals("") || strEmail.length() < 6) {
+        } else if ((!android.util.Patterns.EMAIL_ADDRESS.matcher(strEmail).matches())) {
             etEmail.startAnimation(shake);
-        } else{
+        } else {
+            dialog.show();
             apiCall();
         }
     }
-    public void apiCall(){
-        String url = Configuration.END_POINT_LIVE + "signup/signup?";
-        Log.d("zma url",url);
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, new Response.Listener<JSONObject>() {
+
+    public void apiCall() {
+        Map<String, String> params = new HashMap<>();
+        params.put("email", strEmail);
+        params.put("name", strName);
+        params.put("cnic", strCNIC);
+        params.put("phone_no", strPhoneNumber);
+        JSONObject jsonObject = new JSONObject(params);
+        Log.d("zma data", String.valueOf(jsonObject));
+        String url = Configuration.END_POINT_LIVE + "Signup/signup";
+        Log.d("zma url", url);
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, jsonObject, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 try {
                     if (response.getBoolean("status")) {
                         Log.d("zma status registration", String.valueOf(response.getBoolean("status")));
                         dialog.dismiss();
+                         /*fragment = new LoginFragment();
+                getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment)
+                        .commit();*/
                     }
                 } catch (JSONException e) {
+                    Log.d("zma exception", String.valueOf(e));
                     e.printStackTrace();
                 }
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d("zma error registration",String.valueOf(error));
+                Log.d("zma error registration", String.valueOf(error));
 
             }
-        }) {
-            @Override
-            protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("phone_no",strPhoneNumber);
-                params.put("name", strName);
-                params.put("email", strEmail);
-                params.put("cnic",strCNIC);
-                return params;
-            }
-
-        };
+        });
         request.setRetryPolicy(new DefaultRetryPolicy(200000,
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         mRequestQueue.add(request);
     }
+
     public void customActionBar() {
         android.support.v7.app.ActionBar mActionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         mActionBar.setDisplayShowHomeEnabled(false);

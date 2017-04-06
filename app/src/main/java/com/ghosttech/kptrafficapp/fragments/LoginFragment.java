@@ -86,24 +86,14 @@ public class LoginFragment extends Fragment {
 
         view = inflater.inflate(R.layout.fragment_login, container, false);
         customActionBar();
-        SpannableString content = new SpannableString("Forgot Password?");
-        content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
-        tvForgotPassword = (TextView) view.findViewById(R.id.tv_forgot_password);
         tvSkip = (TextView) view.findViewById(R.id.tvSkip);
         SpannableString contentRegister = new SpannableString("Register here");
         contentRegister.setSpan(new UnderlineSpan(), 0, contentRegister.length(), 0);
         tvSkip.setText(contentRegister);
         mRequestQueue = Volley.newRequestQueue(getActivity());
-        tvForgotPassword.setText(content);
         dialog = new ProgressDialog(getActivity());
         dialog.setMessage("Please wait...");
         dialog.setCancelable(false);
-        tvForgotPassword.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.show();
-            }
-        });
         tvSkip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
