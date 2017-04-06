@@ -1,11 +1,5 @@
 package com.ghosttech.kptrafficapp.utilities;
 
-import android.content.Context;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-
-import com.ghosttech.kptrafficapp.R;
-
 /**
  * Created by Asus on 3/29/2017.
  */

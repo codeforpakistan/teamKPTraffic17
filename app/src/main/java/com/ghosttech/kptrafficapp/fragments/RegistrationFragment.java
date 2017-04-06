@@ -16,18 +16,16 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.ghosttech.kptrafficapp.utilities.Configuration;
 import com.ghosttech.kptrafficapp.R;
-
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.ghosttech.kptrafficapp.utilities.Configuration;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -157,49 +155,57 @@ public class RegistrationFragment extends Fragment {
         } else if ((!android.util.Patterns.EMAIL_ADDRESS.matcher(strEmail).matches())) {
             etEmail.startAnimation(shake);
         } else {
+
             dialog.show();
             apiCall();
         }
     }
 
     public void apiCall() {
-        Map<String, String> params = new HashMap<>();
-        params.put("email", strEmail);
-        params.put("name", strName);
-        params.put("cnic", strCNIC);
-        params.put("phone_no", strPhoneNumber);
-        JSONObject jsonObject = new JSONObject(params);
-        Log.d("zma data", String.valueOf(jsonObject));
         String url = Configuration.END_POINT_LIVE + "signup/signup";
         Log.d("zma url", url);
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, jsonObject, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                try {
-                    if (response.getBoolean("status")) {
-                        Log.d("zma status registration", String.valueOf(response.getBoolean("status")));
-                        dialog.dismiss();
+        StringRequest jsonObjRequest = new StringRequest(Request.Method.POST,
+                url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        boolean status = response.contains("true");
+                        if (status) {
+                            Log.d("Zma response", response);
+                            dialog.dismiss();
+                        }
+                            dialog.dismiss();
 
-                         /*fragment = new LoginFragment();
-                getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment)
-                        .commit();*/
                     }
-                } catch (JSONException e) {
-                    Log.d("zma exception", String.valueOf(e));
-                    e.printStackTrace();
-                }
-            }
-        }, new Response.ErrorListener() {
+                }, new Response.ErrorListener() {
+
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.d("zma error registration", String.valueOf(error));
-
             }
-        });
-        request.setRetryPolicy(new DefaultRetryPolicy(200000,
+        }) {
+
+            @Override
+            public String getBodyContentType() {
+                return "application/x-www-form-urlencoded;charset=UTF-8";
+            }
+
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("email", strEmail);
+                params.put("name", strName);
+                params.put("cnic", strCNIC);
+                params.put("phone_no", strPhoneNumber);
+                return params;
+            }
+
+        };
+
+        jsonObjRequest.setRetryPolicy(new DefaultRetryPolicy(200000,
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-        mRequestQueue.add(request);
+        mRequestQueue.add(jsonObjRequest);
     }
 
     public void customActionBar() {
