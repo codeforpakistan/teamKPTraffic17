@@ -170,7 +170,7 @@ public class RegistrationFragment extends Fragment {
         params.put("phone_no", strPhoneNumber);
         JSONObject jsonObject = new JSONObject(params);
         Log.d("zma data", String.valueOf(jsonObject));
-        String url = Configuration.END_POINT_LIVE + "Signup/signup";
+        String url = Configuration.END_POINT_LIVE + "signup/signup";
         Log.d("zma url", url);
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, jsonObject, new Response.Listener<JSONObject>() {
             @Override
