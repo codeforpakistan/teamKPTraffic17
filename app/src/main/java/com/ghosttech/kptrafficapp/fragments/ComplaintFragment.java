@@ -123,7 +123,6 @@ public class ComplaintFragment extends Fragment {
                     Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
         }
         ivCamera = (ImageView) view.findViewById(R.id.iv_camera);
-
         ivCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -133,7 +132,13 @@ public class ComplaintFragment extends Fragment {
         pDialog = new SweetAlertDialog(getActivity(), SweetAlertDialog.PROGRESS_TYPE);
         pDialog.getProgressHelper().setBarColor(Color.parseColor("#179e99"));
         pDialog.setTitleText("Wait a while");
-
+        ivVideo = (ImageView) view.findViewById(R.id.iv_video);
+        ivVideo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                galleryIntent();
+            }
+        });
         customActionBar();
         onSendButton();
         SmartLocation.with(getActivity()).location()
@@ -190,12 +195,9 @@ public class ComplaintFragment extends Fragment {
     public void inputValidation() {
         etDescription = (EditText) view.findViewById(R.id.et_description);
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
-        ivVideo = (ImageView) view.findViewById(R.id.iv_video);
+
         strDesciption = etDescription.getText().toString();
-
-
         spComlaintType.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
-
             @Override
             public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
                 Snackbar.make(view, "Clicked " + item, Snackbar.LENGTH_LONG).show();
@@ -204,21 +206,19 @@ public class ComplaintFragment extends Fragment {
             }
         });
 
-        ivVideo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-               galleryIntent();
-            }
-        });
         if (strDesciption.length() < 10) {
             etDescription.startAnimation(shake);
-        } else {
+        } else if (sourceFile.toString().length()==0) {
+            ivCamera.startAnimation(shake);
+            Log.d("zma path else",sourceFile.toString());
+        }else {
             pDialog.show();
             String lat = String.valueOf(dblLat);
             String lon = String.valueOf(dblLon);
             int id = 321;
             int signUp_id = 321;
-//            Log.d("zma path else",sourceFile.toString());
+
+            Log.d("zma path else na",sourceFile.toString());
             postPictorialNews(id, signUp_id, sourceFile, strDesciption, lat, lon);
 
         }
@@ -237,19 +237,19 @@ public class ComplaintFragment extends Fragment {
             @Override
             public void onResponse(NetworkResponse response) {
                 String resultResponse = new String(response.data);
-                Log.d("zma response",resultResponse);
+                Log.d("zma response 1",resultResponse);
                 try {
                     JSONObject result = new JSONObject(resultResponse);
                     if (result.getBoolean("status")){
-                        Log.d("zma response",String.valueOf(result));
+                        Log.d("zma response 2",String.valueOf(result));
                         pDialog.dismiss();
                     }else{
+                        Log.d("zma response 3",String.valueOf(result));
                         pDialog.dismiss();
                         new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
                                 .setTitleText("Oops...")
                                 .setContentText("Something went wrong!")
                                 .show();
-                        Log.d("zma response",String.valueOf(result));
 
                     }
                     //TODO parse result and check status of uploading
@@ -310,7 +310,7 @@ public class ComplaintFragment extends Fragment {
             protected Map<String, String> getParams() throws AuthFailureError{
                 Map<String, String> params = new HashMap<>();
                 params.put("complaint_type_id", String.valueOf(id));
-                params.put("description", String.valueOf(signup_id));
+                params.put("signup_id", String.valueOf(signup_id));
                 params.put("description", description);
                 params.put("latitude", lat);
                 params.put("longitude", lon);
@@ -323,7 +323,8 @@ public class ComplaintFragment extends Fragment {
                 // file name could found file base or direct access from real path
                 // for now just get bitmap data from ImageView
                 String mimeType = GeneralUtils.getMimeTypeofFile(file);
-                params.put("image", new VolleyMultipartRequest.DataPart("image.jpeg", GeneralUtils.getByteArrayFromFile(file), "image/jpeg"));
+                Log.d("zma image null",String.valueOf(file));
+                params.put("image", new VolleyMultipartRequest.DataPart("image.jpeg", GeneralUtils.getByteArrayFromFile(file), mimeType));
                 return params;
             }
         };
@@ -409,16 +410,16 @@ public class ComplaintFragment extends Fragment {
 
             // CALL THIS METHOD TO GET THE URI FROM THE BITMAP
             Uri tempUri = GeneralUtils.getImageUri(getActivity(), photo);
-
             // CALL THIS METHOD TO GET THE ACTUAL PATH
             sourceFile = new File(GeneralUtils.getRealPathFromURI(getActivity(), tempUri));
-            Log.d("zma path",sourceFile.toString());
+            Log.d("zma path 1",sourceFile.toString());
         } else if (requestCode == CAMERA_VIDEO_CAPTURE) {
 
             Uri picUri = data.getData();
             Bundle extras = data.getExtras();
             String path = data.getData().toString();
             sourceFile = new File(picUri.getPath());
+            Log.d("zma path 1111",sourceFile.toString());
             /*ivContent.setVisibility(View.GONE);
             vvContent.setVisibility(View.VISIBLE);
 
