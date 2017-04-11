@@ -2,6 +2,8 @@ package com.ghosttech.kptrafficapp.fragments;
 
 import android.app.Fragment;
 import android.app.ProgressDialog;
+import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -30,6 +32,8 @@ import com.ghosttech.kptrafficapp.utilities.Configuration;
 import java.util.HashMap;
 import java.util.Map;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -44,7 +48,7 @@ public class RegistrationFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    ProgressDialog dialog;
+    // ProgressDialog dialog;
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -53,10 +57,13 @@ public class RegistrationFragment extends Fragment {
 
     Button btnSubmit;
     Fragment fragment;
-    String strEmail, strCNIC, strPhoneNumber, strName, strConfirmPassword;
-    EditText etName, etPhoneNumber, etCNIC, etEmail, etConfirmPassword;
+    String strEmail, strCNIC, strPhoneNumber, strName;
+    EditText etName, etPhoneNumber, etCNIC, etEmail;
     private OnFragmentInteractionListener mListener;
     Animation shake;
+    SweetAlertDialog pDialog;
+    SharedPreferences sharedPreferences;
+    SharedPreferences.Editor editor;
 
     public RegistrationFragment() {
         // Required empty public constructor
@@ -95,11 +102,11 @@ public class RegistrationFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_registration, container, false);
         mRequestQueue = Volley.newRequestQueue(getActivity());
         shake = AnimationUtils.loadAnimation(getActivity(), R.anim.shake);
-        dialog = new ProgressDialog(getActivity());
-        dialog.setMessage("Please wait...");
-        dialog.setCancelable(false);
 
-
+        pDialog = new SweetAlertDialog(getActivity(), SweetAlertDialog.PROGRESS_TYPE);
+        pDialog.getProgressHelper().setBarColor(Color.parseColor("#179e99"));
+        pDialog.setTitleText("Wait a while");
+        pDialog.setCancelable(false);
         onSubmitButton();
         customActionBar();
         // Inflate the layout for this fragment
@@ -141,22 +148,22 @@ public class RegistrationFragment extends Fragment {
         etEmail = (EditText) view.findViewById(R.id.et_password);
         etPhoneNumber = (EditText) view.findViewById(R.id.et_phone_number);
 
-        strName = etName.getText().toString();
-        strEmail = etEmail.getText().toString();
-        strCNIC = etCNIC.getText().toString();
-        strPhoneNumber = etPhoneNumber.getText().toString();
+        strName = etName.getText().toString().trim();
+        strEmail = etEmail.getText().toString().trim();
+        strCNIC = etCNIC.getText().toString().trim();
+        strPhoneNumber = etPhoneNumber.getText().toString().trim();
 
         if (strName.equals("") || strName.length() < 3) {
             etName.startAnimation(shake);
         } else if (strPhoneNumber.equals("") || strPhoneNumber.length() < 5) {
             etPhoneNumber.startAnimation(shake);
-        } else if (strCNIC.equals("") || strCNIC.length() < 13) {
+        } else if (strCNIC.equals("") || strCNIC.length() < 13 || strCNIC.contains("-")) {
             etCNIC.startAnimation(shake);
         } else if ((!android.util.Patterns.EMAIL_ADDRESS.matcher(strEmail).matches())) {
             etEmail.startAnimation(shake);
         } else {
-
-            dialog.show();
+            Log.d("zma data", strName + "\n" + strEmail + "\n" + strPhoneNumber + "\n" + strCNIC);
+            pDialog.show();
             apiCall();
         }
     }
@@ -171,20 +178,36 @@ public class RegistrationFragment extends Fragment {
                     public void onResponse(String response) {
                         boolean status = response.contains("true");
                         if (status) {
+                            pDialog.dismiss();
+                            fragment = new LoginFragment();
+                            getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
+                            etCNIC.setText("");
+                            etEmail.setText("");
+                            etPhoneNumber.setText("");
+                            etName.setText("");
                             Log.d("Zma response", response);
-                            dialog.dismiss();
+
+                        } else if (response.contains("false")) {
+                            etCNIC.setText("");
+                            new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
+                                    .setTitleText("Oops...")
+                                    .setContentText("CNIC already exists!")
+                                    .show();
                         }
-                            dialog.dismiss();
+                        pDialog.dismiss();
 
                     }
                 }, new Response.ErrorListener() {
 
             @Override
             public void onErrorResponse(VolleyError error) {
+                new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
+                        .setTitleText("Oops...")
+                        .setContentText("Server Error!")
+                        .show();
                 Log.d("zma error registration", String.valueOf(error));
             }
         }) {
-
             @Override
             public String getBodyContentType() {
                 return "application/x-www-form-urlencoded;charset=UTF-8";
@@ -228,5 +251,6 @@ public class RegistrationFragment extends Fragment {
         });
 
     }
+
 
 }

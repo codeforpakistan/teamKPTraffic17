@@ -2,15 +2,16 @@ package com.ghosttech.kptrafficapp.fragments;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.location.Location;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.app.Fragment;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -26,32 +27,32 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.NetworkResponse;
+import com.android.volley.NoConnectionError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.TimeoutError;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.Volley;
 import com.ghosttech.kptrafficapp.R;
-import com.ghosttech.kptrafficapp.utilities.AndroidMultiPartEntity;
 import com.ghosttech.kptrafficapp.utilities.Configuration;
+import com.ghosttech.kptrafficapp.utilities.GeneralUtils;
+import com.ghosttech.kptrafficapp.utilities.VolleyMultipartRequest;
 import com.jaredrummler.materialspinner.MaterialSpinner;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.mime.content.FileBody;
-import org.apache.http.entity.mime.content.StringBody;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
+import java.util.HashMap;
+import java.util.Map;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import io.nlopez.smartlocation.OnLocationUpdatedListener;
 import io.nlopez.smartlocation.SmartLocation;
-
-import static android.provider.MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE;
-import static android.provider.MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO;
 
 public class ComplaintFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
@@ -65,8 +66,10 @@ public class ComplaintFragment extends Fragment {
     private String mParam2;
     View view;
     long totalSize = 0;
+    String contentPath;
     MaterialSpinner spComlaintType;
     String spinnerID, strDesciption;
+
     double dblLat, dblLon;
     private OnFragmentInteractionListener mListener;
     Fragment fragment;
@@ -77,6 +80,12 @@ public class ComplaintFragment extends Fragment {
     Button btnSend;
     ImageView ivCamera, ivVideo;
     EditText etDescription;
+    File sourceFile;
+    final int CAMERA_CAPTURE = 1;
+    final int RESULT_LOAD_IMAGE = 2;
+    final int CAMERA_VIDEO_CAPTURE = 3 ;
+    final int RESULT_LOAD_VIDEO = 4 ;
+    SweetAlertDialog pDialog;
 
     public ComplaintFragment() {
         // Required empty public constructor
@@ -106,14 +115,26 @@ public class ComplaintFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_complaint, container, false);
+        spComlaintType = (MaterialSpinner) view.findViewById(R.id.spinner);
+        spComlaintType.setItems("Complaint Type", "Traffic Jam", "Wardens Corruption", "Other");
         shake = AnimationUtils.loadAnimation(getActivity(), R.anim.shake);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
                     Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
         }
+        ivCamera = (ImageView) view.findViewById(R.id.iv_camera);
+
+        ivCamera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                cameraIntent();
+            }
+        });
+        pDialog = new SweetAlertDialog(getActivity(), SweetAlertDialog.PROGRESS_TYPE);
+        pDialog.getProgressHelper().setBarColor(Color.parseColor("#179e99"));
+        pDialog.setTitleText("Wait a while");
 
         customActionBar();
-        formValidation();
         onSendButton();
         SmartLocation.with(getActivity()).location()
                 .start(new OnLocationUpdatedListener() {
@@ -157,54 +178,163 @@ public class ComplaintFragment extends Fragment {
 
     public void onSendButton() {
         btnSend = (Button) view.findViewById(R.id.btn_send);
-        if (spComlaintType.getText() == "Complaint type") {
-            spComlaintType.startAnimation(shake);
-        } else {
-            btnSend.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    new UploadFileToServer().execute();
-                }
-            });
-        }
+        btnSend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                inputValidation();
+
+            }
+        });
     }
 
-    public void formValidation() {
-        spComlaintType = (MaterialSpinner) view.findViewById(R.id.spinner);
+    public void inputValidation() {
         etDescription = (EditText) view.findViewById(R.id.et_description);
-        spComlaintType.setItems("Complaint Type", "Traffic Jam", "Wardens Corruption", "Other");
+        progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
+        ivVideo = (ImageView) view.findViewById(R.id.iv_video);
+        strDesciption = etDescription.getText().toString();
+
+
         spComlaintType.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
 
             @Override
             public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
                 Snackbar.make(view, "Clicked " + item, Snackbar.LENGTH_LONG).show();
                 spinnerID = String.valueOf(position);
-                Log.d("zma id",spinnerID);
+                Log.d("zma id", spinnerID);
             }
         });
-        progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
-        ivCamera = (ImageView) view.findViewById(R.id.iv_camera);
-        ivCamera.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                captureImage();
-            }
-        });
-        ivVideo = (ImageView) view.findViewById(R.id.iv_video);
 
         ivVideo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                recordVideo();
+               galleryIntent();
             }
         });
-        strDesciption = etDescription.getText().toString();
-        if (strDesciption.length()<10){
+        if (strDesciption.length() < 10) {
             etDescription.startAnimation(shake);
+        } else {
+            pDialog.show();
+            String lat = String.valueOf(dblLat);
+            String lon = String.valueOf(dblLon);
+            int id = 321;
+            int signUp_id = 321;
+//            Log.d("zma path else",sourceFile.toString());
+            postPictorialNews(id, signUp_id, sourceFile, strDesciption, lat, lon);
+
         }
 
 
     }
+
+
+    private void postPictorialNews(final int id, final int signup_id, final File file, final String description, final String lat, final String lon) {
+        // loading or check internet connection or something...
+        // ... then
+
+        String url = Configuration.END_POINT_LIVE + "complaints/image";
+
+        VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.POST, url, new Response.Listener<NetworkResponse>() {
+            @Override
+            public void onResponse(NetworkResponse response) {
+                String resultResponse = new String(response.data);
+                Log.d("zma response",resultResponse);
+                try {
+                    JSONObject result = new JSONObject(resultResponse);
+                    if (result.getBoolean("status")){
+                        Log.d("zma response",String.valueOf(result));
+                        pDialog.dismiss();
+                    }else{
+                        pDialog.dismiss();
+                        new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
+                                .setTitleText("Oops...")
+                                .setContentText("Something went wrong!")
+                                .show();
+                        Log.d("zma response",String.valueOf(result));
+
+                    }
+                    //TODO parse result and check status of uploading
+                    // progressDialog.dismiss();
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Log.d("zma exception",String.valueOf(e));
+
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                // progressDialog.dismiss();
+                NetworkResponse networkResponse = error.networkResponse;
+                String errorMessage = "Unknown error";
+                if (networkResponse == null) {
+                    if (error.getClass().equals(TimeoutError.class)) {
+                        errorMessage = "Request timeout";
+                    } else if (error.getClass().equals(NoConnectionError.class)) {
+                        errorMessage = "Failed to connect server";
+                    }
+                } else {
+                    String result = new String(networkResponse.data);
+                    try {
+                        JSONObject response = new JSONObject(result);
+                        String status = response.getString("status");
+                        String message = response.getString("message");
+                        // progressDialog.dismiss();
+                        Log.e("Error Status", status);
+                        Log.e("Error Message", message);
+                        if (networkResponse.statusCode == 404) {
+                            errorMessage = "Resource not found";
+                        } else if (networkResponse.statusCode == 401) {
+                            errorMessage = message + " Please login again";
+                        } else if (networkResponse.statusCode == 400) {
+                            errorMessage = message + " Check your inputs";
+                        } else if (networkResponse.statusCode == 500) {
+                            errorMessage = message + " Something is getting wrong";
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        Log.d("zma error js",String.valueOf(e));
+
+                    }
+                }
+                Log.i("Error", errorMessage);
+                error.printStackTrace();
+                Log.d("zma error lis",String.valueOf(error));
+            }
+        }) {
+                @Override
+                public String getBodyContentType() {
+                return "application/x-www-form-urlencoded;charset=UTF-8";
+            }
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError{
+                Map<String, String> params = new HashMap<>();
+                params.put("complaint_type_id", String.valueOf(id));
+                params.put("description", String.valueOf(signup_id));
+                params.put("description", description);
+                params.put("latitude", lat);
+                params.put("longitude", lon);
+                return params;
+            }
+
+            @Override
+            protected Map<String, DataPart> getByteData() {
+                Map<String, DataPart> params = new HashMap<>();
+                // file name could found file base or direct access from real path
+                // for now just get bitmap data from ImageView
+                String mimeType = GeneralUtils.getMimeTypeofFile(file);
+                params.put("image", new VolleyMultipartRequest.DataPart("image.jpeg", GeneralUtils.getByteArrayFromFile(file), "image/jpeg"));
+                return params;
+            }
+        };
+        RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
+        multipartRequest.setRetryPolicy(new DefaultRetryPolicy(
+                200000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        requestQueue.add(multipartRequest);
+    }
+
 
     public void customActionBar() {
         android.support.v7.app.ActionBar mActionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
@@ -226,157 +356,99 @@ public class ComplaintFragment extends Fragment {
         });
     }
 
-    private void captureImage() {
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        fileUri = getOutputMediaFileUri(MEDIA_TYPE_IMAGE);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
-        intent.putExtra("image","1");
-        // start the image capture Intent
-        startActivityForResult(intent, CAMERA_CAPTURE_IMAGE_REQUEST_CODE);
+    public void cameraIntent() {
+
+        Intent captureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(captureIntent, CAMERA_CAPTURE);
+
     }
 
-    private void recordVideo() {
-        Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-        fileUri = getOutputMediaFileUri(MEDIA_TYPE_VIDEO);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
-        // start the image capture Intent
-        intent.putExtra("video","2");
-        startActivityForResult(intent, CAMERA_RECORD_VIDEO_REQUEST_CODE);
+    public void galleryIntent() {
+
+        Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(i, RESULT_LOAD_IMAGE);
+
     }
 
-    public Uri getOutputMediaFileUri(int type) {
-        return Uri.fromFile(getOutputMediaFile(type));
+    public void cameraVIntent() {
+
+        Intent videoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+        startActivityForResult(videoIntent, CAMERA_VIDEO_CAPTURE);
+
     }
 
-    private static File getOutputMediaFile(int type) {
+    public void galleryVIntent() {
 
-        // External sdcard location
-        File mediaStorageDir = new File(
-                Environment
-                        .getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
-                Configuration.IMAGE_DIRECTORY_NAME);
+        Intent vv = new Intent(Intent.ACTION_PICK, MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(vv, RESULT_LOAD_VIDEO);
 
-        // Create the storage directory if it does not exist
-        if (!mediaStorageDir.exists()) {
-            if (!mediaStorageDir.mkdirs()) {
-                Log.d("zma failed", "Oops! Failed create "
-                        + Configuration.IMAGE_DIRECTORY_NAME + " directory");
-                return null;
-            }
+    }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == RESULT_LOAD_IMAGE && null != data) {
+            Uri selectedImage = data.getData();
+            String[] filePathColumn = {MediaStore.Images.Media.DATA};
+            Cursor cursor = getActivity().getContentResolver().query(selectedImage,
+                    filePathColumn, null, null, null);
+            cursor.moveToFirst();
+            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+            String picturePath = cursor.getString(columnIndex);
+            sourceFile = new File(picturePath);
+            Log.d("zma path",picturePath.toString());
+            cursor.close();
+            //ivContent.setImageBitmap(BitmapFactory.decodeFile(picturePath));
+
+        } else if (requestCode == CAMERA_CAPTURE) {
+            Bitmap photo = (Bitmap) data.getExtras().get("data");
+           // ivContent.setImageBitmap(photo);
+
+
+            // CALL THIS METHOD TO GET THE URI FROM THE BITMAP
+            Uri tempUri = GeneralUtils.getImageUri(getActivity(), photo);
+
+            // CALL THIS METHOD TO GET THE ACTUAL PATH
+            sourceFile = new File(GeneralUtils.getRealPathFromURI(getActivity(), tempUri));
+            Log.d("zma path",sourceFile.toString());
+        } else if (requestCode == CAMERA_VIDEO_CAPTURE) {
+
+            Uri picUri = data.getData();
+            Bundle extras = data.getExtras();
+            String path = data.getData().toString();
+            sourceFile = new File(picUri.getPath());
+            /*ivContent.setVisibility(View.GONE);
+            vvContent.setVisibility(View.VISIBLE);
+
+
+            vvContent.setVideoPath(path);
+            vvContent.requestFocus();
+            vvContent.start();*/
+
+
+        } else if (resultCode == RESULT_LOAD_VIDEO) {
+
+            Uri selectedVideo = data.getData();
+            String[] filePathColumn = {MediaStore.Video.Media.DATA};
+            Cursor cursor = getActivity().getContentResolver().query(selectedVideo,
+                    filePathColumn, null, null, null);
+            cursor.moveToFirst();
+            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+            // String videoPath = cursor.getString(columnIndex);
+            String videoPath = data.getData().toString();
+            sourceFile = new File(videoPath);
+            cursor.close();
+
         }
 
-        // Create a media file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss",
-                Locale.getDefault()).format(new Date());
-        File mediaFile;
-        if (type == MEDIA_TYPE_IMAGE) {
-            mediaFile = new File(mediaStorageDir.getPath() + File.separator
-                    + "IMG_" + timeStamp + ".jpg");
-        } else if (type == MEDIA_TYPE_VIDEO) {
-            mediaFile = new File(mediaStorageDir.getPath() + File.separator
-                    + "VID_" + timeStamp + ".mp4");
-        } else {
-            return null;
-        }
-
-        return mediaFile;
     }
+
 
     /**
      * Uploading the file to server
      */
-    private class UploadFileToServer extends AsyncTask<Void, Integer, String> {
-        @Override
-        protected void onPreExecute() {
-            // setting progress bar to zero
-            progressBar.setProgress(0);
-            super.onPreExecute();
-        }
-
-        @Override
-        protected void onProgressUpdate(Integer... progress) {
-            // Making progress bar visible
-            progressBar.setVisibility(View.VISIBLE);
-
-            // updating progress bar value
-            progressBar.setProgress(progress[0]);
-
-            // updating percentage value
-            //txtPercentage.setText(String.valueOf(progress[0]) + "%");
-        }
-
-        @Override
-        protected String doInBackground(Void... params) {
-            return uploadFile();
-        }
-
-        @SuppressWarnings("deprecation")
-        private String uploadFile() {
-            String responseString = null;
-            HttpClient httpclient = new DefaultHttpClient();
-            HttpPost httppost = new HttpPost(Configuration.COMPLAINT_MODULE_URL);
-
-            try {
-                AndroidMultiPartEntity entity = new AndroidMultiPartEntity(
-                        new AndroidMultiPartEntity.ProgressListener() {
-
-                            @Override
-                            public void transferred(long num) {
-                                publishProgress((int) ((num / (float) totalSize) * 100));
-                            }
-                        });
-
-                File sourceFile = new File(fileUri.getPath());
-                Intent intent = getActivity().getIntent();
-               /* if (intent.getStringExtra("image").equals("1")){
-                    entity.addPart("image", new FileBody(sourceFile));
-
-                }else if (intent.getStringExtra("video").equals("2")){
-                    entity.addPart("video", new FileBody(sourceFile));
-                }*/
-                // Adding file data to http body
-                entity.addPart("image", new FileBody(sourceFile));
-                // Extra parameters if you want to pass to server
-                entity.addPart("complaint_type_id ", new StringBody(spinnerID));
-                entity.addPart("latitude", new StringBody(String.valueOf(dblLat)));
-                entity.addPart("longitude", new StringBody(String.valueOf(dblLon)));
-                entity.addPart("description", new StringBody(strDesciption));
-                totalSize = entity.getContentLength();
-                httppost.setEntity(entity);
-                // Making server call
-                HttpResponse response = httpclient.execute(httppost);
-                HttpEntity r_entity = response.getEntity();
-
-                int statusCode = response.getStatusLine().getStatusCode();
-                if (statusCode == 200) {
-                    // Server response
-                    responseString = EntityUtils.toString(r_entity);
-                } else {
-                    responseString = "Error occurred! Http Status Code: "
-                            + statusCode;
-                }
-
-            } catch (ClientProtocolException e) {
-                responseString = e.toString();
-            } catch (IOException e) {
-                responseString = e.toString();
-            }
-
-            return responseString;
-
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            Log.e(TAG, "Response from server: " + result);
-
-            // showing the server response in an alert dialog
-            showAlert(result);
-
-            super.onPostExecute(result);
-        }
-
-    }
 
     private void showAlert(String message) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -384,7 +456,7 @@ public class ComplaintFragment extends Fragment {
                 .setCancelable(false)
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                       getActivity().finish();
+                        getActivity().finish();
                     }
                 });
         AlertDialog alert = builder.create();

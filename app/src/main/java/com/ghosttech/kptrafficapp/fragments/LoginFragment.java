@@ -2,9 +2,12 @@ package com.ghosttech.kptrafficapp.fragments;
 
 import android.app.ActionBar;
 import android.app.ProgressDialog;
+import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
@@ -23,12 +26,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.ghosttech.kptrafficapp.R;
 import com.ghosttech.kptrafficapp.utilities.Configuration;
@@ -36,6 +41,11 @@ import com.ghosttech.kptrafficapp.utilities.Configuration;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Text;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class LoginFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
@@ -47,15 +57,16 @@ public class LoginFragment extends Fragment {
     private String mParam1;
     private String mParam2;
     Button btnSubmit;
-    EditText etCNIC, etPassword;
+    EditText etCNIC;
     View view;
-    TextView tvForgotPassword;
     Fragment fragment;
-    ProgressDialog dialog;
     private OnFragmentInteractionListener mListener;
     RequestQueue mRequestQueue;
-    String strCNIC, strPassword;
+    String strCNIC;
+    SweetAlertDialog pDialog;
     TextView tvSkip;
+    SharedPreferences sharedPreferences;
+    SharedPreferences.Editor editor;
     public LoginFragment() {
         // Required empty public constructor
     }
@@ -85,15 +96,18 @@ public class LoginFragment extends Fragment {
         // Inflate the layout for this fragment
 
         view = inflater.inflate(R.layout.fragment_login, container, false);
+        sharedPreferences = getActivity().getSharedPreferences("com.ghosttech.kptraffic", 0);
+        editor = sharedPreferences.edit();
         customActionBar();
         tvSkip = (TextView) view.findViewById(R.id.tvSkip);
-        SpannableString contentRegister = new SpannableString("Register here");
+        SpannableString contentRegister = new SpannableString("Register Here");
         contentRegister.setSpan(new UnderlineSpan(), 0, contentRegister.length(), 0);
         tvSkip.setText(contentRegister);
         mRequestQueue = Volley.newRequestQueue(getActivity());
-        dialog = new ProgressDialog(getActivity());
-        dialog.setMessage("Please wait...");
-        dialog.setCancelable(false);
+        pDialog = new SweetAlertDialog(getActivity(), SweetAlertDialog.PROGRESS_TYPE);
+        pDialog.getProgressHelper().setBarColor(Color.parseColor("#179e99"));
+        pDialog.setTitleText("getting login");
+        pDialog.setCancelable(false);
         tvSkip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -130,58 +144,77 @@ public class LoginFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 formValidation();
-                apiCall();
-                fragment = new MainFragment();
-                getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).
-                        commit();
             }
         });
     }
 
     public void formValidation() {
         etCNIC = (EditText) view.findViewById(R.id.et_cnic_login);
-        etPassword = (EditText) view.findViewById(R.id.et_password_login);
-        strPassword = etPassword.getText().toString();
         strCNIC = etCNIC.getText().toString();
         Animation shake = AnimationUtils.loadAnimation(getActivity(), R.anim.shake);
-        if (strCNIC.equals("") || strCNIC.length() < 13) {
+        if (strCNIC.equals("") || strCNIC.length() < 13 || strCNIC.contains("-")) {
             etCNIC.startAnimation(shake);
-        } else if (strPassword.equals("") || strPassword.length() < 6) {
-            etPassword.startAnimation(shake);
+            Snackbar.make(view, "Wrong CNIC " , Snackbar.LENGTH_LONG).show();
+        } else{
+            pDialog.show();
+            apiCall();
+
         }
     }
 
     public void apiCall() {
-        String url = Configuration.END_POINT_LIVE + "/kp-traffic-police/login/?cnic=" + strCNIC + "&password=" + strPassword;
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                try {
-                    if (response.getBoolean("status")) {
-                        fragment = new MainFragment();
-                        getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).
-                                commit();
-                        Log.d("zma status registration", String.valueOf(response.getBoolean("status")));
-                        dialog.dismiss();
+        String url = Configuration.END_POINT_LIVE + "login/userlogin";
+        StringRequest jsonObjRequest = new StringRequest(Request.Method.POST,
+                url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        if (response.contains("true")) {
+                            pDialog.dismiss();
+                            editor.putString("true",strCNIC).commit();
+                            fragment = new MainFragment();
+                            getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).
+                                    commit();
+                            etCNIC.setText("");
+                            Log.d("Zma response", response);
 
-                    }else {
+                        }else if (response.contains("false")){
+                            pDialog.dismiss();
+                            new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
+                                    .setTitleText("Oops...")
+                                    .setContentText("Invalid CNIC!")
+                                    .show();
+                        }
 
                     }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }, new Response.ErrorListener() {
+                },  new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
+                        .setTitleText("Oops...")
+                        .setContentText("Something went wrong!")
+                        .show();
                 Log.d("zma error registration", String.valueOf(error));
 
             }
-        });
-        request.setRetryPolicy(new DefaultRetryPolicy(200000,
+        }){
+            @Override
+            public String getBodyContentType() {
+                return "application/x-www-form-urlencoded;charset=UTF-8";
+            }
+
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("cnic", strCNIC);
+                return params;
+            }
+
+        };
+        jsonObjRequest.setRetryPolicy(new DefaultRetryPolicy(200000,
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-        mRequestQueue.add(request);
+        mRequestQueue.add(jsonObjRequest);
     }
 
 

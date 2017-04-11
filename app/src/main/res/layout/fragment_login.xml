@@ -120,7 +120,7 @@
             android:layout_toRightOf="@+id/btnSubmit"
             android:text="register here"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="#000"
+            android:textColor="#fff"
             android:textStyle="bold" />
 </LinearLayout>
     </TableLayout>

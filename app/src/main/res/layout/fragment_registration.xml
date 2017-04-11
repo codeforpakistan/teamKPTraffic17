@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:float="http://schemas.android.com/tools"
+    android:background="#000"
     android:orientation="vertical"
 >
 
@@ -133,7 +134,7 @@
                 android:layout_height="32dp"
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="30dp"
-                android:src="@drawable/password_icon" />
+                android:src="@drawable/mail_icon" />
 
             <com.wrapp.floatlabelededittext.FloatLabeledEditText
                 android:id="@+id/view9"
