@@ -1,6 +1,5 @@
 package com.ghosttech.kptrafficapp.fragments;
 
-import android.content.res.Resources;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -161,7 +160,7 @@ public class MainFragment extends Fragment {
         mActionBar.setDisplayShowHomeEnabled(false);
         mActionBar.setDisplayShowTitleEnabled(false);
         LayoutInflater mInflater = LayoutInflater.from(getActivity());
-        View mCustomView = mInflater.inflate(R.layout.custom_actionbar, null);
+        View mCustomView = mInflater.inflate(R.layout.custom_action_bar, null);
         mTitleTextView = (TextView) mCustomView.findViewById(R.id.title_text);
         ImageView mBackArrow = (ImageView) mCustomView.findViewById(R.id.iv_back_arrow);
         mBackArrow.setImageResource(R.drawable.map_pointer);

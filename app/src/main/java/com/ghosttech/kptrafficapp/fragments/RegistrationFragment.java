@@ -1,7 +1,6 @@
 package com.ghosttech.kptrafficapp.fragments;
 
 import android.app.Fragment;
-import android.app.ProgressDialog;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
@@ -236,7 +235,7 @@ public class RegistrationFragment extends Fragment {
         mActionBar.setDisplayShowHomeEnabled(false);
         mActionBar.setDisplayShowTitleEnabled(false);
         LayoutInflater mInflater = LayoutInflater.from(getActivity());
-        View mCustomView = mInflater.inflate(R.layout.custom_actionbar, null);
+        View mCustomView = mInflater.inflate(R.layout.custom_action_bar, null);
         TextView mTitleTextView = (TextView) mCustomView.findViewById(R.id.title_text);
         ImageView mBackArrow = (ImageView) mCustomView.findViewById(R.id.iv_back_arrow);
         mTitleTextView.setText("Sign Up");

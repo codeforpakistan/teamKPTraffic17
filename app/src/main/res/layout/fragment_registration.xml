@@ -3,7 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:float="http://schemas.android.com/tools"
-    android:background="#000"
     android:orientation="vertical"
 >
 

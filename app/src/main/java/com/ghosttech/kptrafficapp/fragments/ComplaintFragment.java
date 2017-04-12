@@ -12,6 +12,7 @@ import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -42,6 +43,9 @@ import com.ghosttech.kptrafficapp.utilities.Configuration;
 import com.ghosttech.kptrafficapp.utilities.GeneralUtils;
 import com.ghosttech.kptrafficapp.utilities.VolleyMultipartRequest;
 import com.jaredrummler.materialspinner.MaterialSpinner;
+import com.orhanobut.dialogplus.DialogPlus;
+import com.orhanobut.dialogplus.OnItemClickListener;
+import com.orhanobut.dialogplus.ViewHolder;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -86,7 +90,7 @@ public class ComplaintFragment extends Fragment {
     final int CAMERA_VIDEO_CAPTURE = 3 ;
     final int RESULT_LOAD_VIDEO = 4 ;
     SweetAlertDialog pDialog;
-
+    RequestQueue requestQueue;
     public ComplaintFragment() {
         // Required empty public constructor
     }
@@ -115,6 +119,7 @@ public class ComplaintFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_complaint, container, false);
+         requestQueue = Volley.newRequestQueue(getActivity());
         spComlaintType = (MaterialSpinner) view.findViewById(R.id.spinner);
         spComlaintType.setItems("Complaint Type", "Traffic Jam", "Wardens Corruption", "Other");
         shake = AnimationUtils.loadAnimation(getActivity(), R.anim.shake);
@@ -136,7 +141,8 @@ public class ComplaintFragment extends Fragment {
         ivVideo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                galleryIntent();
+                //galleryIntent();
+                showAlert();
             }
         });
         customActionBar();
@@ -208,34 +214,35 @@ public class ComplaintFragment extends Fragment {
 
         if (strDesciption.length() < 10) {
             etDescription.startAnimation(shake);
-        } else if (sourceFile.toString().length()==0) {
+        } else if (sourceFile.toString().length() == 0) {
             ivCamera.startAnimation(shake);
-            Log.d("zma path else",sourceFile.toString());
-        }else {
+            Log.d("zma path else", sourceFile.toString());
+        } else {
             pDialog.show();
             String lat = String.valueOf(dblLat);
             String lon = String.valueOf(dblLon);
             int id = 321;
             int signUp_id = 321;
+            Log.d("zma path last check", sourceFile.toString());
+            if (sourceFile.length() != 0) {
+//                String path = Environment.getExternalStorageDirectory()+ "/storage/emulated/0/Pictures/1491979342159.jpg";
+//                sourceFile = new File(path);
+                Log.d("zma path last static", sourceFile.toString());
+                postPictorialNews(sourceFile, id, signUp_id, strDesciption, lat, lon);
 
-            Log.d("zma path else na",sourceFile.toString());
-            postPictorialNews(id, signUp_id, sourceFile, strDesciption, lat, lon);
-
+            }
         }
-
-
     }
-
-
-    private void postPictorialNews(final int id, final int signup_id, final File file, final String description, final String lat, final String lon) {
+    private void postPictorialNews(final File file,final int id, final int signup_id,  final String description, final String lat, final String lon) {
         // loading or check internet connection or something...
         // ... then
 
-        String url = Configuration.END_POINT_LIVE + "complaints/image";
+        final String url = Configuration.END_POINT_LIVE + "complaints/image";
 
         VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.POST, url, new Response.Listener<NetworkResponse>() {
             @Override
             public void onResponse(NetworkResponse response) {
+                Log.d("zma response url",url);
                 String resultResponse = new String(response.data);
                 Log.d("zma response 1",resultResponse);
                 try {
@@ -246,10 +253,7 @@ public class ComplaintFragment extends Fragment {
                     }else{
                         Log.d("zma response 3",String.valueOf(result));
                         pDialog.dismiss();
-                        new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
-                                .setTitleText("Oops...")
-                                .setContentText("Something went wrong!")
-                                .show();
+
 
                     }
                     //TODO parse result and check status of uploading
@@ -304,7 +308,7 @@ public class ComplaintFragment extends Fragment {
         }) {
                 @Override
                 public String getBodyContentType() {
-                return "application/x-www-form-urlencoded;charset=UTF-8";
+                    return "application/x-www-form-urlencoded;charset=UTF-8";
             }
             @Override
             protected Map<String, String> getParams() throws AuthFailureError{
@@ -323,12 +327,12 @@ public class ComplaintFragment extends Fragment {
                 // file name could found file base or direct access from real path
                 // for now just get bitmap data from ImageView
                 String mimeType = GeneralUtils.getMimeTypeofFile(file);
-                Log.d("zma image null",String.valueOf(file));
-                params.put("image", new VolleyMultipartRequest.DataPart("image.jpeg", GeneralUtils.getByteArrayFromFile(file), mimeType));
+                Log.d("zma image",String.valueOf(file));
+                params.put("image", new VolleyMultipartRequest.DataPart("file_name", GeneralUtils.getByteArrayFromFile(file), mimeType));
                 return params;
             }
         };
-        RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
+
         multipartRequest.setRetryPolicy(new DefaultRetryPolicy(
                 200000,
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
@@ -342,7 +346,7 @@ public class ComplaintFragment extends Fragment {
         mActionBar.setDisplayShowHomeEnabled(false);
         mActionBar.setDisplayShowTitleEnabled(false);
         LayoutInflater mInflater = LayoutInflater.from(getActivity());
-        View mCustomView = mInflater.inflate(R.layout.custom_actionbar, null);
+        View mCustomView = mInflater.inflate(R.layout.custom_action_bar, null);
         TextView mTitleTextView = (TextView) mCustomView.findViewById(R.id.title_text);
         ImageView mBackArrow = (ImageView) mCustomView.findViewById(R.id.iv_back_arrow);
         mTitleTextView.setText("Write a Complaint");
@@ -451,18 +455,17 @@ public class ComplaintFragment extends Fragment {
      * Uploading the file to server
      */
 
-    private void showAlert(String message) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("Uploaded successfully")
-                .setCancelable(false)
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        getActivity().finish();
+    private void showAlert() {
+        DialogPlus dialog = DialogPlus.newDialog(getActivity())
+                .setContentHolder(new ViewHolder(R.layout.custom_dailog_box))
+                .setOnItemClickListener(new OnItemClickListener() {
+                    @Override
+                    public void onItemClick(DialogPlus dialog, Object item, View view, int position) {
                     }
-                });
-        AlertDialog alert = builder.create();
-        alert.setCancelable(false);
-        alert.show();
+                })
+                .setExpanded(false)  // This will enable the expand feature, (similar to android L share dialog)
+                .create();
+        dialog.show();
     }
 
 
