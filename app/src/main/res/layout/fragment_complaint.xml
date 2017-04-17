@@ -1,99 +1,87 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="16dp"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#fff"
     tools:context="com.ghosttech.kptrafficapp.fragments.ComplaintFragment">
 
     <!-- TODO: Update blank fragment layout -->
     <TableLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
-        <LinearLayout
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="wrap_content">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <com.jaredrummler.materialspinner.MaterialSpinner
-                    android:id="@+id/spinner"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="80dp"
+                    android:layout_weight="0.5"
+                    android:background="@color/colorPrimary"></LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="80dp"
+                    android:layout_weight="0.2"
+                    android:background="#fff"></LinearLayout>
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/imageView3"
+                android:layout_width="128dp"
+                android:layout_gravity="center"
+                android:layout_margin="10dp"
+                app:srcCompat="@drawable/main_screen_logo"
+                android:layout_height="128dp" />
+        </FrameLayout>
 
-                <com.wrapp.floatlabelededittext.FloatLabeledEditText
-                    android:id="@+id/view"
+        <LinearLayout
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:padding="16dp"
+            >
+            <com.jaredrummler.materialspinner.MaterialSpinner
+                android:id="@+id/spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+            <com.wrapp.floatlabelededittext.FloatLabeledEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <EditText
+                    android:id="@+id/et_description"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/spinner"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="44dp">
-
-                    <EditText
-                        android:id="@+id/et_description"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:backgroundTint="#fff"
-                        android:hint="Write to us...       "
-                        android:inputType="none"
-                        android:maxLines="10"
-                        android:textColor="#fff"
-                        android:textColorHint="#fff" />
-
-                </com.wrapp.floatlabelededittext.FloatLabeledEditText>
-            </LinearLayout>
-
-            <LinearLayout
+                    android:hint="Add Description"
+                    android:drawableRight="@drawable/edit"
+                    android:layout_margin="5dp"/>
+            </com.wrapp.floatlabelededittext.FloatLabeledEditText>
+            <ImageView
+                android:id="@+id/iv_camera"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:layout_gravity="center_horizontal"
+                android:src="@drawable/photo_camera"/>
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:id="@+id/iv_camera"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:src="@drawable/photo_camera" />
-
-                <ImageView
-                    android:id="@+id/iv_video"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:src="@drawable/video_camera"
-
-
-                    />
-            </LinearLayout>
-
-            <Button
-                android:id="@+id/btn_send"
-                android:layout_width="200dp"
-                android:layout_height="40dp"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/round_corner"
-                android:text="Send"
-                android:textColor="#fff"
-                android:textSize="18sp" />
+                android:gravity="center_horizontal"
+                android:text="Take Picture/Video"/>
+            <ImageView
+                android:id="@+id/iv_send_button"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:src="@drawable/send_complaint_icon"
+                android:layout_marginRight="10dp"
+                android:layout_gravity="end"/>
         </LinearLayout>
-        <ProgressBar
-            android:id="@+id/progressBar"
-            style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="fill_parent"
-            android:layout_height="20dp"
-            android:layout_marginBottom="35dp"
-            android:visibility="gone"/>
     </TableLayout>
 </ScrollView>

@@ -7,6 +7,7 @@
     android:padding="20dp">
 
     <LinearLayout
+        android:id="@+id/linear_layout_camera_image"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
@@ -23,6 +24,7 @@
             android:src="@drawable/photo_camera" />
 
         <TextView
+            android:id="@+id/tv_camera_picture"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
@@ -32,6 +34,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/linear_layout_camera_video"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
@@ -48,6 +51,7 @@
             android:src="@drawable/video_camera" />
 
         <TextView
+            android:id="@+id/tv_camera_video"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
