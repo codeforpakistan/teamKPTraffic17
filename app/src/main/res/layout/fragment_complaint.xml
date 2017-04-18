@@ -98,7 +98,7 @@
                         android:layout_width="50dp"
                         android:layout_height="50dp"
                         android:layout_gravity="center_horizontal"
-                        android:src="@drawable/complaint_camera" />
+                        android:src="@drawable/complaint_camera_icon" />
 
                     <TextView
                         android:layout_width="wrap_content"

@@ -245,7 +245,7 @@ public class ComplaintFragment extends Fragment {
                         });
                 try {
                     File msourceFile = new File(sourceFile.getPath());
-                    entity.addPart("image", new FileBody(msourceFile));
+                    entity.addPart("video", new FileBody(msourceFile));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -263,10 +263,10 @@ public class ComplaintFragment extends Fragment {
                 HttpEntity r_entity = response.getEntity();
                 int statusCode = response.getStatusLine().getStatusCode();
                 if (statusCode == 200) {
-
+                    pDialog.dismiss();
                     // Server response
                     fragment = new MainFragment();
-                    getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
+                    //getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
                     responseString = EntityUtils.toString(r_entity);
                     Log.d("zma response", responseString);
                     Looper.prepare();
@@ -422,16 +422,16 @@ public class ComplaintFragment extends Fragment {
                 .setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(DialogPlus dialog, View view) {
-                        final LinearLayout linearLayoutCamera = (LinearLayout) dialog.findViewById(R.id.linear_layout_camera_image);
-                        LinearLayout linearLayoutVideo = (LinearLayout) dialog.findViewById(R.id.linear_layout_camera_video);
-                        linearLayoutCamera.setOnClickListener(new View.OnClickListener() {
+                        final ImageView ivCameraPicture = (ImageView) dialog.findViewById(R.id.iv_camera_picture);
+                        ImageView ivCameraVideo = (ImageView) dialog.findViewById(R.id.iv_camera_video);
+                        ivCameraPicture.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
                                 cameraIntent();
 
                             }
                         });
-                        linearLayoutVideo.setOnClickListener(new View.OnClickListener() {
+                        ivCameraVideo.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
                                 cameraVIntent();
