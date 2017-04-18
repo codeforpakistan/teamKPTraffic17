@@ -195,9 +195,9 @@ public class ComplaintFragment extends Fragment {
             spComlaintType.startAnimation(shake);
         } else if (strDesciption.length() < 10) {
             etDescription.startAnimation(shake);
-        } else if (sourceFile.toString().length()==0) {
+        } else if (sourceFile == null) {
             ivStartCamera.startAnimation(shake);
-        }else{
+        } else {
             pDialog.show();
             new UploadFileToServer().execute();
         }
@@ -246,7 +246,7 @@ public class ComplaintFragment extends Fragment {
                 try {
                     File msourceFile = new File(sourceFile.getPath());
                     entity.addPart("image", new FileBody(msourceFile));
-                }catch(Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
                 // Adding file data to http body
@@ -390,8 +390,7 @@ public class ComplaintFragment extends Fragment {
                 }
 
             }
-        }
-        else if (requestCode == CAMERA_VIDEO_CAPTURE) {
+        } else if (requestCode == CAMERA_VIDEO_CAPTURE) {
 
             Uri picUri = data.getData();
             Bundle extras = data.getExtras();
