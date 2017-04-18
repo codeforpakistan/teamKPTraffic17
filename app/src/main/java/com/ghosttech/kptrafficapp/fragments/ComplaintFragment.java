@@ -389,29 +389,29 @@ public class ComplaintFragment extends Fragment {
                     e.printStackTrace();
                 }
 
+            }else if (requestCode == CAMERA_VIDEO_CAPTURE) {
+
+                Uri picUri = data.getData();
+                Bundle extras = data.getExtras();
+                String path = data.getData().toString();
+                sourceFile = new File(GeneralUtils.getRealPathFromURI(getActivity(), picUri));
+                Log.d("zma path 1111", sourceFile.toString());
+
+
+            } else if (resultCode == RESULT_LOAD_VIDEO) {
+
+                Uri selectedVideo = data.getData();
+                String[] filePathColumn = {MediaStore.Video.Media.DATA};
+                Cursor cursor = getActivity().getContentResolver().query(selectedVideo,
+                        filePathColumn, null, null, null);
+                cursor.moveToFirst();
+                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+                // String videoPath = cursor.getString(columnIndex);
+                String videoPath = data.getData().toString();
+                sourceFile = new File(videoPath);
+                cursor.close();
+
             }
-        } else if (requestCode == CAMERA_VIDEO_CAPTURE) {
-
-            Uri picUri = data.getData();
-            Bundle extras = data.getExtras();
-            String path = data.getData().toString();
-            sourceFile = new File(GeneralUtils.getRealPathFromURI(getActivity(), picUri));
-            Log.d("zma path 1111", sourceFile.toString());
-
-
-        } else if (resultCode == RESULT_LOAD_VIDEO) {
-
-            Uri selectedVideo = data.getData();
-            String[] filePathColumn = {MediaStore.Video.Media.DATA};
-            Cursor cursor = getActivity().getContentResolver().query(selectedVideo,
-                    filePathColumn, null, null, null);
-            cursor.moveToFirst();
-            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-            // String videoPath = cursor.getString(columnIndex);
-            String videoPath = data.getData().toString();
-            sourceFile = new File(videoPath);
-            cursor.close();
-
         }
 
     }
