@@ -395,7 +395,7 @@ public class ComplaintFragment extends Fragment {
             Uri picUri = data.getData();
             Bundle extras = data.getExtras();
             String path = data.getData().toString();
-            sourceFile = new File(picUri.getPath());
+            sourceFile = new File(GeneralUtils.getRealPathFromURI(getActivity(), picUri));
             Log.d("zma path 1111", sourceFile.toString());
 
 

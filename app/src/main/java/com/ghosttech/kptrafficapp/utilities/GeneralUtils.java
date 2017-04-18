@@ -73,4 +73,5 @@ public class GeneralUtils {
         int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
         return cursor.getString(idx);
     }
+
 }
