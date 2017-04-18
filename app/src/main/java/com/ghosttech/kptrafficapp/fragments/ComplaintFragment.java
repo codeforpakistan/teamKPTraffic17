@@ -195,7 +195,9 @@ public class ComplaintFragment extends Fragment {
             spComlaintType.startAnimation(shake);
         } else if (strDesciption.length() < 10) {
             etDescription.startAnimation(shake);
-        } else {
+        } else if (sourceFile.toString().length()==0) {
+            ivStartCamera.startAnimation(shake);
+        }else{
             pDialog.show();
             new UploadFileToServer().execute();
         }
@@ -230,7 +232,7 @@ public class ComplaintFragment extends Fragment {
             String responseString = null;
 
             HttpClient httpclient = new DefaultHttpClient();
-            HttpPost httppost = new HttpPost(Configuration.END_POINT_LIVE + "complaints/image");
+            HttpPost httppost = new HttpPost(Configuration.END_POINT_LIVE + "complaints/video");
 
             try {
                 HTTPMultiPartEntity entity = new HTTPMultiPartEntity(
