@@ -21,7 +21,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -36,7 +35,7 @@ import com.ghosttech.kptrafficapp.utilities.GeneralUtils;
 import com.ghosttech.kptrafficapp.utilities.HTTPMultiPartEntity;
 import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.orhanobut.dialogplus.DialogPlus;
-import com.orhanobut.dialogplus.OnItemClickListener;
+import com.orhanobut.dialogplus.OnClickListener;
 import com.orhanobut.dialogplus.ViewHolder;
 
 import org.apache.http.HttpEntity;
@@ -55,6 +54,8 @@ import java.io.IOException;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import io.nlopez.smartlocation.OnLocationUpdatedListener;
 import io.nlopez.smartlocation.SmartLocation;
+
+import static android.app.Activity.RESULT_CANCELED;
 
 public class ComplaintFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
@@ -76,10 +77,9 @@ public class ComplaintFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
     Fragment fragment;
     private Uri fileUri;
-    private static final int CAMERA_CAPTURE_IMAGE_REQUEST_CODE = 100;
     private static final int CAMERA_RECORD_VIDEO_REQUEST_CODE = 200;
     Animation shake;
-    ImageView ivCamera, ivVideo,btnSend;
+    ImageView ivStartCamera, ivSendComplaint;
     EditText etDescription;
     File sourceFile;
     final int CAMERA_CAPTURE = 1;
@@ -119,23 +119,23 @@ public class ComplaintFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_complaint, container, false);
         requestQueue = Volley.newRequestQueue(getActivity());
         spComlaintType = (MaterialSpinner) view.findViewById(R.id.spinner);
+        ivSendComplaint = (ImageView) view.findViewById(R.id.iv_send_button);
         spComlaintType.setItems("Complaint Type", "Traffic Jam", "Wardens Corruption", "Other");
         shake = AnimationUtils.loadAnimation(getActivity(), R.anim.shake);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
                     Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
         }
-        ivCamera = (ImageView) view.findViewById(R.id.iv_camera);
-        ivCamera.setOnClickListener(new View.OnClickListener() {
+        ivStartCamera = (ImageView) view.findViewById(R.id.iv_camera);
+        ivStartCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               // cameraIntent();
                 bottomCustomDialog();
             }
         });
         pDialog = new SweetAlertDialog(getActivity(), SweetAlertDialog.PROGRESS_TYPE);
         pDialog.getProgressHelper().setBarColor(Color.parseColor("#179e99"));
-        pDialog.setTitleText("Wait a while");
+        pDialog.setTitleText("Sending complaint");
         customActionBar();
         onSendButton();
         SmartLocation.with(getActivity()).location()
@@ -158,15 +158,6 @@ public class ComplaintFragment extends Fragment {
         }
     }
 
-    public void onSendButtonClick() {
-
-
-    }
-
-    public void checkParameters() {
-
-    }
-
     @Override
     public void onDetach() {
         super.onDetach();
@@ -179,8 +170,8 @@ public class ComplaintFragment extends Fragment {
     }
 
     public void onSendButton() {
-        btnSend = (ImageView) view.findViewById(R.id.iv_send_button);
-        btnSend.setOnClickListener(new View.OnClickListener() {
+
+        ivSendComplaint.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 inputValidation();
@@ -200,12 +191,10 @@ public class ComplaintFragment extends Fragment {
                 Log.d("zma id", spinnerID);
             }
         });
-
-        if (strDesciption.length() < 10) {
+        if (spComlaintType.getText().equals("Complaint Type")) {
+            spComlaintType.startAnimation(shake);
+        } else if (strDesciption.length() < 10) {
             etDescription.startAnimation(shake);
-        } else if (sourceFile.toString().length() == 0) {
-            ivCamera.startAnimation(shake);
-            Log.d("zma path else", sourceFile.toString());
         } else {
             pDialog.show();
             new UploadFileToServer().execute();
@@ -252,12 +241,13 @@ public class ComplaintFragment extends Fragment {
                                 publishProgress((int) ((num / (float) totalSize) * 100));
                             }
                         });
-
-                File msourceFile = new File(sourceFile.getPath());
-
+                try {
+                    File msourceFile = new File(sourceFile.getPath());
+                    entity.addPart("image", new FileBody(msourceFile));
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
                 // Adding file data to http body
-                entity.addPart("image", new FileBody(msourceFile));
-
                 // Extra parameters if you want to pass to server
                 entity.addPart("complaint_type_id", new StringBody("12"));
                 entity.addPart("signup_id", new StringBody("21"));
@@ -269,15 +259,17 @@ public class ComplaintFragment extends Fragment {
                 // Making server call
                 HttpResponse response = httpclient.execute(httppost);
                 HttpEntity r_entity = response.getEntity();
-
                 int statusCode = response.getStatusLine().getStatusCode();
                 if (statusCode == 200) {
+
                     // Server response
+                    fragment = new MainFragment();
+                    getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
                     responseString = EntityUtils.toString(r_entity);
-                    Log.d("zma response",responseString);
+                    Log.d("zma response", responseString);
                     Looper.prepare();
-                    if (responseString.contains("true")){
-                        pDialog.dismiss();
+                    if (responseString.contains("true")) {
+
                         new SweetAlertDialog(getActivity(), SweetAlertDialog.SUCCESS_TYPE)
                                 .setTitleText("Good job!")
                                 .setContentText("Your complaint has been registered!")
@@ -314,115 +306,6 @@ public class ComplaintFragment extends Fragment {
 
         }
     }
-
-
-//    private void postPictorialNews(final File file,final int id, final int signup_id,  final String description, final String lat, final String lon) {
-//        // loading or check internet connection or something...
-//        // ... then
-//
-//        final String url = Configuration.END_POINT_LIVE + "complaints/image";
-//
-//        VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.POST, url, new Response.Listener<NetworkResponse>() {
-//            @Override
-//            public void onResponse(NetworkResponse response) {
-//                Log.d("zma response url",url);
-//                String resultResponse = new String(response.data);
-//                Log.d("zma response 1",resultResponse);
-//                try {
-//                    JSONObject result = new JSONObject(resultResponse);
-//                    if (result.getBoolean("status")){
-//                        Log.d("zma response 2",String.valueOf(result));
-//                        pDialog.dismiss();
-//                    }else{
-//                        Log.d("zma response 3",String.valueOf(result));
-//                        pDialog.dismiss();
-//
-//
-//                    }
-//                    //TODO parse result and check status of uploading
-//                    // progressDialog.dismiss();
-//
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                    Log.d("zma exception",String.valueOf(e));
-//
-//                }
-//            }
-//        }, new Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//                // progressDialog.dismiss();
-//                NetworkResponse networkResponse = error.networkResponse;
-//                String errorMessage = "Unknown error";
-//                if (networkResponse == null) {
-//                    if (error.getClass().equals(TimeoutError.class)) {
-//                        errorMessage = "Request timeout";
-//                    } else if (error.getClass().equals(NoConnectionError.class)) {
-//                        errorMessage = "Failed to connect server";
-//                    }
-//                } else {
-//                    String result = new String(networkResponse.data);
-//                    try {
-//                        JSONObject response = new JSONObject(result);
-//                        String status = response.getString("status");
-//                        String message = response.getString("message");
-//                        // progressDialog.dismiss();
-//                        Log.e("Error Status", status);
-//                        Log.e("Error Message", message);
-//                        if (networkResponse.statusCode == 404) {
-//                            errorMessage = "Resource not found";
-//                        } else if (networkResponse.statusCode == 401) {
-//                            errorMessage = message + " Please login again";
-//                        } else if (networkResponse.statusCode == 400) {
-//                            errorMessage = message + " Check your inputs";
-//                        } else if (networkResponse.statusCode == 500) {
-//                            errorMessage = message + " Something is getting wrong";
-//                        }
-//                    } catch (JSONException e) {
-//                        e.printStackTrace();
-//                        Log.d("zma error js",String.valueOf(e));
-//
-//                    }
-//                }
-//                Log.i("Error", errorMessage);
-//                error.printStackTrace();
-//                Log.d("zma error lis",String.valueOf(error));
-//            }
-//        }) {
-//                @Override
-//                public String getBodyContentType() {
-//                    return "application/x-www-form-urlencoded;charset=UTF-8";
-//            }
-//            @Override
-//            protected Map<String, String> getParams() throws AuthFailureError{
-//                Map<String, String> params = new HashMap<>();
-//                params.put("complaint_type_id", String.valueOf(id));
-//                params.put("signup_id", String.valueOf(signup_id));
-//                params.put("description", description);
-//                params.put("latitude", lat);
-//                params.put("longitude", lon);
-//                return params;
-//            }
-//
-//            @Override
-//            protected Map<String, DataPart> getByteData() {
-//                Map<String, DataPart> params = new HashMap<>();
-//                // file name could found file base or direct access from real path
-//                // for now just get bitmap data from ImageView
-//                String mimeType = GeneralUtils.getMimeTypeofFile(file);
-//                Log.d("zma image",String.valueOf(file));
-//                params.put("image", new VolleyMultipartRequest.DataPart("file_name", GeneralUtils.getByteArrayFromFile(file), mimeType));
-//                return params;
-//            }
-//        };
-//
-//        multipartRequest.setRetryPolicy(new DefaultRetryPolicy(
-//                200000,
-//                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-//                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-//        requestQueue.add(multipartRequest);
-//    }
-
 
     public void customActionBar() {
         android.support.v7.app.ActionBar mActionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
@@ -490,17 +373,23 @@ public class ComplaintFragment extends Fragment {
             cursor.close();
             //ivContent.setImageBitmap(BitmapFactory.decodeFile(picturePath));
 
-        } else if (requestCode == CAMERA_CAPTURE) {
-            Bitmap photo = (Bitmap) data.getExtras().get("data");
-            // ivContent.setImageBitmap(photo);
+        } else if (requestCode != RESULT_CANCELED || data != null) {
+            if (requestCode == CAMERA_CAPTURE) {
+                try {
+                    Bitmap photo = (Bitmap) data.getExtras().get("data");
+                    // ivContent.setImageBitmap(photo);
+                    // CALL THIS METHOD TO GET THE URI FROM THE BITMAP
+                    Uri tempUri = GeneralUtils.getImageUri(getActivity(), photo);
+                    // CALL THIS METHOD TO GET THE ACTUAL PATH
+                    sourceFile = new File(GeneralUtils.getRealPathFromURI(getActivity(), tempUri));
+                    Log.d("zma path 1", sourceFile.toString());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
-
-            // CALL THIS METHOD TO GET THE URI FROM THE BITMAP
-            Uri tempUri = GeneralUtils.getImageUri(getActivity(), photo);
-            // CALL THIS METHOD TO GET THE ACTUAL PATH
-            sourceFile = new File(GeneralUtils.getRealPathFromURI(getActivity(), tempUri));
-            Log.d("zma path 1", sourceFile.toString());
-        } else if (requestCode == CAMERA_VIDEO_CAPTURE) {
+            }
+        }
+        else if (requestCode == CAMERA_VIDEO_CAPTURE) {
 
             Uri picUri = data.getData();
             Bundle extras = data.getExtras();
@@ -526,41 +415,27 @@ public class ComplaintFragment extends Fragment {
 
     }
 
-
-    /**
-     * Uploading the file to server
-     */
-
     private void bottomCustomDialog() {
         DialogPlus dialog = DialogPlus.newDialog(getActivity())
                 .setContentHolder(new ViewHolder(R.layout.custom_bottom_option_menu))
-                .setOnItemClickListener(new OnItemClickListener() {
+                .setOnClickListener(new OnClickListener() {
                     @Override
-                    public void onItemClick(DialogPlus dialog, Object item, View view, int position) {
-                        LinearLayout ivCameraPhoto = (LinearLayout)view.findViewById(R.id.linear_layout_camera_image);
-                        TextView tvCameraPicture = (TextView) view.findViewById(R.id.tv_camera_picture);
-                        TextView tvCameraVideo = (TextView) view.findViewById(R.id.tv_camera_video);
-                        String text = tvCameraPicture.getText().toString();
-                        Log.d("zma text",text);
-                        if (text.equals("Take Picture")){
-                            cameraIntent();
-                        }else{
-                            cameraVIntent();
-                        }
-//                        LinearLayout ivCameraVideo = (LinearLayout)view.findViewById(R.id.linear_layout_camera_video);
-//                        ivCameraPhoto.setOnClickListener(new View.OnClickListener() {
-//                            @Override
-//                            public void onClick(View view) {
-//                                cameraIntent();
-//                            }
-//                        });
-//                        ivCameraVideo.setOnClickListener(new View.OnClickListener() {
-//                            @Override
-//                            public void onClick(View view) {
-//                                cameraVIntent();
-//                            }
-//                        });
-                       Log.d("zma pos",String.valueOf(view+"item:"+item+"position:"+position));
+                    public void onClick(DialogPlus dialog, View view) {
+                        final LinearLayout linearLayoutCamera = (LinearLayout) dialog.findViewById(R.id.linear_layout_camera_image);
+                        LinearLayout linearLayoutVideo = (LinearLayout) dialog.findViewById(R.id.linear_layout_camera_video);
+                        linearLayoutCamera.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                cameraIntent();
+
+                            }
+                        });
+                        linearLayoutVideo.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                cameraVIntent();
+                            }
+                        });
                     }
                 })
                 .setExpanded(false)  // This will enable the expand feature, (similar to android L share dialog)

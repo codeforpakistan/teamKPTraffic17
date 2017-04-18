@@ -1,8 +1,8 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="#fff"
     tools:context="com.ghosttech.kptrafficapp.fragments.ComplaintFragment">
 
@@ -22,66 +22,109 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="80dp"
+                    android:layout_height="130dp"
                     android:layout_weight="0.5"
                     android:background="@color/colorPrimary"></LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="80dp"
+                    android:layout_height="60dp"
                     android:layout_weight="0.2"
                     android:background="#fff"></LinearLayout>
             </LinearLayout>
 
             <ImageView
                 android:id="@+id/imageView3"
-                android:layout_width="128dp"
+                android:layout_width="96dp"
+                android:layout_height="96dp"
                 android:layout_gravity="center"
-                android:layout_margin="10dp"
-                app:srcCompat="@drawable/main_screen_logo"
-                android:layout_height="128dp" />
+                android:layout_marginTop="35dp"
+                app:srcCompat="@drawable/main_screen_logo" />
         </FrameLayout>
 
         <LinearLayout
-            android:layout_height="wrap_content"
             android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp"
-            >
-            <com.jaredrummler.materialspinner.MaterialSpinner
-                android:id="@+id/spinner"
+            android:padding="16dp">
+
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-            <com.wrapp.floatlabelededittext.FloatLabeledEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <com.jaredrummler.materialspinner.MaterialSpinner
+                    android:id="@+id/spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="kuch bhi" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1.7dp"
+                    android:background="#EEEEEE" />
+
                 <EditText
                     android:id="@+id/et_description"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Add Description"
+                    android:layout_margin="5dp"
+                    android:backgroundTint="#fff"
                     android:drawableRight="@drawable/edit"
-                    android:layout_margin="5dp"/>
-            </com.wrapp.floatlabelededittext.FloatLabeledEditText>
-            <ImageView
-                android:id="@+id/iv_camera"
-                android:layout_width="64dp"
-                android:layout_height="64dp"
-                android:layout_gravity="center_horizontal"
-                android:src="@drawable/photo_camera"/>
-            <TextView
+                    android:hint="Add Description"
+                    android:paddingLeft="18dp"
+                    android:textSize="15sp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1.7dp"
+                    android:background="#EEEEEE" />
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:gravity="center_horizontal"
-                android:text="Take Picture/Video"/>
-            <ImageView
-                android:id="@+id/iv_send_button"
-                android:layout_width="64dp"
-                android:layout_height="64dp"
-                android:src="@drawable/send_complaint_icon"
-                android:layout_marginRight="10dp"
-                android:layout_gravity="end"/>
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginTop="10dp"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:id="@+id/iv_camera"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_gravity="center_horizontal"
+                        android:src="@drawable/complaint_camera" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="5dp"
+                        android:text="Take Picture/Video" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:id="@+id/iv_send_button"
+                        android:layout_width="64dp"
+                        android:layout_height="64dp"
+                        android:layout_gravity="end"
+                        android:layout_marginRight="5dp"
+                        android:layout_marginTop="50dp"
+                        android:src="@drawable/send_complaint_icon" />
+                </LinearLayout>
+            </LinearLayout>
+
         </LinearLayout>
     </TableLayout>
 </ScrollView>
