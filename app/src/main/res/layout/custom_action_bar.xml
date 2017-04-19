@@ -5,8 +5,8 @@
     android:background="@color/colorPrimary">
     <ImageView
         android:id="@+id/iv_back_arrow"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
         android:src="@drawable/back_arrow" />
@@ -19,6 +19,7 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="#fff"
         android:paddingTop="5dp"
+        android:textStyle="bold"
         android:text="fetching location..."
         android:textSize="15sp"
         android:layout_marginLeft="10dp"

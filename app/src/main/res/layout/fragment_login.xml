@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/app_background"
     android:padding="16dp">
 
     <TableLayout
@@ -15,15 +16,15 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="10dp"
+            android:layout_margin="40dp"
             android:orientation="vertical">
 
             <ImageView
                 android:id="@+id/imageView9"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
+                android:layout_width="130dp"
+                android:layout_height="130dp"
                 android:layout_gravity="center_horizontal"
-                android:src="@mipmap/ic_launcher" />
+                android:src="@drawable/main_layered_logo" />
 
         </LinearLayout>
 
@@ -46,7 +47,7 @@
                 android:id="@+id/view8"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
+                android:layout_marginLeft="10dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginTop="10dp">
 
@@ -62,52 +63,15 @@
                     android:textColorHint="#fff" />
             </com.wrapp.floatlabelededittext.FloatLabeledEditText>
         </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:orientation="horizontal"
-            android:visibility="gone">
-
-            <ImageView
-                android:id="@+id/imageView100"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="30dp"
-                android:src="@drawable/password_icon" />
-
-            <com.wrapp.floatlabelededittext.FloatLabeledEditText
-                android:id="@+id/view9"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginTop="10dp">
-
-                <EditText
-                    android:id="@+id/et_password_login"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:backgroundTint="#fff"
-                    android:hint="Password"
-                    android:inputType="textPassword"
-                    android:textColor="#fff"
-                    android:textColorHint="#fff" />
-            </com.wrapp.floatlabelededittext.FloatLabeledEditText>
-        </LinearLayout>
-
-
             <Button
                 android:id="@+id/btn_submit"
-                android:layout_width="200dp"
+                android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="10dp"
-                android:text="Login"
+                android:text="Sign In"
                 android:textColor="#fff"
-                android:background="@drawable/round_corner"
+                android:background="@color/button_color"
                 android:textSize="18sp" />
         <TextView
             android:id="@+id/tvSkip"
@@ -118,7 +82,7 @@
             android:layout_margin="30dp"
             android:layout_toEndOf="@+id/btnSubmit"
             android:layout_toRightOf="@+id/btnSubmit"
-            android:text="register here"
+            android:text="REGISTER HERE"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="#fff"
             android:textStyle="bold" />

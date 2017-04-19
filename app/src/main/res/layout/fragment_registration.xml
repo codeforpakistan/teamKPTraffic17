@@ -4,6 +4,8 @@
     android:layout_height="match_parent"
     xmlns:float="http://schemas.android.com/tools"
     android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@color/app_background"
 >
 
     <LinearLayout
@@ -30,7 +32,7 @@
                 android:id="@+id/view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
+                android:layout_marginLeft="10dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginTop="10dp">
 
@@ -68,7 +70,7 @@
                 android:id="@+id/view1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
+                android:layout_marginLeft="10dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginTop="10dp">
 
@@ -105,7 +107,7 @@
                 android:id="@+id/view8"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
+                android:layout_marginLeft="10dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginTop="10dp">
 
@@ -139,7 +141,7 @@
                 android:id="@+id/view9"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
+                android:layout_marginLeft="10dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginTop="10dp">
 
@@ -157,13 +159,13 @@
 
         <Button
             android:id="@+id/btn_submit"
-            android:layout_width="200dp"
-            android:layout_height="40dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="10dp"
-            android:text="Register"
+            android:text="Create Account"
             android:textColor="#fff"
-            android:background="@drawable/round_corner"
+            android:background="@color/button_color"
             android:textSize="18sp" />
 
 

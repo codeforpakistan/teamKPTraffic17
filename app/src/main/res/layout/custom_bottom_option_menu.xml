@@ -21,7 +21,7 @@
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:layout_gravity="center_horizontal"
-            android:src="@drawable/photo_camera" />
+            android:src="@drawable/photo_camera_icon" />
 
         <TextView
             android:id="@+id/tv_camera_picture"
@@ -48,7 +48,7 @@
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:layout_gravity="center_horizontal"
-            android:src="@drawable/video_camera" />
+            android:src="@drawable/video_camera_icon" />
 
         <TextView
             android:id="@+id/tv_camera_video"
