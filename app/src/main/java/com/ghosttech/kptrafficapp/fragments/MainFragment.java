@@ -147,6 +147,22 @@ public class MainFragment extends Fragment {
                         addToBackStack("tag").commit();
             }
         });
+        btnLiveTrafficUpdates.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                fragment = new LiveUpdateFragment();
+                getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).
+                        addToBackStack("tag").commit();
+            }
+        });
+        btnLicenseVerification.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                fragment = new LicenseFragment();
+                getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).
+                        addToBackStack("tag").commit();
+            }
+        });
 
     }
 
