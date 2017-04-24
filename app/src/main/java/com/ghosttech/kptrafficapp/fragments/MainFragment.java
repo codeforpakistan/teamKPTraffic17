@@ -1,5 +1,6 @@
 package com.ghosttech.kptrafficapp.fragments;
 
+import android.app.Dialog;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -8,19 +9,39 @@ import android.os.Build;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatEditText;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.ghosttech.kptrafficapp.R;
+import com.ghosttech.kptrafficapp.utilities.Configuration;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import io.nlopez.smartlocation.OnLocationUpdatedListener;
 import io.nlopez.smartlocation.SmartLocation;
@@ -44,9 +65,15 @@ public class MainFragment extends Fragment {
     private String mParam2;
     Fragment fragment;
     View view;
+    RequestQueue mRequestQueue;
+    EditText etLicNumber;
+    Button btnShowLicRecord;
     double dblLat, dblLon;
-    String strCityName, strCheckLatLon;
+    String strCityName, strCheckLatLon, strLicenseNumber, strCNIC, strResponseLicenseID, strResponseDLNumber,
+            strResponseCNIC, strResponseLicHolderName, strResponseLicHolderFatherName, strResponseLicType,
+            strResponseExpiryDate, strResponseLicHolderDistrict;
     TextView mTitleTextView;
+    Animation shake;
     LinearLayout btnComplaintSystem, btnLiveTrafficUpdates, btnChallanTracking, btnTrafficEducation,
             btnLicenseVerification, btnEmergencyContacts;
     private OnFragmentInteractionListener mListener;
@@ -79,6 +106,8 @@ public class MainFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_main, container, false);
+        shake = AnimationUtils.loadAnimation(getActivity(), R.anim.shake);
+        mRequestQueue = Volley.newRequestQueue(getActivity());
         onButtonClick();
         customActionBar();
         //((AppCompatActivity) getActivity()).getSupportActionBar().hide();
@@ -158,9 +187,9 @@ public class MainFragment extends Fragment {
         btnLicenseVerification.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                fragment = new LicenseFragment();
-                getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).
-                        addToBackStack("tag").commit();
+                customDialog();
+
+
             }
         });
 
@@ -182,5 +211,93 @@ public class MainFragment extends Fragment {
         mBackArrow.setImageResource(R.drawable.map_pointer);
         mActionBar.setCustomView(mCustomView);
         mActionBar.setDisplayShowCustomEnabled(true);
+    }
+
+    public void customDialog() {
+        final Dialog dialog = new Dialog(getActivity());
+        //dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.custom_input_dialog);
+        dialog.setCancelable(true);
+        etLicNumber = (EditText) dialog.findViewById(R.id.et_verify_license);
+        btnShowLicRecord = (Button) dialog.findViewById(R.id.btn_search_license_record);
+        strLicenseNumber = etLicNumber.getText().toString();
+        Log.d("zma DL number", strLicenseNumber);
+
+        final Bundle bundle = new Bundle();
+        btnShowLicRecord.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                fragment = new LicenseFragment();
+                bundle.putString("license_number", strResponseDLNumber);
+                bundle.putString("name", strResponseLicHolderName);
+                fragment.setArguments(bundle);
+                if (strLicenseNumber.toString().length() == 12) {
+
+                } else if (strLicenseNumber.toString().length() > 13) {
+                    strCNIC = strLicenseNumber;
+                } else if (!strLicenseNumber.toString().equals("") || strLicenseNumber.toString().length() >= 12) {
+                    getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).
+                            addToBackStack("tag").commit();
+                    Log.d("zma DL number not wala", strLicenseNumber);
+                    apiCall();
+                } else {
+                    etLicNumber.startAnimation(shake);
+                }
+
+
+            }
+        });
+        dialog.show();
+    }
+
+    public void apiCall() {
+        String url = Configuration.END_POINT_LIVE + "license_verification/get_license_data";
+        Log.d("zma log", url);
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    boolean status = response.getBoolean("status");
+                    if (status) {
+                        JSONArray jsonArray = response.getJSONArray("Data");
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            JSONObject jsonObject = jsonArray.getJSONObject(i);
+                            strResponseDLNumber = jsonObject.getString("dl_number");
+                            strResponseCNIC = jsonObject.getString("cnic");
+                            strResponseLicHolderName = jsonObject.getString("name");
+                            strResponseLicHolderFatherName = jsonObject.getString("father_name");
+                            strResponseLicType = jsonObject.getString("license_type");
+                            strResponseExpiryDate = jsonObject.getString("License_expiry_date");
+                            strResponseLicHolderDistrict = jsonObject.getString("district");
+                        }
+
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        }) {
+            @Override
+            public String getBodyContentType() {
+                return "application/x-www-form-urlencoded;charset=UTF-8";
+            }
+
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("cnic", strCNIC);
+                params.put("dl_number", strLicenseNumber);
+                return params;
+            }
+        };
+        mRequestQueue.add(jsonObjectRequest);
     }
 }
