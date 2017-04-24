@@ -232,7 +232,7 @@ public class ComplaintFragment extends Fragment {
             String responseString = null;
 
             HttpClient httpclient = new DefaultHttpClient();
-            HttpPost httppost = new HttpPost(Configuration.END_POINT_LIVE + "complaints/video");
+            HttpPost httppost = new HttpPost(Configuration.END_POINT_LIVE + "complaints/image");
 
             try {
                 HTTPMultiPartEntity entity = new HTTPMultiPartEntity(
@@ -245,7 +245,7 @@ public class ComplaintFragment extends Fragment {
                         });
                 try {
                     File msourceFile = new File(sourceFile.getPath());
-                    entity.addPart("video", new FileBody(msourceFile));
+                    entity.addPart("image", new FileBody(msourceFile));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -399,7 +399,6 @@ public class ComplaintFragment extends Fragment {
 
 
             } else if (resultCode == RESULT_LOAD_VIDEO) {
-
                 Uri selectedVideo = data.getData();
                 String[] filePathColumn = {MediaStore.Video.Media.DATA};
                 Cursor cursor = getActivity().getContentResolver().query(selectedVideo,
