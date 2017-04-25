@@ -24,11 +24,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.ghosttech.kptrafficapp.R;
 import com.ghosttech.kptrafficapp.utilities.Configuration;
@@ -43,6 +46,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import io.nlopez.smartlocation.OnLocationUpdatedListener;
 import io.nlopez.smartlocation.SmartLocation;
 
@@ -65,6 +69,7 @@ public class MainFragment extends Fragment {
     private String mParam2;
     Fragment fragment;
     View view;
+    Dialog dialog;
     RequestQueue mRequestQueue;
     EditText etLicNumber;
     Button btnShowLicRecord;
@@ -214,67 +219,113 @@ public class MainFragment extends Fragment {
     }
 
     public void customDialog() {
-        final Dialog dialog = new Dialog(getActivity());
+         dialog = new Dialog(getActivity());
         //dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.custom_input_dialog);
         dialog.setCancelable(true);
         etLicNumber = (EditText) dialog.findViewById(R.id.et_verify_license);
         btnShowLicRecord = (Button) dialog.findViewById(R.id.btn_search_license_record);
-        strLicenseNumber = etLicNumber.getText().toString();
-        Log.d("zma DL number", strLicenseNumber);
-
-        final Bundle bundle = new Bundle();
+        dialog.show();
+        inputValidation();
+    }
+    public void inputValidation(){
         btnShowLicRecord.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dialog.dismiss();
-                fragment = new LicenseFragment();
-                bundle.putString("license_number", strResponseDLNumber);
-                bundle.putString("name", strResponseLicHolderName);
-                fragment.setArguments(bundle);
-                if (strLicenseNumber.toString().length() == 12) {
-
-                } else if (strLicenseNumber.toString().length() > 13) {
-                    strCNIC = strLicenseNumber;
-                } else if (!strLicenseNumber.toString().equals("") || strLicenseNumber.toString().length() >= 12) {
-                    getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).
-                            addToBackStack("tag").commit();
-                    Log.d("zma DL number not wala", strLicenseNumber);
-                    apiCall();
-                } else {
+                strLicenseNumber = etLicNumber.getText().toString();
+                if (strLicenseNumber.toString().equals("")
+                        || strLicenseNumber.toString().length() < 12) {
+                    Log.d("zma else", strLicenseNumber);
                     etLicNumber.startAnimation(shake);
+                } else if (strLicenseNumber.toString().length() == 12) {
+                    Log.d("zma License", strLicenseNumber);
+                    apiCall(strLicenseNumber);
+                } else if (strLicenseNumber.toString().length() == 13) {
+                    strCNIC = strLicenseNumber;
+                    Log.d("zma CNiC Cnic", strLicenseNumber);
+                    apiCall(strCNIC);
                 }
-
 
             }
         });
-        dialog.show();
     }
 
-    public void apiCall() {
+    public void apiCall(final String strParamLicCNIC) {
         String url = Configuration.END_POINT_LIVE + "license_verification/get_license_data";
-        Log.d("zma log", url);
+//
+//        Log.d("zma url", url);
+//        StringRequest jsonObjRequest = new StringRequest(Request.Method.POST,
+//                url,
+//                new Response.Listener<String>() {
+//                    @Override
+//                    public void onResponse(String response) {
+//                        boolean status = response.contains("true");
+//                        Log.d("zma response",String.valueOf(response));
+//                        if (status) {
+//                        } else if (response.contains("false")) {
+//                            new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
+//                                    .setTitleText("Oops...")
+//                                    .setContentText("CNIC already exists!")
+//                                    .show();
+//                        }
+//
+//                    }
+//                }, new Response.ErrorListener() {
+//
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+//                new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
+//                        .setTitleText("Oops...")
+//                        .setContentText("Server Error!")
+//                        .show();
+//                Log.d("zma error registration", String.valueOf(error));
+//            }
+//        }) {
+//            @Override
+//            public String getBodyContentType() {
+//                return "application/x-www-form-urlencoded;charset=UTF-8";
+//            }
+//
+//            @Override
+//            protected Map<String, String> getParams() throws AuthFailureError {
+//                Map<String, String> params = new HashMap<>();
+//                params.put("cnic", strCNIC);
+//                Log.d("zma params",String.valueOf(params));
+//                return params;
+//            }
+//
+//        };
+//
+
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 try {
                     boolean status = response.getBoolean("status");
-                    if (status) {
-                        JSONArray jsonArray = response.getJSONArray("Data");
-                        for (int i = 0; i < jsonArray.length(); i++) {
-                            JSONObject jsonObject = jsonArray.getJSONObject(i);
-                            strResponseDLNumber = jsonObject.getString("dl_number");
-                            strResponseCNIC = jsonObject.getString("cnic");
-                            strResponseLicHolderName = jsonObject.getString("name");
-                            strResponseLicHolderFatherName = jsonObject.getString("father_name");
-                            strResponseLicType = jsonObject.getString("license_type");
-                            strResponseExpiryDate = jsonObject.getString("License_expiry_date");
-                            strResponseLicHolderDistrict = jsonObject.getString("district");
-                        }
-
+                    String strMessage = response.getString("message");
+                    Log.d("zma status", strMessage);
+                    JSONArray jsonArray = response.getJSONArray("data");
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        JSONObject jsonObject = jsonArray.getJSONObject(i);
+                        strResponseDLNumber = jsonObject.getString("dl_number");
+                        strResponseCNIC = jsonObject.getString("cnic");
+                        strResponseLicHolderName = jsonObject.getString("name");
+                        strResponseLicHolderFatherName = jsonObject.getString("father_name");
+                        strResponseLicType = jsonObject.getString("license_type");
+                        strResponseExpiryDate = jsonObject.getString("License_expiry_date");
+                        strResponseLicHolderDistrict = jsonObject.getString("district");
+                        Log.d("zma response", response.toString());
+                        fragment = new LicenseFragment();
+                        getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).
+                                addToBackStack("tag").commit();
                     }
+
                 } catch (JSONException e) {
                     e.printStackTrace();
+                    new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
+                            .setTitleText("Oops...")
+                            .setContentText("No Data for given CNIC or License!")
+                            .show();
                 }
 
 
@@ -282,6 +333,10 @@ public class MainFragment extends Fragment {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
+                        .setTitleText("Oops...")
+                        .setContentText("Server Error!")
+                        .show();
 
             }
         }) {
@@ -293,11 +348,15 @@ public class MainFragment extends Fragment {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
-                params.put("cnic", strCNIC);
-                params.put("dl_number", strLicenseNumber);
+                params.put("cnic", strParamLicCNIC);
+                Log.d("params", String.valueOf(params));
                 return params;
+
             }
         };
+        jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(200000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         mRequestQueue.add(jsonObjectRequest);
     }
 }
