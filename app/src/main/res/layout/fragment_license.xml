@@ -32,101 +32,153 @@
 
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="0sp"
+                            android:layout_height="wrap_content"
                             android:layout_marginTop="40dp"
-                            android:layout_weight="2"
                             android:orientation="horizontal">
 
                             <TextView
                                 android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
+                                android:layout_height="match_parent"
                                 android:layout_weight="1"
-                                android:gravity="center"
+                                android:gravity="left"
                                 android:text="Name"
                                 android:textColor="#669d90"
-                                android:textSize="18sp"
+                                android:textSize="15sp"
                                 android:textStyle="bold" />
 
                             <TextView
                                 android:id="@+id/tv_name_lic_holder"
                                 android:layout_width="0dp"
-                                android:layout_height="wrap_content"
+                                android:layout_height="match_parent"
                                 android:layout_weight="1"
-                                android:gravity="center"
+                                android:gravity="left"
                                 android:text="Ali Gul"
                                 android:textColor="#bebdbe"
-                                android:textSize="18sp" />
+                                android:textSize="15sp" />
 
                         </LinearLayout>
 
                         <View
                             android:layout_width="match_parent"
                             android:layout_height="1.7dp"
-                            android:layout_marginTop="5dp"
                             android:background="#EEEEEE" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="0sp"
+                            android:layout_height="wrap_content"
                             android:layout_marginTop="20dp"
-                            android:layout_weight="2"
                             android:orientation="horizontal">
 
                             <TextView
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
                                 android:layout_weight="1"
-                                android:gravity="center"
+                                android:gravity="left"
                                 android:text="Father Name"
                                 android:textColor="#45a7a4"
-                                android:textSize="18sp"
+                                android:textSize="15sp"
                                 android:textStyle="bold" />
 
                             <TextView
                                 android:id="@+id/tv_fn_lic_holder"
                                 android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="15sp"
+                                android:layout_height="match_parent"
                                 android:layout_weight="1"
-                                android:gravity="center"
+                                android:gravity="left"
                                 android:text="Gul Bashsah"
                                 android:textColor="#bebdbe"
-                                android:textSize="18sp" />
+                                android:textSize="15sp" />
                         </LinearLayout>
 
                         <View
                             android:layout_width="match_parent"
                             android:layout_height="1.7dp"
-                            android:layout_marginTop="5dp"
 
                             android:background="#EEEEEE" />
-
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="0sp"
+                            android:layout_height="wrap_content"
                             android:layout_marginTop="20dp"
-                            android:layout_weight="2"
-                            android:gravity="center"
                             android:orientation="horizontal">
 
                             <TextView
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
                                 android:layout_weight="1"
-                                android:gravity="center"
+                                android:gravity="left"
+                                android:text="CNIC Number"
+                                android:textColor="#45a7a4"
+                                android:textSize="15sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/tv_cnic"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:gravity="left"
+                                android:text="12345678900987"
+                                android:textColor="#bebdbe"
+                                android:textSize="15sp" />
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1.7dp"
+                            android:background="#EEEEEE" />
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="20dp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:gravity="left"
+                                android:text="License Number"
+                                android:textColor="#45a7a4"
+                                android:textSize="15sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/tv_license_number"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:gravity="left"
+                                android:text="098765432112"
+                                android:textColor="#bebdbe"
+                                android:textSize="15sp" />
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1.7dp"
+                            android:background="#EEEEEE" />
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="20dp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:gravity="left"
                                 android:text="District"
                                 android:textColor="#45a7a4"
-                                android:textSize="18sp"
+                                android:textSize="15sp"
                                 android:textStyle="bold" />
 
                             <TextView
                                 android:id="@+id/tv_district_lic_holder"
                                 android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="75sp"
+                                android:layout_height="match_parent"
                                 android:layout_weight="1"
-                                android:gravity="center"
+                                android:gravity="left"
                                 android:text="Nowshera"
                                 android:textColor="#bebdbe"
                                 android:textSize="18sp" />
@@ -135,118 +187,69 @@
                         <View
                             android:layout_width="match_parent"
                             android:layout_height="1.7dp"
-                            android:layout_marginTop="5dp"
-
                             android:background="#EEEEEE" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="0sp"
+                            android:layout_height="wrap_content"
                             android:layout_marginTop="20dp"
-                            android:layout_weight="2"
-                            android:gravity="center"
                             android:weightSum="1">
 
                             <TextView
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
                                 android:layout_weight="0.50"
-                                android:gravity="center"
+                                android:gravity="left"
                                 android:text="License Type"
                                 android:textColor="#45a7a4"
-                                android:textSize="18sp"
+                                android:textSize="15sp"
                                 android:textStyle="bold" />
 
                             <TextView
                                 android:id="@+id/tv_lic_type"
                                 android:layout_width="0dp"
-                                android:layout_height="wrap_content"
+                                android:layout_height="match_parent"
                                 android:layout_weight="0.50"
-                                android:gravity="center"
-                                android:text="LTV"
+                                android:gravity="left"
+                                android:text="M.CYCLE + M.CAR/JEEP ONLY"
                                 android:textColor="#bebdbe"
-                                android:textSize="18sp" />
+                                android:textSize="15sp" />
                         </LinearLayout>
 
                         <View
                             android:layout_width="match_parent"
                             android:layout_height="1.7dp"
-                            android:layout_marginTop="5dp"
-
                             android:background="#EEEEEE" />
-
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="0sp"
+                            android:layout_height="wrap_content"
                             android:layout_marginTop="20dp"
-                            android:layout_weight="2"
-                            android:gravity="center_horizontal"
                             android:orientation="horizontal">
 
                             <TextView
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
                                 android:layout_weight="1"
-                                android:gravity="center"
-                                android:text="Issue Date"
-                                android:textColor="#45a7a4"
-                                android:textSize="18sp"
-                                android:textStyle="bold" />
-
-                            <TextView
-                                android:id="@+id/tv_issue_date"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="45sp"
-                                android:layout_weight="1"
-                                android:gravity="center"
-                                android:text="20/12/2012"
-                                android:textColor="#bebdbe"
-                                android:textSize="18sp" />
-                        </LinearLayout>
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1.7dp"
-                            android:layout_marginTop="5dp"
-
-                            android:background="#EEEEEE" />
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="0sp"
-                            android:layout_marginTop="20dp"
-                            android:layout_weight="2"
-                            android:gravity="center_horizontal"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:layout_weight="1"
-                                android:gravity="center"
+                                android:gravity="left"
                                 android:text="Expiry Date"
                                 android:textColor="#45a7a4"
-                                android:textSize="18sp"
+                                android:textSize="15sp"
                                 android:textStyle="bold" />
 
                             <TextView
                                 android:id="@+id/tv_expiry_date"
                                 android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="40dp"
+                                android:layout_height="match_parent"
                                 android:layout_weight="1"
-                                android:gravity="center"
+                                android:gravity="left"
                                 android:text="20/12/2016"
                                 android:textColor="#bebdbe"
-                                android:textSize="18sp" />
+                                android:textSize="15sp" />
                         </LinearLayout>
 
                         <View
                             android:layout_width="match_parent"
                             android:layout_height="1.7dp"
-                            android:layout_marginTop="5dp"
-
                             android:background="#EEEEEE" />
                     </LinearLayout>
             </TableLayout>

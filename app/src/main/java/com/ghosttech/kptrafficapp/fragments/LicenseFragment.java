@@ -38,8 +38,9 @@ public class LicenseFragment extends Fragment {
     private String mParam2;
     EditText etLicNumber;
     Button btnShowLicRecord;
-    String strLicenseNumber;
-    TextView tvLicHolderName, tvLicHolderFatherName, tvLicHolderDistrict, tvLicType, tvLicIssueDate, tvLisExpiryDate;
+    String strGetLicenseNumber, strGetLicHolderName, strGetLicHolderFName, strGetLicType, strLicDistrict, strLicExpiryDate;
+    TextView tvLicHolderName, tvLicHolderFatherName, tvLicHolderDistrict, tvLicType, tvLicIssueDate,
+            tvLisExpiryDate,tvCNICNumber,tvLicenseNumber;
     private OnFragmentInteractionListener mListener;
 
     public LicenseFragment() {
@@ -69,13 +70,28 @@ public class LicenseFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-            view = inflater.inflate(R.layout.fragment_license, container, false);
-            tvLicHolderName = (TextView) view.findViewById(R.id.tv_name_lic_holder);
-            tvLicHolderFatherName = (TextView) view.findViewById(R.id.tv_fn_lic_holder);
-            tvLicType = (TextView) view.findViewById(R.id.tv_lic_type);
-            tvLicHolderDistrict = (TextView) view.findViewById(R.id.tv_district_lic_holder);
-            tvLicIssueDate = (TextView) view.findViewById(R.id.tv_issue_date);
-            tvLisExpiryDate = (TextView) view.findViewById(R.id.tv_expiry_date);
+        view = inflater.inflate(R.layout.fragment_license, container, false);
+        tvLicHolderName = (TextView) view.findViewById(R.id.tv_name_lic_holder);
+        tvLicHolderFatherName = (TextView) view.findViewById(R.id.tv_fn_lic_holder);
+        tvLicType = (TextView) view.findViewById(R.id.tv_lic_type);
+        tvLicHolderDistrict = (TextView) view.findViewById(R.id.tv_district_lic_holder);
+        tvLisExpiryDate = (TextView) view.findViewById(R.id.tv_expiry_date);
+        tvLicenseNumber = (TextView)view.findViewById(R.id.tv_license_number);
+        tvCNICNumber = (TextView)view.findViewById(R.id.tv_cnic);
+        Bundle args = new Bundle(getArguments());
+
+        /*strGetLicenseNumber = String.valueOf(args.get("name"));
+        strGetLicHolderFName = String.valueOf(args.get("f_name"));
+        strGetLicType = String.valueOf("district"+"expiry_date");*/
+
+        tvLicHolderName.setText(String.valueOf(args.get("name")));
+        tvLicHolderDistrict.setText(String.valueOf(args.get("district")));
+        tvLicHolderFatherName.setText(String.valueOf(args.get("f_name")));
+        tvLisExpiryDate.setText(String.valueOf(args.get("expiry_date")));
+        tvLicType.setText(String.valueOf(args.get("lic_type")));
+        tvCNICNumber.setText(String.valueOf(args.get("cnic")));
+        tvLicenseNumber.setText(String.valueOf(args.get("license_number")));
+
 
         return view;
     }

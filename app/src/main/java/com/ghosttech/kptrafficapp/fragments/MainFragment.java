@@ -249,6 +249,7 @@ public class MainFragment extends Fragment {
 
     public void apiCall(final String cnic) {
         String url = Configuration.END_POINT_LIVE + "license_verification/get_license_data";
+        final Bundle args = new Bundle();
 //
 //        Log.d("zma url", url);
         StringRequest jsonObjRequest = new StringRequest(Request.Method.POST,
@@ -259,9 +260,31 @@ public class MainFragment extends Fragment {
                         try {
                             JSONObject jsonResponseObject = new JSONObject(response);
                             boolean status = jsonResponseObject.getBoolean("status");
+                            Log.d("zma status", String.valueOf(status));
                             if (status) {
-                                JSONArray data = jsonResponseObject.getJSONArray("data");
-                               //TODO extract data from jsonarray data
+                                dialog.dismiss();
+                                JSONArray jsonArray = jsonResponseObject.getJSONArray("data");
+                                for (int i = 0; i < jsonArray.length(); i++) {
+                                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+                                    strResponseLicHolderName = String.valueOf(jsonObject.get("name"));
+                                    strResponseDLNumber = String.valueOf(jsonObject.get("dl_number"));
+                                    strResponseCNIC = String.valueOf(jsonObject.get("cnic"));
+                                    strResponseLicHolderFatherName = String.valueOf(jsonObject.get("father_name"));
+                                    strResponseLicType = String.valueOf(jsonObject.get("license_type"));
+                                    strResponseExpiryDate = String.valueOf(jsonObject.get("license_expiry_date"));
+                                    strResponseLicHolderDistrict = String.valueOf(jsonObject.get("district"));
+                                }
+                                args.putString("name", strResponseLicHolderName);
+                                args.putString("f_name", strResponseLicHolderFatherName);
+                                args.putString("cnic", strResponseCNIC);
+                                args.putString("license_number", strResponseDLNumber);
+                                args.putString("lic_type", strResponseLicType);
+                                args.putString("expiry_date", strResponseExpiryDate);
+                                args.putString("district", strResponseLicHolderDistrict);
+                                fragment = new LicenseFragment();
+                                getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).addToBackStack("tag").commit();
+                                fragment.setArguments(args);
+                                //TODO extract data from jsonarray data
                             } else {
                                 new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
                                         .setTitleText("Oops...")
@@ -292,6 +315,7 @@ public class MainFragment extends Fragment {
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
                 params.put("cnic", strCNIC);
+                //params.put("dl_license",strLicenseNumber);
                 Log.d("zma params", String.valueOf(params));
                 return params;
             }
