@@ -4,7 +4,14 @@ package com.ghosttech.kptrafficapp.utilities;
  * Created by Asus on 2/1/2017.
  */
 
+import android.app.Activity;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.Intent;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -24,6 +31,8 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.ghosttech.kptrafficapp.R;
+import com.ghosttech.kptrafficapp.activities.MapsActivity;
+import com.ghosttech.kptrafficapp.fragments.LiveUpdateResultFragment;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -34,6 +43,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static java.security.AccessController.getContext;
+
 public class LiveUpdateAdapter extends RecyclerView.Adapter<LiveUpdateAdapter.ViewHolder> {
     private ArrayList<String> mDataset;
     List<LiveUpdateHelper> liveUpdateHelpers;
@@ -41,6 +52,7 @@ public class LiveUpdateAdapter extends RecyclerView.Adapter<LiveUpdateAdapter.Vi
     String responseRouteName,responseRouteStatus,responseTime;
     Context context;
     RequestQueue mRequestQueue;
+    Fragment fragment;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -91,8 +103,11 @@ public class LiveUpdateAdapter extends RecyclerView.Adapter<LiveUpdateAdapter.Vi
         holder.cvLiveUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                fragment = new LiveUpdateResultFragment();
+                ((AppCompatActivity) context).getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container,fragment).commit();
                 apiCall();
+
 //                switch (itemPosition){
 //                    case  0:
 //                        strRoadName = "R1";

@@ -79,11 +79,6 @@ public class LicenseFragment extends Fragment {
         tvLicenseNumber = (TextView)view.findViewById(R.id.tv_license_number);
         tvCNICNumber = (TextView)view.findViewById(R.id.tv_cnic);
         Bundle args = new Bundle(getArguments());
-
-        /*strGetLicenseNumber = String.valueOf(args.get("name"));
-        strGetLicHolderFName = String.valueOf(args.get("f_name"));
-        strGetLicType = String.valueOf("district"+"expiry_date");*/
-
         tvLicHolderName.setText(String.valueOf(args.get("name")));
         tvLicHolderDistrict.setText(String.valueOf(args.get("district")));
         tvLicHolderFatherName.setText(String.valueOf(args.get("f_name")));

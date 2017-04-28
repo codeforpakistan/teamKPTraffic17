@@ -321,65 +321,6 @@ public class MainFragment extends Fragment {
             }
 
         };
-
-
-//        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, new Response.Listener<JSONObject>() {
-//            @Override
-//            public void onResponse(JSONObject response) {
-//                try {
-//                    boolean status = response.getBoolean("status");
-//                    String strMessage = response.getString("message");
-//                    Log.d("zma status", strMessage);
-//                    JSONArray jsonArray = response.getJSONArray("data");
-//                    for (int i = 0; i < jsonArray.length(); i++) {
-//                        JSONObject jsonObject = jsonArray.getJSONObject(i);
-//                        strResponseDLNumber = jsonObject.getString("dl_number");
-//                        strResponseCNIC = jsonObject.getString("cnic");
-//                        strResponseLicHolderName = jsonObject.getString("name");
-//                        strResponseLicHolderFatherName = jsonObject.getString("father_name");
-//                        strResponseLicType = jsonObject.getString("license_type");
-//                        strResponseExpiryDate = jsonObject.getString("License_expiry_date");
-//                        strResponseLicHolderDistrict = jsonObject.getString("district");
-//                        Log.d("zma response", response.toString());
-//                        fragment = new LicenseFragment();
-//                        getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).
-//                                addToBackStack("tag").commit();
-//                    }
-//
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                    new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
-//                            .setTitleText("Oops...")
-//                            .setContentText("No Data for given CNIC or License!")
-//                            .show();
-//                }
-//
-//
-//            }
-//        }, new Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//                new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
-//                        .setTitleText("Oops...")
-//                        .setContentText("Server Error!")
-//                        .show();
-//
-//            }
-//        }) {
-//            @Override
-//            public String getBodyContentType() {
-//                return "application/x-www-form-urlencoded;charset=UTF-8";
-//            }
-//
-//            @Override
-//            protected Map<String, String> getParams() throws AuthFailureError {
-//                Map<String, String> params = new HashMap<>();
-//                params.put("cnic", cnic);
-//                Log.d("params", String.valueOf(params));
-//                return params;
-//
-//            }
-//        };
         jsonObjRequest.setRetryPolicy(new DefaultRetryPolicy(200000,
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
