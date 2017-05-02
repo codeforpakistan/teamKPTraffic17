@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatEditText;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +27,7 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 public class LicenseFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
@@ -86,8 +88,6 @@ public class LicenseFragment extends Fragment {
         tvLicType.setText(String.valueOf(args.get("lic_type")));
         tvCNICNumber.setText(String.valueOf(args.get("cnic")));
         tvLicenseNumber.setText(String.valueOf(args.get("license_number")));
-
-
         return view;
     }
 

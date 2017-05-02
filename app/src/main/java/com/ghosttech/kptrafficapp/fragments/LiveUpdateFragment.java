@@ -68,13 +68,17 @@ public class LiveUpdateFragment extends Fragment {
     }
     private void initializeData() {
         liveUpdateHelpers = new ArrayList<>();
-        liveUpdateHelpers.add(new LiveUpdateHelper("University Road",  R.drawable.ic_launcher));
-        liveUpdateHelpers.add(new LiveUpdateHelper("GT Road",  R.mipmap.ic_launcher));
-        liveUpdateHelpers.add(new LiveUpdateHelper("Ring Road",  R.drawable.ic_launcher));
+        liveUpdateHelpers.add(new LiveUpdateHelper("G.T Road",  R.drawable.ic_launcher));
+        liveUpdateHelpers.add(new LiveUpdateHelper("Khyber Road",  R.mipmap.ic_launcher));
+        liveUpdateHelpers.add(new LiveUpdateHelper("Charsadda Road",  R.drawable.ic_launcher));
+        liveUpdateHelpers.add(new LiveUpdateHelper("Jail Road",  R.drawable.ic_launcher));
+        liveUpdateHelpers.add(new LiveUpdateHelper("University Road", R.drawable.ic_launcher));
+        liveUpdateHelpers.add(new LiveUpdateHelper("Dalazak Road",  R.drawable.ic_launcher));
+        liveUpdateHelpers.add(new LiveUpdateHelper("Saddar Road",  R.drawable.ic_launcher));
+        liveUpdateHelpers.add(new LiveUpdateHelper("Bagh e Naran Road",  R.drawable.ic_launcher));
         liveUpdateHelpers.add(new LiveUpdateHelper("Warsak Road",  R.drawable.ic_launcher));
-        liveUpdateHelpers.add(new LiveUpdateHelper("Charsadda Road", R.drawable.ic_launcher));
-        liveUpdateHelpers.add(new LiveUpdateHelper("Peerano Road",  R.drawable.ic_launcher));
-        liveUpdateHelpers.add(new LiveUpdateHelper("Landi Sarak",  R.drawable.ic_launcher));
+        liveUpdateHelpers.add(new LiveUpdateHelper("Kohat Road",  R.drawable.ic_launcher));
+
     }
 
     // TODO: Rename method, update argument and hook method into UI event
