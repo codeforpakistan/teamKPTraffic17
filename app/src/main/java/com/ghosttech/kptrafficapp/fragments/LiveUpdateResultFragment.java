@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.ghosttech.kptrafficapp.R;
 import com.ghosttech.kptrafficapp.utilities.LiveUpdatesMapCoorindates;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -53,6 +54,8 @@ public class LiveUpdateResultFragment extends Fragment {
     Bundle args;
     PolylineOptions polylineOptions;
     Fragment fragment;
+    View view;
+    TextView tvRoadStatus, tvUpdateTime;
 
 
     private OnFragmentInteractionListener mListener;
@@ -93,14 +96,14 @@ public class LiveUpdateResultFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_live_update_result, container, false);
+        view = inflater.inflate(R.layout.fragment_live_update_result, container, false);
         customActionBar();
         mMapView = (MapView) view.findViewById(R.id.mapView);
         mMapView.onCreate(savedInstanceState);
         args = getArguments();
         strStatus = args.getString("status");
         strRoadName = args.getString("road_name");
-        Log.d("zma road and status",strRoadName+"\n"+strStatus);
+        Log.d("zma road and status", strRoadName + "\n" + strStatus);
         mMapView.onResume(); // needed to get the map to display immediately
 
         try {
@@ -208,22 +211,29 @@ public class LiveUpdateResultFragment extends Fragment {
 
     public void setPolylineOptions() {
 //Remove the same line from map
-        if (strStatus.equals("clear")) {
+        if (strStatus.equals("Clear")) {
             polylineOptions = new PolylineOptions().
                     addAll(LiveUpdatesMapCoorindates.getArrayKhyberRoad())
                     .width(10).color(Color.GREEN).geodesic(true);
+            setText();
 
-        } else if (strStatus.equals("busy")) {
+
+        } else if (strStatus.equals("Busy")) {
             polylineOptions = new PolylineOptions().
                     addAll(LiveUpdatesMapCoorindates.getArrayKhyberRoad())
                     .width(10).color(Color.RED).geodesic(true);
-        } else if (strStatus.equals("congested")) {
+            setText();
+
+        } else if (strStatus.equals("Congested")) {
             polylineOptions = new PolylineOptions().
                     addAll(LiveUpdatesMapCoorindates.getArrayKhyberRoad())
                     .width(10).color(Color.YELLOW).geodesic(true);
+            setText();
+
         }
         googleMap.addPolyline(polylineOptions);
     }
+
     public void customActionBar() {
         android.support.v7.app.ActionBar mActionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         mActionBar.setDisplayShowHomeEnabled(false);
@@ -244,5 +254,14 @@ public class LiveUpdateResultFragment extends Fragment {
         });
 
     }
+
+    public void setText() {
+        tvRoadStatus = (TextView) view.findViewById(R.id.tv_road_status);
+        tvUpdateTime = (TextView) view.findViewById(R.id.tv_status_time);
+        Bundle args = new Bundle(getArguments());
+        tvUpdateTime.setText(String.valueOf(args.get("response_time")));
+        tvRoadStatus.setText(String.valueOf(args.get("status")));
+    }
+
 
 }

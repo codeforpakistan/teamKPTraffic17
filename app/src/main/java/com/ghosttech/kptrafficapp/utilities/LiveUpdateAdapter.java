@@ -6,6 +6,7 @@ package com.ghosttech.kptrafficapp.utilities;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
@@ -37,11 +38,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
+
+import static cn.pedant.SweetAlert.SweetAlertDialog.PROGRESS_TYPE;
+
 public class LiveUpdateAdapter extends RecyclerView.Adapter<LiveUpdateAdapter.ViewHolder> {
     private ArrayList<String> mDataset;
     List<LiveUpdateHelper> liveUpdateHelpers;
     String strRoadName;
-    String responseRouteName,responseRouteStatus,responseTime;
+    String responseRouteName, responseRouteStatus, responseTime;
     Context context;
     RequestQueue mRequestQueue;
     Fragment fragment;
@@ -81,6 +86,7 @@ public class LiveUpdateAdapter extends RecyclerView.Adapter<LiveUpdateAdapter.Vi
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.live_update_list_item, parent, false);
         // set the view's size, margins, paddings and layout parameters
         ViewHolder vh = new ViewHolder(v);
+
         return vh;
     }
 
@@ -93,62 +99,62 @@ public class LiveUpdateAdapter extends RecyclerView.Adapter<LiveUpdateAdapter.Vi
         holder.ivRoadListIcon.setImageResource(liveUpdateHelpers.get(position).roadIcon);
         final int itemPosition = position;
         args = new Bundle();
-        Log.d("zma position",String.valueOf(itemPosition));
+        Log.d("zma position", String.valueOf(itemPosition));
         holder.cvLiveUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 fragment = new LiveUpdateResultFragment();
 
-                switch (itemPosition){
-                    case  0:
+                switch (itemPosition) {
+                    case 0:
                         strRoadName = "gt_road";
-                        args.putString("road_name",strRoadName);
-                        Log.d("zma strRoadName",strRoadName);
+                        args.putString("road_name", strRoadName);
+                        Log.d("zma strRoadName", strRoadName);
                         apiCall(strRoadName);
                         break;
                     case 1:
                         strRoadName = "khyber_road";
-                        args.putString("road_name",strRoadName);
+                        args.putString("road_name", strRoadName);
                         apiCall(strRoadName);
                         break;
                     case 2:
                         strRoadName = "charsadda_road";
-                        args.putString("road_name",strRoadName);
+                        args.putString("road_name", strRoadName);
                         apiCall(strRoadName);
                         break;
                     case 3:
                         strRoadName = "jail_road";
-                        args.putString("road_name",strRoadName);
+                        args.putString("road_name", strRoadName);
                         apiCall(strRoadName);
                         break;
                     case 4:
                         strRoadName = "university_road";
-                        args.putString("road_name",strRoadName);
+                        args.putString("road_name", strRoadName);
                         apiCall(strRoadName);
                         break;
                     case 5:
                         strRoadName = "dalazak_road";
-                        args.putString("road_name",strRoadName);
+                        args.putString("road_name", strRoadName);
                         apiCall(strRoadName);
                         break;
                     case 6:
                         strRoadName = "saddar_road";
-                        args.putString("road_name",strRoadName);
+                        args.putString("road_name", strRoadName);
                         apiCall(strRoadName);
                         break;
                     case 7:
                         strRoadName = "baghenaran_road";
-                        args.putString("road_name",strRoadName);
+                        args.putString("road_name", strRoadName);
                         apiCall(strRoadName);
                         break;
                     case 8:
                         strRoadName = "warsak_road";
-                        args.putString("road_name",strRoadName);
+                        args.putString("road_name", strRoadName);
                         apiCall(strRoadName);
                         break;
                     case 9:
                         strRoadName = "kohat_road";
-                        args.putString("road_name",strRoadName);
+                        args.putString("road_name", strRoadName);
                         apiCall(strRoadName);
                         break;
                 }
@@ -169,9 +175,16 @@ public class LiveUpdateAdapter extends RecyclerView.Adapter<LiveUpdateAdapter.Vi
     public void onAttachedToRecyclerView(RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
     }
+
     public void apiCall(final String strRoadName) {
 
-        String url = Configuration.END_POINT_LIVE + "live_updates/get_updates?flag="+strRoadName;
+        final SweetAlertDialog pDialog = new SweetAlertDialog(((AppCompatActivity) context), SweetAlertDialog.PROGRESS_TYPE);
+        pDialog.getProgressHelper().setBarColor(Color.parseColor("#179e99"));
+        pDialog.setTitleText("Wait a while");
+        pDialog.setCancelable(false);
+        pDialog.show();
+
+        String url = Configuration.END_POINT_LIVE + "live_updates/get_updates?fla=" + strRoadName;
         Log.d("zma url", String.valueOf(url));
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, new Response.Listener<JSONObject>() {
             @Override
@@ -180,50 +193,63 @@ public class LiveUpdateAdapter extends RecyclerView.Adapter<LiveUpdateAdapter.Vi
                     boolean status = response.getBoolean("status");
 
                     if (status) {
+                        pDialog.dismiss();
                         Log.d("zma status", String.valueOf(status));
-                        Log.d("zma response", String.valueOf(response));
                         JSONArray jsonArray = response.getJSONArray("data");
                         for (int i = 0; i < jsonArray.length(); i++) {
                             JSONObject jsonObject = jsonArray.getJSONObject(i);
                             responseRouteName = jsonObject.getString("route_name");
                             responseRouteStatus = jsonObject.getString("route_status");
                             responseTime = jsonObject.getString("updated_time");
+                          //  responseTime = responseTime.replace(" ","\n");
                             Toast.makeText(context, responseRouteName + "\n" +
                                     responseRouteStatus +
                                     "\n" + responseTime, Toast.LENGTH_SHORT).show();
                         }
                         fragment = new LiveUpdateResultFragment();
-                        args.putString("route_name",responseRouteName.toString());
-                        args.putString("response_time",responseTime.toString());
-                        if (responseRouteStatus.toString().equals("Clear")){
+                        args.putString("route_name", responseRouteName.toString());
+
+                        if (responseRouteStatus.toString().equals("Clear")) {
 
                             ((AppCompatActivity) context).getFragmentManager().beginTransaction()
-                                    .replace(R.id.fragment_container,fragment).addToBackStack("tag").commit();
-                            args.putString("status","clear");
-                            Log.d("zma road status",responseRouteStatus.toString());
+                                    .replace(R.id.fragment_container, fragment).addToBackStack("tag").commit();
+                            args.putString("status", responseRouteStatus.toString());
+                            args.putString("response_time", responseTime.toString());
+                            Log.d("zma response if wala", String.valueOf(responseRouteName + "\n" + responseTime));
                             fragment.setArguments(args);
 
-                        }else if (responseRouteStatus.toString().equals("Busy")){
-
+                        } else if (responseRouteStatus.toString().equals("Busy")) {
                             ((AppCompatActivity) context).getFragmentManager().beginTransaction()
-                                    .replace(R.id.fragment_container,fragment).addToBackStack("tag").commit();
-                            args.putString("status","busy");
-                            Log.d("zma road status",responseRouteStatus.toString());
+                                    .replace(R.id.fragment_container, fragment).addToBackStack("tag").commit();
+                            args.putString("status", responseRouteStatus.toString());
+                            args.putString("response_time", responseTime.toString());
+                            Log.d("zma response if wala", String.valueOf(responseRouteName + "\n" + responseTime));
                             fragment.setArguments(args);
 
-                        }else if (responseRouteStatus.toString().equals("Congested")){
+                        } else if (responseRouteStatus.toString().equals("Congested")) {
                             ((AppCompatActivity) context).getFragmentManager().beginTransaction()
-                                    .replace(R.id.fragment_container,fragment).addToBackStack("tag").commit();
-                            args.putString("status","congested");
-                            Log.d("zma road status",responseRouteStatus.toString());
+                                    .replace(R.id.fragment_container, fragment).addToBackStack("tag").commit();
+                            args.putString("status", responseRouteStatus.toString());
+                            args.putString("response_time", responseTime.toString());
+                            Log.d("zma response if wala", String.valueOf(responseRouteName + "\n" + responseTime));
                             fragment.setArguments(args);
+
 
                         }
+                        fragment.setArguments(args);
 
-                    }else{
+                    } else {
+                        new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
+                                .setTitleText("Oops...")
+                                .setContentText("Something went wrong   !")
+                                .show();
                         //main else
                     }
                 } catch (JSONException e) {
+                    new SweetAlertDialog(context, SweetAlertDialog.ERROR_TYPE)
+                            .setTitleText("Oops...")
+                            .setContentText("Server Error!")
+                            .show();
                     e.printStackTrace();
                 }
             }
@@ -232,11 +258,12 @@ public class LiveUpdateAdapter extends RecyclerView.Adapter<LiveUpdateAdapter.Vi
             public void onErrorResponse(VolleyError error) {
 
             }
-        }){
+        }) {
             @Override
             public String getBodyContentType() {
                 return "application/x-www-form-urlencoded;charset=UTF-8";
             }
+
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
