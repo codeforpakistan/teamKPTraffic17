@@ -6,9 +6,51 @@
 
     <!-- TODO: Update blank fragment layout -->
 
-    <android.support.v7.widget.RecyclerView
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/rv"
-        />
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingTop="23dp"
+        android:orientation="vertical"
+        android:background="#d2d3d4"
+        tools:context="com.ghosttech.eatableshere.LiveUpdatesDesign">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp">
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="60sp"
+                android:hint="\t\tSearch"
+                android:drawableRight="@mipmap/ic_launcher"
+                android:textColorHint="#bab9b9"
+                android:background="#fff"
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="16dp"
+            android:orientation="vertical"
+            android:paddingTop="23dp"
+            android:paddingRight="16dp">
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#fff">
+                <android.support.v7.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/rv">
+
+                </android.support.v7.widget.RecyclerView>
+            </android.support.v7.widget.CardView>
+        </LinearLayout>
+
+    </LinearLayout>
 </FrameLayout>

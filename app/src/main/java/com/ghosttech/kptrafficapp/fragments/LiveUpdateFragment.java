@@ -68,16 +68,16 @@ public class LiveUpdateFragment extends Fragment {
     }
     private void initializeData() {
         liveUpdateHelpers = new ArrayList<>();
-        liveUpdateHelpers.add(new LiveUpdateHelper("G.T Road",  R.drawable.ic_launcher));
-        liveUpdateHelpers.add(new LiveUpdateHelper("Khyber Road",  R.mipmap.ic_launcher));
-        liveUpdateHelpers.add(new LiveUpdateHelper("Charsadda Road",  R.drawable.ic_launcher));
-        liveUpdateHelpers.add(new LiveUpdateHelper("Jail Road",  R.drawable.ic_launcher));
-        liveUpdateHelpers.add(new LiveUpdateHelper("University Road", R.drawable.ic_launcher));
-        liveUpdateHelpers.add(new LiveUpdateHelper("Dalazak Road",  R.drawable.ic_launcher));
-        liveUpdateHelpers.add(new LiveUpdateHelper("Saddar Road",  R.drawable.ic_launcher));
-        liveUpdateHelpers.add(new LiveUpdateHelper("Bagh e Naran Road",  R.drawable.ic_launcher));
-        liveUpdateHelpers.add(new LiveUpdateHelper("Warsak Road",  R.drawable.ic_launcher));
-        liveUpdateHelpers.add(new LiveUpdateHelper("Kohat Road",  R.drawable.ic_launcher));
+        liveUpdateHelpers.add(new LiveUpdateHelper("G.T Road",  "Pir Zakuri - Suri Pul"));
+        liveUpdateHelpers.add(new LiveUpdateHelper("Khyber Road", "Suri Pul - Aman Chowk"));
+        liveUpdateHelpers.add(new LiveUpdateHelper("Charsadda Road", "Ring Road - Bacha Khan Chowk"));
+        liveUpdateHelpers.add(new LiveUpdateHelper("Jail Road",  "Khyber Bazar - FC Chowk"));
+        liveUpdateHelpers.add(new LiveUpdateHelper("University Road", "Sifat Ghayour - Phase-3"));
+        liveUpdateHelpers.add(new LiveUpdateHelper("Dalazak Road", "Not available - not available"));
+        liveUpdateHelpers.add(new LiveUpdateHelper("Saddar Road",  "Suri Pul - Cantt Area"));
+        liveUpdateHelpers.add(new LiveUpdateHelper("Bagh e Naran Road",  "Not available - not available"));
+        liveUpdateHelpers.add(new LiveUpdateHelper("Warsak Road",  "Not available - not available"));
+        liveUpdateHelpers.add(new LiveUpdateHelper("Kohat Road",  "Ramdas Chowk - Kohat Adda"));
 
     }
 

@@ -9,13 +9,13 @@ import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,8 +40,6 @@ import java.util.Map;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
-import static cn.pedant.SweetAlert.SweetAlertDialog.PROGRESS_TYPE;
-
 public class LiveUpdateAdapter extends RecyclerView.Adapter<LiveUpdateAdapter.ViewHolder> {
     private ArrayList<String> mDataset;
     List<LiveUpdateHelper> liveUpdateHelpers;
@@ -57,16 +55,18 @@ public class LiveUpdateAdapter extends RecyclerView.Adapter<LiveUpdateAdapter.Vi
     // you provide access to all the views for a data item in a view holder
     public class ViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
-        CardView cvLiveUpdate;
-        TextView tvRoadName;
+        LinearLayout linearLayout;
+        TextView tvRoadName,tvRoadStartEndPoint;
         ImageView ivRoadListIcon;
 
 
         public ViewHolder(View v) {
             super(v);
-            ivRoadListIcon = (ImageView) itemView.findViewById(R.id.iv_road_icon);
+           // ivRoadListIcon = (ImageView) itemView.findViewById(R.id.iv_road_icon);
             tvRoadName = (TextView) itemView.findViewById(R.id.tv_road_name);
-            cvLiveUpdate = (CardView) itemView.findViewById(R.id.cv_item_live_update);
+            linearLayout = (LinearLayout) itemView.findViewById(R.id.item_live_update);
+            tvRoadStartEndPoint = (TextView)itemView.findViewById(R.id.tv_road_detail);
+
         }
     }
 
@@ -96,11 +96,12 @@ public class LiveUpdateAdapter extends RecyclerView.Adapter<LiveUpdateAdapter.Vi
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
         holder.tvRoadName.setText(liveUpdateHelpers.get(position).strRoadName);
-        holder.ivRoadListIcon.setImageResource(liveUpdateHelpers.get(position).roadIcon);
+        holder.tvRoadStartEndPoint.setText(liveUpdateHelpers.get(position).strRoadStartEndPoint);
+       // holder.ivRoadListIcon.setImageResource(liveUpdateHelpers.get(position).roadIcon);
         final int itemPosition = position;
         args = new Bundle();
         Log.d("zma position", String.valueOf(itemPosition));
-        holder.cvLiveUpdate.setOnClickListener(new View.OnClickListener() {
+        holder.linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 fragment = new LiveUpdateResultFragment();
@@ -184,7 +185,7 @@ public class LiveUpdateAdapter extends RecyclerView.Adapter<LiveUpdateAdapter.Vi
         pDialog.setCancelable(false);
         pDialog.show();
 
-        String url = Configuration.END_POINT_LIVE + "live_updates/get_updates?fla=" + strRoadName;
+        String url = Configuration.END_POINT_LIVE + "live_updates/get_updates?flag=" + strRoadName;
         Log.d("zma url", String.valueOf(url));
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, new Response.Listener<JSONObject>() {
             @Override
@@ -201,8 +202,7 @@ public class LiveUpdateAdapter extends RecyclerView.Adapter<LiveUpdateAdapter.Vi
                             responseRouteName = jsonObject.getString("route_name");
                             responseRouteStatus = jsonObject.getString("route_status");
                             responseTime = jsonObject.getString("updated_time");
-                          //  responseTime = responseTime.replace(" ","\n");
-                            Toast.makeText(context, responseRouteName + "\n" +
+                             Toast.makeText(context, responseRouteName + "\n" +
                                     responseRouteStatus +
                                     "\n" + responseTime, Toast.LENGTH_SHORT).show();
                         }

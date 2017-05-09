@@ -5,11 +5,11 @@ package com.ghosttech.kptrafficapp.utilities;
  */
 
 public class LiveUpdateHelper {
-    String strRoadName;
-    int roadIcon;
+    String strRoadName,strRoadStartEndPoint;
 
-    public LiveUpdateHelper(String name, int photoId) {
+
+    public LiveUpdateHelper(String name, String strRoadStartEndPoint) {
         this.strRoadName = name;
-        this.roadIcon = photoId;
+        this.strRoadStartEndPoint = strRoadStartEndPoint;
     }
 }

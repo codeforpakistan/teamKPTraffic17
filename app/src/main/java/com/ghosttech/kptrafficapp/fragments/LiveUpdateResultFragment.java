@@ -176,34 +176,34 @@ public class LiveUpdateResultFragment extends Fragment {
     public void pickMapView() {
         switch (strRoadName) {
             case "gt_road":
-                setPolylineOptions();
+                //setPolylineOptions();
                 break;
             case "khyber_road":
                 setPolylineOptions();
                 break;
             case "charsadda_road":
-                setPolylineOptions();
+                //setPolylineOptions();
                 break;
             case "jail_road":
-                setPolylineOptions();
+                //setPolylineOptions();
                 break;
             case "university_road":
-                setPolylineOptions();
+               // setPolylineOptions();
                 break;
             case "dalazak_road":
-                setPolylineOptions();
+                //setPolylineOptions();
                 break;
             case "saddar_road":
-                setPolylineOptions();
+                //setPolylineOptions();
                 break;
             case "baghenaran_road":
-                setPolylineOptions();
+               // setPolylineOptions();
                 break;
             case "warsak_road":
-                setPolylineOptions();
+                //setPolylineOptions();
                 break;
             case "kohat_road":
-                setPolylineOptions();
+                //setPolylineOptions();
                 break;
         }
 
@@ -231,6 +231,7 @@ public class LiveUpdateResultFragment extends Fragment {
             setText();
 
         }
+        googleMap.clear();
         googleMap.addPolyline(polylineOptions);
     }
 
@@ -249,7 +250,8 @@ public class LiveUpdateResultFragment extends Fragment {
             public void onClick(View view) {
                 fragment = new LiveUpdateFragment();
                 getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
-                googleMap.clear();
+
+
             }
         });
 
