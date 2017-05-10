@@ -1,19 +1,32 @@
 package com.ghosttech.kptrafficapp.fragments;
 
 import android.app.Fragment;
+import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
+
 import com.ghosttech.kptrafficapp.R;
 import com.ghosttech.kptrafficapp.utilities.LiveUpdateAdapter;
 import com.ghosttech.kptrafficapp.utilities.LiveUpdateHelper;
 
 import java.util.ArrayList;
 import java.util.List;
+
 public class LiveUpdateFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -26,13 +39,16 @@ public class LiveUpdateFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    String[] myDataset ;
+    String[] myDataset;
     List<LiveUpdateHelper> liveUpdateHelpers;
     private OnFragmentInteractionListener mListener;
+    EditText etSearchBar;
+    ImageView ivSearchIcon;
 
     public LiveUpdateFragment() {
         // Required empty public constructor
     }
+
     // TODO: Rename and change types and number of parameters
     public static LiveUpdateFragment newInstance(String param1, String param2) {
         LiveUpdateFragment fragment = new LiveUpdateFragment();
@@ -56,28 +72,33 @@ public class LiveUpdateFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view =  inflater.inflate(R.layout.fragment_live_update, container, false);
-        mRecyclerView = (RecyclerView)view.findViewById(R.id.rv);
+        View view = inflater.inflate(R.layout.fragment_live_update, container, false);
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.rv);
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setHasFixedSize(true);
+
         initializeData();
-        mAdapter = new LiveUpdateAdapter(getActivity(),liveUpdateHelpers);
+        mAdapter = new LiveUpdateAdapter(getActivity(), liveUpdateHelpers);
         mRecyclerView.setAdapter(mAdapter);
-        return  view;
+        return view;
     }
+
+
+
+
     private void initializeData() {
         liveUpdateHelpers = new ArrayList<>();
-        liveUpdateHelpers.add(new LiveUpdateHelper("G.T Road",  "Pir Zakuri - Suri Pul"));
+        liveUpdateHelpers.add(new LiveUpdateHelper("G.T Road", "Pir Zakuri - Suri Pul"));
         liveUpdateHelpers.add(new LiveUpdateHelper("Khyber Road", "Suri Pul - Aman Chowk"));
         liveUpdateHelpers.add(new LiveUpdateHelper("Charsadda Road", "Ring Road - Bacha Khan Chowk"));
-        liveUpdateHelpers.add(new LiveUpdateHelper("Jail Road",  "Khyber Bazar - FC Chowk"));
+        liveUpdateHelpers.add(new LiveUpdateHelper("Jail Road", "Khyber Bazar - FC Chowk"));
         liveUpdateHelpers.add(new LiveUpdateHelper("University Road", "Sifat Ghayour - Phase-3"));
         liveUpdateHelpers.add(new LiveUpdateHelper("Dalazak Road", "Not available - not available"));
-        liveUpdateHelpers.add(new LiveUpdateHelper("Saddar Road",  "Suri Pul - Cantt Area"));
-        liveUpdateHelpers.add(new LiveUpdateHelper("Bagh e Naran Road",  "Not available - not available"));
-        liveUpdateHelpers.add(new LiveUpdateHelper("Warsak Road",  "Not available - not available"));
-        liveUpdateHelpers.add(new LiveUpdateHelper("Kohat Road",  "Ramdas Chowk - Kohat Adda"));
+        liveUpdateHelpers.add(new LiveUpdateHelper("Saddar Road", "Suri Pul - Cantt Area"));
+        liveUpdateHelpers.add(new LiveUpdateHelper("Bagh e Naran Road", "Not available - not available"));
+        liveUpdateHelpers.add(new LiveUpdateHelper("Warsak Road", "Not available - not available"));
+        liveUpdateHelpers.add(new LiveUpdateHelper("Kohat Road", "Ramdas Chowk - Kohat Adda"));
 
     }
 
@@ -93,6 +114,7 @@ public class LiveUpdateFragment extends Fragment {
         super.onDetach();
         mListener = null;
     }
+
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
