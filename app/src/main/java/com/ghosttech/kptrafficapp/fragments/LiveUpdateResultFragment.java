@@ -27,6 +27,8 @@ import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.util.ArrayList;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
+
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
@@ -40,10 +42,6 @@ public class LiveUpdateResultFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    LatLng CHARSADDA_ROAD_1 = new LatLng(34.032627, 71.576201);
-    LatLng CHARSADDA_ROAD_2 = new LatLng(34.034312, 71.5779767);
-    LatLng CHARSADDA_ROAD_3 = new LatLng(34.046545, 71.5806858);
-    LatLng CHARSADDA_ROAD_4 = new LatLng(34.05858, 71.5868058);
     ArrayList<LatLng> locations = new ArrayList<>();
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -137,7 +135,7 @@ public class LiveUpdateResultFragment extends Fragment {
 //                    markerOptions.position(point);
 //                    googleMap.addMarker(markerOptions);
 //                }
-                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(LiveUpdatesMapCoorindates.KHYBER_ROAD_1, 12));
+
             }
         });
 
@@ -176,61 +174,261 @@ public class LiveUpdateResultFragment extends Fragment {
     public void pickMapView() {
         switch (strRoadName) {
             case "gt_road":
-                //setPolylineOptions();
+                setPolylineOptions();
                 break;
             case "khyber_road":
                 setPolylineOptions();
+                Log.d("zma poly road",String.valueOf(strRoadName));
                 break;
             case "charsadda_road":
-                //setPolylineOptions();
+                setPolylineOptions();
+                Log.d("zma poly road",String.valueOf(strRoadName));
                 break;
             case "jail_road":
-                //setPolylineOptions();
+                setPolylineOptions();
                 break;
             case "university_road":
-               // setPolylineOptions();
+                setPolylineOptions();
                 break;
             case "dalazak_road":
-                //setPolylineOptions();
+                setPolylineOptions();
                 break;
             case "saddar_road":
-                //setPolylineOptions();
+                setPolylineOptions();
                 break;
             case "baghenaran_road":
-               // setPolylineOptions();
+                setPolylineOptions();
                 break;
             case "warsak_road":
-                //setPolylineOptions();
+                setPolylineOptions();
                 break;
             case "kohat_road":
-                //setPolylineOptions();
+                setPolylineOptions();
                 break;
         }
 
     }
 
     public void setPolylineOptions() {
-//Remove the same line from map
-        if (strStatus.equals("Clear")) {
-            polylineOptions = new PolylineOptions().
-                    addAll(LiveUpdatesMapCoorindates.getArrayKhyberRoad())
-                    .width(10).color(Color.GREEN).geodesic(true);
-            setText();
+        try {
 
 
-        } else if (strStatus.equals("Busy")) {
-            polylineOptions = new PolylineOptions().
-                    addAll(LiveUpdatesMapCoorindates.getArrayKhyberRoad())
-                    .width(10).color(Color.RED).geodesic(true);
-            setText();
+            switch (strRoadName) {
+                case "khyber_road":
+                    if (strStatus.equals("Clear")) {
+                        polylineOptions = new PolylineOptions().
+                                addAll(LiveUpdatesMapCoorindates.getArrayKhyberRoad())
+                                .width(10).color(Color.GREEN).geodesic(true);
+                        setText();
 
-        } else if (strStatus.equals("Congested")) {
-            polylineOptions = new PolylineOptions().
-                    addAll(LiveUpdatesMapCoorindates.getArrayKhyberRoad())
-                    .width(10).color(Color.YELLOW).geodesic(true);
-            setText();
 
+                    } else if (strStatus.equals("Busy")) {
+                        polylineOptions = new PolylineOptions().
+                                addAll(LiveUpdatesMapCoorindates.getArrayKhyberRoad())
+                                .width(10).color(Color.RED).geodesic(true);
+                        setText();
+
+                    } else if (strStatus.equals("Congested")) {
+                        polylineOptions = new PolylineOptions().
+                                addAll(LiveUpdatesMapCoorindates.getArrayKhyberRoad())
+                                .width(10).color(Color.YELLOW).geodesic(true);
+                        setText();
+                        Log.d("zma second switch", "osho");
+
+                    }
+                    googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(LiveUpdatesMapCoorindates.KHYBER_ROAD_1, 12));
+                    break;
+                case "charsadda_road":
+                    if (strStatus.equals("Clear")) {
+                        polylineOptions = new PolylineOptions().
+                                addAll(LiveUpdatesMapCoorindates.getArrayCharsaddaRoad())
+                                .width(10).color(Color.GREEN).geodesic(true);
+                        setText();
+
+
+                    } else if (strStatus.equals("Busy")) {
+                        polylineOptions = new PolylineOptions().
+                                addAll(LiveUpdatesMapCoorindates.getArrayCharsaddaRoad())
+                                .width(10).color(Color.RED).geodesic(true);
+                        setText();
+
+                    } else if (strStatus.equals("Congested")) {
+                        polylineOptions = new PolylineOptions().
+                                addAll(LiveUpdatesMapCoorindates.getArrayCharsaddaRoad())
+                                .width(10).color(Color.YELLOW).geodesic(true);
+                        setText();
+                        Log.d("zma second switch", "charsadda");
+
+                    }
+                    googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(LiveUpdatesMapCoorindates.CHARSADDA_ROAD_1, 12));
+                    break;
+                case "university_road":
+                    if (strStatus.equals("Clear")) {
+                        polylineOptions = new PolylineOptions().
+                                addAll(LiveUpdatesMapCoorindates.getArrayUniversityRoad())
+                                .width(10).color(Color.GREEN).geodesic(true);
+                        setText();
+
+
+                    } else if (strStatus.equals("Busy")) {
+                        polylineOptions = new PolylineOptions().
+                                addAll(LiveUpdatesMapCoorindates.getArrayUniversityRoad())
+                                .width(10).color(Color.RED).geodesic(true);
+                        setText();
+
+                    } else if (strStatus.equals("Congested")) {
+                        polylineOptions = new PolylineOptions().
+                                addAll(LiveUpdatesMapCoorindates.getArrayUniversityRoad())
+                                .width(10).color(Color.YELLOW).geodesic(true);
+                        setText();
+                        Log.d("zma second switch", "uni");
+
+                    }
+                    googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(LiveUpdatesMapCoorindates.UNIVERSITY_ROAD_1, 12));
+                case "jail_road":
+                    if (strStatus.equals("Clear")) {
+                        polylineOptions = new PolylineOptions().
+                                addAll(LiveUpdatesMapCoorindates.getArrayJailRoad())
+                                .width(10).color(Color.GREEN).geodesic(true);
+                        setText();
+
+
+                    } else if (strStatus.equals("Busy")) {
+                        polylineOptions = new PolylineOptions().
+                                addAll(LiveUpdatesMapCoorindates.getArrayJailRoad())
+                                .width(10).color(Color.RED).geodesic(true);
+                        setText();
+
+                    } else if (strStatus.equals("Congested")) {
+                        polylineOptions = new PolylineOptions().
+                                addAll(LiveUpdatesMapCoorindates.getArrayJailRoad())
+                                .width(10).color(Color.YELLOW).geodesic(true);
+                        setText();
+                        Log.d("zma second switch", "jail");
+
+                    }
+                    googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(LiveUpdatesMapCoorindates.JAIL_ROAD_1, 12));
+                    break;
+                case "baghenaran_road":
+                    if (strStatus.equals("Clear")) {
+                        polylineOptions = new PolylineOptions().
+                                addAll(LiveUpdatesMapCoorindates.getArrayBaghENaranRoad())
+                                .width(10).color(Color.GREEN).geodesic(true);
+                        setText();
+
+
+                    } else if (strStatus.equals("Busy")) {
+                        polylineOptions = new PolylineOptions().
+                                addAll(LiveUpdatesMapCoorindates.getArrayBaghENaranRoad())
+                                .width(10).color(Color.RED).geodesic(true);
+                        setText();
+
+                    } else if (strStatus.equals("Congested")) {
+                        polylineOptions = new PolylineOptions().
+                                addAll(LiveUpdatesMapCoorindates.getArrayBaghENaranRoad())
+                                .width(10).color(Color.YELLOW).geodesic(true);
+                        setText();
+                        Log.d("zma second switch", "bagh e naran");
+
+                    }
+                    googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(LiveUpdatesMapCoorindates.BAGH_E_NARAN_ROAD_1, 12));
+                    break;
+                case "saddar_road":
+                    if (strStatus.equals("Clear")) {
+                        polylineOptions = new PolylineOptions().
+                                addAll(LiveUpdatesMapCoorindates.getArraySaddarRoad())
+                                .width(10).color(Color.GREEN).geodesic(true);
+                        setText();
+
+
+                    } else if (strStatus.equals("Busy")) {
+                        polylineOptions = new PolylineOptions().
+                                addAll(LiveUpdatesMapCoorindates.getArraySaddarRoad())
+                                .width(10).color(Color.RED).geodesic(true);
+                        setText();
+
+                    } else if (strStatus.equals("Congested")) {
+                        polylineOptions = new PolylineOptions().
+                                addAll(LiveUpdatesMapCoorindates.getArraySaddarRoad())
+                                .width(10).color(Color.YELLOW).geodesic(true);
+                        setText();
+                        Log.d("zma second switch", "saddar");
+
+                    }
+                    googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(LiveUpdatesMapCoorindates.SADDAR_ROAD_1, 12));
+                    break;
+                case "kohat_road":
+                    if (strStatus.equals("Clear")) {
+                        polylineOptions = new PolylineOptions().
+                                addAll(LiveUpdatesMapCoorindates.getArrayKohatRoad())
+                                .width(10).color(Color.GREEN).geodesic(true);
+                        setText();
+
+
+                    } else if (strStatus.equals("Busy")) {
+                        polylineOptions = new PolylineOptions().
+                                addAll(LiveUpdatesMapCoorindates.getArrayKohatRoad())
+                                .width(10).color(Color.RED).geodesic(true);
+                        setText();
+
+                    } else if (strStatus.equals("Congested")) {
+                        polylineOptions = new PolylineOptions().
+                                addAll(LiveUpdatesMapCoorindates.getArrayKohatRoad())
+                                .width(10).color(Color.YELLOW).geodesic(true);
+                        setText();
+                        Log.d("zma second switch", "kohat road");
+
+                    }
+                    googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(LiveUpdatesMapCoorindates.KOHAT_ROAD_1, 12));
+                    break;
+                case "gt_road":
+                    if (strStatus.equals("Clear")) {
+                        polylineOptions = new PolylineOptions().
+                                addAll(LiveUpdatesMapCoorindates.getArrayGtRoad())
+                                .width(10).color(Color.GREEN).geodesic(true);
+                        setText();
+
+
+                    } else if (strStatus.equals("Busy")) {
+                        polylineOptions = new PolylineOptions().
+                                addAll(LiveUpdatesMapCoorindates.getArrayGtRoad())
+                                .width(10).color(Color.RED).geodesic(true);
+                        setText();
+
+                    } else if (strStatus.equals("Congested")) {
+                        polylineOptions = new PolylineOptions().
+                                addAll(LiveUpdatesMapCoorindates.getArrayGtRoad())
+                                .width(10).color(Color.YELLOW).geodesic(true);
+                        setText();
+                        Log.d("zma second switch", "gt road");
+
+                    }
+                    googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(LiveUpdatesMapCoorindates.GT_ROAD_1, 12));
+                    break;
+                case "dalazak_road":
+                    new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
+                            .setTitleText("Oops...")
+                            .setContentText("No path available")
+                            .show();
+                    break;
+                case "warsak_road":
+                    new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
+                            .setTitleText("Oops...")
+                            .setContentText("No path available")
+                            .show();
+                    break;
+
+
+            }
+        }catch (Exception e){
+            new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
+                    .setTitleText("Oops...")
+                    .setContentText("No path available")
+                    .show();
+            e.printStackTrace();
         }
+//Remove the same line from map
+
         googleMap.clear();
         googleMap.addPolyline(polylineOptions);
     }

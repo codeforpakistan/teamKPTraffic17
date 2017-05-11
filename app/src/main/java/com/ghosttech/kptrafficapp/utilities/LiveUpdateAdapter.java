@@ -9,6 +9,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -55,17 +56,17 @@ public class LiveUpdateAdapter extends RecyclerView.Adapter<LiveUpdateAdapter.Vi
     // you provide access to all the views for a data item in a view holder
     public class ViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
-        LinearLayout linearLayout;
-        TextView tvRoadName,tvRoadStartEndPoint;
+        LinearLayout cvItem;
+        TextView tvRoadName, tvRoadStartEndPoint;
         ImageView ivRoadListIcon;
 
 
         public ViewHolder(View v) {
             super(v);
-           // ivRoadListIcon = (ImageView) itemView.findViewById(R.id.iv_road_icon);
+            // ivRoadListIcon = (ImageView) itemView.findViewById(R.id.iv_road_icon);
             tvRoadName = (TextView) itemView.findViewById(R.id.tv_road_name);
-            linearLayout = (LinearLayout) itemView.findViewById(R.id.item_live_update);
-            tvRoadStartEndPoint = (TextView)itemView.findViewById(R.id.tv_road_detail);
+            cvItem = (LinearLayout) itemView.findViewById(R.id.item_live_update);
+            tvRoadStartEndPoint = (TextView) itemView.findViewById(R.id.tv_road_detail);
 
         }
     }
@@ -97,11 +98,11 @@ public class LiveUpdateAdapter extends RecyclerView.Adapter<LiveUpdateAdapter.Vi
         // - replace the contents of the view with that element
         holder.tvRoadName.setText(liveUpdateHelpers.get(position).strRoadName);
         holder.tvRoadStartEndPoint.setText(liveUpdateHelpers.get(position).strRoadStartEndPoint);
-       // holder.ivRoadListIcon.setImageResource(liveUpdateHelpers.get(position).roadIcon);
+        // holder.ivRoadListIcon.setImageResource(liveUpdateHelpers.get(position).roadIcon);
         final int itemPosition = position;
         args = new Bundle();
         Log.d("zma position", String.valueOf(itemPosition));
-        holder.linearLayout.setOnClickListener(new View.OnClickListener() {
+        holder.cvItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 fragment = new LiveUpdateResultFragment();
@@ -195,14 +196,14 @@ public class LiveUpdateAdapter extends RecyclerView.Adapter<LiveUpdateAdapter.Vi
 
                     if (status) {
                         pDialog.dismiss();
-                        Log.d("zma status", String.valueOf(status));
+                        Log.d("zma status api wala", String.valueOf(status));
                         JSONArray jsonArray = response.getJSONArray("data");
                         for (int i = 0; i < jsonArray.length(); i++) {
                             JSONObject jsonObject = jsonArray.getJSONObject(i);
                             responseRouteName = jsonObject.getString("route_name");
                             responseRouteStatus = jsonObject.getString("route_status");
                             responseTime = jsonObject.getString("updated_time");
-                             Toast.makeText(context, responseRouteName + "\n" +
+                            Toast.makeText(context, responseRouteName + "\n" +
                                     responseRouteStatus +
                                     "\n" + responseTime, Toast.LENGTH_SHORT).show();
                         }
@@ -239,6 +240,7 @@ public class LiveUpdateAdapter extends RecyclerView.Adapter<LiveUpdateAdapter.Vi
                         fragment.setArguments(args);
 
                     } else {
+                        pDialog.dismiss();
                         new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
                                 .setTitleText("Oops...")
                                 .setContentText("Something went wrong   !")
@@ -246,6 +248,7 @@ public class LiveUpdateAdapter extends RecyclerView.Adapter<LiveUpdateAdapter.Vi
                         //main else
                     }
                 } catch (JSONException e) {
+                    pDialog.dismiss();
                     new SweetAlertDialog(context, SweetAlertDialog.ERROR_TYPE)
                             .setTitleText("Oops...")
                             .setContentText("Server Error!")

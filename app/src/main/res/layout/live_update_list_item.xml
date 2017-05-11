@@ -1,38 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_marginBottom="20dp"
+    android:background="#fff">
+    <LinearLayout
         android:id="@+id/item_live_update"
+        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        android:background="#fff"
-        android:orientation="horizontal"
-        android:paddingLeft="16dp"
-        android:paddingTop="16dp">
+        android:background="#fff">
 
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:weightSum="1">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:padding="5dp"
+            app:srcCompat="@drawable/list_item_image"
+            android:id="@+id/ivItemPicture"
+            android:layout_weight="0.01" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        >
 
         <TextView
             android:id="@+id/tv_road_name"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/person_age"
-            android:layout_weight="1"
             android:text="G.T Road"
             android:textColor="#619c8e"
+            android:layout_gravity="center_horizontal"
+
             android:textSize="12sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            />
+
 
         <TextView
             android:id="@+id/tv_road_detail"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1"
+            android:layout_gravity="center_horizontal"
             android:text="Pir Zakori - Suri Pul"
             android:textColor="#b7b7b7"
             android:textSize="12sp"
-            android:textStyle="bold" />
-
+            android:textStyle="bold"
+            />
     </LinearLayout>
+    </LinearLayout>
+
+</android.support.v7.widget.CardView>
 
