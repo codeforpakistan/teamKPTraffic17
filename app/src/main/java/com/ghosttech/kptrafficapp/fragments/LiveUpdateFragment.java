@@ -3,6 +3,7 @@ package com.ghosttech.kptrafficapp.fragments;
 import android.app.Fragment;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,11 +11,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.ghosttech.kptrafficapp.R;
 import com.ghosttech.kptrafficapp.utilities.LiveUpdateAdapter;
 import com.ghosttech.kptrafficapp.utilities.LiveUpdateHelper;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -68,7 +69,7 @@ public class LiveUpdateFragment extends Fragment {
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setHasFixedSize(true);
-
+        customActionBar();
         initializeData();
         mAdapter = new LiveUpdateAdapter(getActivity(), liveUpdateHelpers);
         mRecyclerView.setAdapter(mAdapter);
@@ -109,5 +110,25 @@ public class LiveUpdateFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+    public void customActionBar() {
+        android.support.v7.app.ActionBar mActionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        mActionBar.setDisplayShowHomeEnabled(false);
+        mActionBar.setDisplayShowTitleEnabled(false);
+        LayoutInflater mInflater = LayoutInflater.from(getActivity());
+        View mCustomView = mInflater.inflate(R.layout.custom_action_bar, null);
+        TextView mTitleTextView = (TextView) mCustomView.findViewById(R.id.title_text);
+        ImageView mBackArrow = (ImageView) mCustomView.findViewById(R.id.iv_back_arrow);
+        mTitleTextView.setText("Live Road Update");
+        mBackArrow.setImageResource(R.drawable.back_arrow);
+        mBackArrow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Fragment fragment = new MainFragment();
+                getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
+            }
+        });
+        mActionBar.setCustomView(mCustomView);
+        mActionBar.setDisplayShowCustomEnabled(true);
     }
 }

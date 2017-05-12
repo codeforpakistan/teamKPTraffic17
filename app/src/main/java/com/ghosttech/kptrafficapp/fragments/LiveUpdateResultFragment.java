@@ -172,17 +172,19 @@ public class LiveUpdateResultFragment extends Fragment {
     }
 
     public void pickMapView() {
+        googleMap.clear();
         switch (strRoadName) {
             case "gt_road":
+
                 setPolylineOptions();
                 break;
             case "khyber_road":
                 setPolylineOptions();
-                Log.d("zma poly road",String.valueOf(strRoadName));
+                Log.d("zma poly road", String.valueOf(strRoadName));
                 break;
             case "charsadda_road":
                 setPolylineOptions();
-                Log.d("zma poly road",String.valueOf(strRoadName));
+                Log.d("zma poly road", String.valueOf(strRoadName));
                 break;
             case "jail_road":
                 setPolylineOptions();
@@ -211,9 +213,8 @@ public class LiveUpdateResultFragment extends Fragment {
 
     public void setPolylineOptions() {
         try {
-
-
             switch (strRoadName) {
+
                 case "khyber_road":
                     if (strStatus.equals("Clear")) {
                         polylineOptions = new PolylineOptions().
@@ -420,7 +421,7 @@ public class LiveUpdateResultFragment extends Fragment {
 
 
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
                     .setTitleText("Oops...")
                     .setContentText("No path available")

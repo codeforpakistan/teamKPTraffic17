@@ -88,6 +88,7 @@ public class ComplaintFragment extends Fragment {
     final int RESULT_LOAD_VIDEO = 4;
     SweetAlertDialog pDialog;
     RequestQueue requestQueue;
+    boolean flag = false;
 
     public ComplaintFragment() {
         // Required empty public constructor
@@ -230,81 +231,159 @@ public class ComplaintFragment extends Fragment {
         @SuppressWarnings("deprecation")
         private String uploadFile() {
             String responseString = null;
+            if (flag) {
 
-            HttpClient httpclient = new DefaultHttpClient();
-            HttpPost httppost = new HttpPost(Configuration.END_POINT_LIVE + "complaints/image");
+                Log.d("zma flag",String.valueOf(flag));
+                HttpClient httpclient = new DefaultHttpClient();
 
-            try {
-                HTTPMultiPartEntity entity = new HTTPMultiPartEntity(
-                        new HTTPMultiPartEntity.ProgressListener() {
+                HttpPost httppost = new HttpPost(Configuration.END_POINT_LIVE + "complaints/image");
 
-                            @Override
-                            public void transferred(long num) {
-                                publishProgress((int) ((num / (float) totalSize) * 100));
-                            }
-                        });
                 try {
-                    File msourceFile = new File(sourceFile.getPath());
-                    entity.addPart("image", new FileBody(msourceFile));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                // Adding file data to http body
-                // Extra parameters if you want to pass to server
-                entity.addPart("complaint_type_id", new StringBody("12"));
-                entity.addPart("signup_id", new StringBody("21"));
-                entity.addPart("latitude", new StringBody(String.valueOf(dblLat)));
-                entity.addPart("longitude", new StringBody(String.valueOf(dblLon)));
-                entity.addPart("description", new StringBody(strDesciption));
-                totalSize = entity.getContentLength();
-                httppost.setEntity(entity);
-                // Making server call
-                HttpResponse response = httpclient.execute(httppost);
-                HttpEntity r_entity = response.getEntity();
-                int statusCode = response.getStatusLine().getStatusCode();
-                if (statusCode == 200) {
-                    pDialog.dismiss();
-                    // Server response
-                    fragment = new MainFragment();
-                    //getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
-                    responseString = EntityUtils.toString(r_entity);
-                    Log.d("zma response", responseString);
-                    Looper.prepare();
-                    if (responseString.contains("true")) {
+                    HTTPMultiPartEntity entity = new HTTPMultiPartEntity(
+                            new HTTPMultiPartEntity.ProgressListener() {
 
-                        new SweetAlertDialog(getActivity(), SweetAlertDialog.SUCCESS_TYPE)
-                                .setTitleText("Good job!")
-                                .setContentText("Your complaint has been registered!")
-                                .show();
-
+                                @Override
+                                public void transferred(long num) {
+                                    publishProgress((int) ((num / (float) totalSize) * 100));
+                                }
+                            });
+                    try {
+                        File msourceFile = new File(sourceFile.getPath());
+                        entity.addPart("image", new FileBody(msourceFile));
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                } else {
-                    responseString = "Error occurred! Http Status Code: "
-                            + statusCode;
+                    // Adding file data to http body
+                    // Extra parameters if you want to pass to server
+                    entity.addPart("complaint_type_id", new StringBody("12"));
+                    entity.addPart("signup_id", new StringBody("21"));
+                    entity.addPart("latitude", new StringBody(String.valueOf(dblLat)));
+                    entity.addPart("longitude", new StringBody(String.valueOf(dblLon)));
+                    entity.addPart("description", new StringBody(strDesciption));
+                    totalSize = entity.getContentLength();
+                    httppost.setEntity(entity);
+                    // Making server call
+                    HttpResponse response = httpclient.execute(httppost);
+                    HttpEntity r_entity = response.getEntity();
+                    int statusCode = response.getStatusLine().getStatusCode();
+                    if (statusCode == 200) {
+                        pDialog.dismiss();
+                        // Server response
+                        fragment = new MainFragment();
+                        //getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
+                        responseString = EntityUtils.toString(r_entity);
+                        Log.d("zma response", responseString);
+                        Looper.prepare();
+                        if (responseString.contains("true")) {
+
+                            new SweetAlertDialog(getActivity(), SweetAlertDialog.SUCCESS_TYPE)
+                                    .setTitleText("Good job")
+                                    .setContentText("Your complaint has been registered!")
+                                    .show();
+
+                        }
+                    } else {
+                        responseString = "Error occurred! Http Status Code: "
+                                + statusCode;
+                        pDialog.dismiss();
+                        new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
+                                .setTitleText("Oops...")
+                                .setContentText("Something went wrong!")
+                                .show();
+                    }
+
+                } catch (ClientProtocolException e) {
+                    responseString = e.toString();
                     pDialog.dismiss();
-                    new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
+                    new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
+                            .setTitleText("Oops...")
+                            .setContentText("Something went wrong!")
+                            .show();
+                } catch (IOException e) {
+                    responseString = e.toString();
+                    pDialog.dismiss();
+                    new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
                             .setTitleText("Oops...")
                             .setContentText("Something went wrong!")
                             .show();
                 }
+            }else{
+                Log.d("zma flag else",String.valueOf(flag));
+                HttpClient httpclient = new DefaultHttpClient();
 
-            } catch (ClientProtocolException e) {
-                responseString = e.toString();
-                pDialog.dismiss();
-                new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
-                        .setTitleText("Oops...")
-                        .setContentText("Something went wrong!")
-                        .show();
-            } catch (IOException e) {
-                responseString = e.toString();
-                pDialog.dismiss();
-                new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
-                        .setTitleText("Oops...")
-                        .setContentText("Something went wrong!")
-                        .show();
+                HttpPost httppost = new HttpPost(Configuration.END_POINT_LIVE + "complaints/video");
+
+                try {
+                    HTTPMultiPartEntity entity = new HTTPMultiPartEntity(
+                            new HTTPMultiPartEntity.ProgressListener() {
+
+                                @Override
+                                public void transferred(long num) {
+                                    publishProgress((int) ((num / (float) totalSize) * 100));
+                                }
+                            });
+                    try {
+                        File msourceFile = new File(sourceFile.getPath());
+                        entity.addPart("video", new FileBody(msourceFile));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    // Adding file data to http body
+                    // Extra parameters if you want to pass to server
+                    entity.addPart("complaint_type_id", new StringBody("12"));
+                    entity.addPart("signup_id", new StringBody("21"));
+                    entity.addPart("latitude", new StringBody(String.valueOf(dblLat)));
+                    entity.addPart("longitude", new StringBody(String.valueOf(dblLon)));
+                    entity.addPart("description", new StringBody(strDesciption));
+                    totalSize = entity.getContentLength();
+                    httppost.setEntity(entity);
+                    // Making server call
+                    HttpResponse response = httpclient.execute(httppost);
+                    HttpEntity r_entity = response.getEntity();
+                    int statusCode = response.getStatusLine().getStatusCode();
+                    if (statusCode == 200) {
+                        pDialog.dismiss();
+                        // Server response
+                        fragment = new MainFragment();
+                        //getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
+                        responseString = EntityUtils.toString(r_entity);
+                        Log.d("zma response", responseString);
+                        Looper.prepare();
+                        if (responseString.contains("true")) {
+
+                            new SweetAlertDialog(getActivity(), SweetAlertDialog.SUCCESS_TYPE)
+                                    .setTitleText("Good job")
+                                    .setContentText("Your complaint has been registered!")
+                                    .show();
+
+                        }
+                    } else {
+                        responseString = "Error occurred! Http Status Code: "
+                                + statusCode;
+                        pDialog.dismiss();
+                        new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
+                                .setTitleText("Oops...")
+                                .setContentText("Something went wrong!")
+                                .show();
+                    }
+
+                } catch (ClientProtocolException e) {
+                    responseString = e.toString();
+                    pDialog.dismiss();
+                    new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
+                            .setTitleText("Oops...")
+                            .setContentText("Something went wrong!")
+                            .show();
+                } catch (IOException e) {
+                    responseString = e.toString();
+                    pDialog.dismiss();
+                    new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
+                            .setTitleText("Oops...")
+                            .setContentText("Something went wrong!")
+                            .show();
+                }
             }
-
-            return responseString;
+                return responseString;
 
         }
     }
@@ -357,7 +436,6 @@ public class ComplaintFragment extends Fragment {
 
     }
 
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -384,7 +462,12 @@ public class ComplaintFragment extends Fragment {
                     Uri tempUri = GeneralUtils.getImageUri(getActivity(), photo);
                     // CALL THIS METHOD TO GET THE ACTUAL PATH
                     sourceFile = new File(GeneralUtils.getRealPathFromURI(getActivity(), tempUri));
-                    Log.d("zma path 1", sourceFile.toString());
+                    if (sourceFile.toString().length()>0){
+                        Log.d("zma source pic",String.valueOf(sourceFile));
+                        flag = true;
+                        Log.d("zma flag camera",String.valueOf(flag));
+                    }
+                    Log.d("zma pic", sourceFile.toString());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -395,7 +478,10 @@ public class ComplaintFragment extends Fragment {
                 Bundle extras = data.getExtras();
                 String path = data.getData().toString();
                 sourceFile = new File(GeneralUtils.getRealPathFromURI(getActivity(), picUri));
-                Log.d("zma path 1111", sourceFile.toString());
+                if (sourceFile.toString().length()>0){
+                    Log.d("zma source video",String.valueOf(sourceFile));
+                }
+                Log.d("zma video", sourceFile.toString());
 
 
             } else if (resultCode == RESULT_LOAD_VIDEO) {
@@ -408,6 +494,9 @@ public class ComplaintFragment extends Fragment {
                 // String videoPath = cursor.getString(columnIndex);
                 String videoPath = data.getData().toString();
                 sourceFile = new File(videoPath);
+                if (sourceFile.toString().length()>0){
+                    Log.d("zma source video",String.valueOf(sourceFile));
+                }
                 cursor.close();
 
             }
