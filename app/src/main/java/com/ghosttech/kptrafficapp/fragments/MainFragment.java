@@ -8,6 +8,7 @@ import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.multidex.MultiDex;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -107,6 +108,7 @@ public class MainFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_main, container, false);
+        MultiDex.install(getActivity());
         shake = AnimationUtils.loadAnimation(getActivity(), R.anim.shake);
         mRequestQueue = Volley.newRequestQueue(getActivity());
         onButtonClick();
@@ -131,6 +133,12 @@ public class MainFragment extends Fragment {
                             int maxLines = address.get(0).getMaxAddressLineIndex();
                             for (int i = 0; i < maxLines; i++) {
                                 String addressStr = address.get(0).getAddressLine(i);
+                                String city = address.get(0).getLocality();
+                                String state = address.get(0).getAdminArea();
+                                String country = address.get(0).getCountryName();
+                                String postalCode = address.get(0).getPostalCode();
+                                String knownName = address.get(0).getFeatureName();
+                                Log.d("zma city 2", "city " + city + "\nstate " + state + "\n country " + country + "\n postal code " + postalCode + "\nknow name " + knownName);
                                 builder.append(addressStr);
                                 builder.append(" ");
                             }
@@ -138,6 +146,12 @@ public class MainFragment extends Fragment {
                             strCityName = builder.toString(); //This is the complete address.
                             mTitleTextView.setText(" " + strCityName);
                             Log.d("zma city", strCityName);
+                            if (address.size() > 0) {
+
+                                System.out.println(address.get(0).getCountryName());
+                                System.out.println(address.get(0).getAdminArea());
+                                System.out.println(address.get(0).getSubLocality());
+                            }
                         } catch (IOException e) {
                         } catch (NullPointerException e) {
                         }
@@ -191,6 +205,14 @@ public class MainFragment extends Fragment {
                 customDialog();
 
 
+            }
+        });
+        btnEmergencyContacts.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                fragment = new MainEmergencyFragment();
+                getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).
+                        addToBackStack("tag").commit();
             }
         });
 

@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.multidex.MultiDex;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -101,7 +102,7 @@ public class RegistrationFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_registration, container, false);
         mRequestQueue = Volley.newRequestQueue(getActivity());
         shake = AnimationUtils.loadAnimation(getActivity(), R.anim.shake);
-
+        MultiDex.install(getActivity());
         pDialog = new SweetAlertDialog(getActivity(), SweetAlertDialog.PROGRESS_TYPE);
         pDialog.getProgressHelper().setBarColor(Color.parseColor("#179e99"));
         pDialog.setTitleText("Wait a while");

@@ -255,7 +255,7 @@ public class ComplaintFragment extends Fragment {
                     }
                     // Adding file data to http body
                     // Extra parameters if you want to pass to server
-                    entity.addPart("complaint_type_id", new StringBody("12"));
+                    entity.addPart("complaint_type_id", new StringBody(spinnerID));
                     entity.addPart("signup_id", new StringBody("21"));
                     entity.addPart("latitude", new StringBody(String.valueOf(dblLat)));
                     entity.addPart("longitude", new StringBody(String.valueOf(dblLon)));
@@ -330,7 +330,7 @@ public class ComplaintFragment extends Fragment {
                     }
                     // Adding file data to http body
                     // Extra parameters if you want to pass to server
-                    entity.addPart("complaint_type_id", new StringBody("12"));
+                    entity.addPart("complaint_type_id", new StringBody(spinnerID));
                     entity.addPart("signup_id", new StringBody("21"));
                     entity.addPart("latitude", new StringBody(String.valueOf(dblLat)));
                     entity.addPart("longitude", new StringBody(String.valueOf(dblLon)));
