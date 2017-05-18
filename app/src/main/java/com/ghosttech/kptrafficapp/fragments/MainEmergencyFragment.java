@@ -7,6 +7,7 @@ import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.ghosttech.kptrafficapp.R;
 import com.imangazaliev.circlemenu.CircleMenu;
@@ -25,11 +26,11 @@ public class MainEmergencyFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
+    View view;
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-
+    ImageView ivHealthEmergency,ivMechanicsEmergency,ivRescueEmergency, ivHighOfficer;
     private OnFragmentInteractionListener mListener;
 
     public MainEmergencyFragment() {
@@ -67,7 +68,11 @@ public class MainEmergencyFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view  = inflater.inflate(R.layout.fragment_main_emergency, container, false);
+        view = inflater.inflate(R.layout.fragment_main_emergency, container, false);
+        ivHealthEmergency = (ImageView)view.findViewById(R.id.iv_emergency_health);
+        ivHighOfficer = (ImageView)view.findViewById(R.id.iv_emergency_highway_officer);
+        ivMechanicsEmergency = (ImageView)view.findViewById(R.id.iv_emergency_mechanics);
+        ivRescueEmergency = (ImageView)view.findViewById(R.id.iv_emergency_rescue_1122);
 //        CircleMenu circleMenu = (CircleMenu) view.findViewById(R.id.circleMenu);
 //        circleMenu.setOnItemClickListener(new CircleMenu.OnItemClickListener() {
 //            @Override

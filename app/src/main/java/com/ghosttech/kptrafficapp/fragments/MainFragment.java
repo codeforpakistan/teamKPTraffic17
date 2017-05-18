@@ -138,7 +138,9 @@ public class MainFragment extends Fragment {
                                 String country = address.get(0).getCountryName();
                                 String postalCode = address.get(0).getPostalCode();
                                 String knownName = address.get(0).getFeatureName();
-                                Log.d("zma city 2", "city " + city + "\nstate " + state + "\n country " + country + "\n postal code " + postalCode + "\nknow name " + knownName);
+                                String subadmin = address.get(0).getSubLocality();
+                                Log.d("zma city 2", "city " + city + "\nstate " + state + "\n country " +
+                                        country + "\n postal code " + postalCode + "\nknow name " + knownName+"get sub admin area"+subadmin);
                                 builder.append(addressStr);
                                 builder.append(" ");
                             }
