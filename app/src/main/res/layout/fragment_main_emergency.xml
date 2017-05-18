@@ -20,26 +20,29 @@
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_gravity="top|center_horizontal"
-            android:src="@drawable/emergency_health" />
+            android:src="@drawable/emergency_image_without_shadow_mechanics" />
 
         <ImageView
             android:layout_width="70dp"
             android:layout_height="70dp"
+            android:paddingRight="-20dp"
+            android:elevation="20dp"
             android:layout_marginLeft="-10dp"
             android:layout_gravity="right|center_vertical"
-            android:src="@drawable/emergency_health" />
+            android:src="@drawable/emergency_image_without_shadow_mechanics" />
 
         <ImageView
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_gravity="left|center_vertical"
-            android:src="@drawable/emergency_health" />
+            android:src="@drawable/emergency_image_without_shadow_mechanics" />
 
         <ImageView
             android:layout_width="70dp"
             android:layout_height="70dp"
+            android:layout_marginBottom="-15dp"
             android:layout_gravity="bottom|center_horizontal"
-            android:src="@drawable/emergency_highway_officer"
+            android:src="@drawable/emergency_image_without_shadow_mechanics"
             android:id="@+id/imageView4" />
 
 
