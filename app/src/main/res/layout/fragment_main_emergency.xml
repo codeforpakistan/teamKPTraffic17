@@ -1,57 +1,48 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#fff"
+    android:gravity="center"
     android:orientation="vertical"
     tools:context="com.ghosttech.kptrafficapp.fragments.MainEmergencyFragment">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="vertical">
-
+    <FrameLayout
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_gravity="center">
         <ImageView
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_gravity="top"
-            android:layout_marginTop="110dp"
+            android:layout_width="match_parent"
+            android:paddingTop="25dp"
+            android:src="@drawable/emergency_image_background"
+            android:layout_height="match_parent" />
+        <ImageView
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_gravity="top|center_horizontal"
             android:src="@drawable/emergency_health" />
 
         <ImageView
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_gravity="bottom"
-            android:layout_marginRight="25dp"
-            android:layout_marginTop="20dp"
-            android:src="@drawable/emergency_health" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_marginTop="50dp"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal">
-
-        <ImageView
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_gravity="top"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_marginLeft="-10dp"
+            android:layout_gravity="right|center_vertical"
             android:src="@drawable/emergency_health" />
 
         <ImageView
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_gravity="bottom"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_gravity="left|center_vertical"
             android:src="@drawable/emergency_health" />
 
-    </LinearLayout>
+        <ImageView
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_gravity="bottom|center_horizontal"
+            android:src="@drawable/emergency_highway_officer"
+            android:id="@+id/imageView4" />
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="250dp"
-        android:layout_height="250dp"
-        android:layout_gravity="center"
-        android:src="@drawable/emergency_image_background" />
-</FrameLayout>
+
+    </FrameLayout>
+
+</LinearLayout>
