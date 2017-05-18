@@ -6,10 +6,12 @@ package com.ghosttech.kptrafficapp.utilities;
 
 public class LiveUpdateHelper {
     String strRoadName,strRoadStartEndPoint;
+    int imageID;
 
 
-    public LiveUpdateHelper(String name, String strRoadStartEndPoint) {
+    public LiveUpdateHelper(int imageID, String name, String strRoadStartEndPoint) {
         this.strRoadName = name;
         this.strRoadStartEndPoint = strRoadStartEndPoint;
+        this.imageID = imageID;
     }
 }

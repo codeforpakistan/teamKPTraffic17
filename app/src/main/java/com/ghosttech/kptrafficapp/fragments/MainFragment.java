@@ -215,6 +215,14 @@ public class MainFragment extends Fragment {
                         addToBackStack("tag").commit();
             }
         });
+        btnTrafficEducation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                fragment = new TrafficEducationFragment();
+                getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).
+                        addToBackStack("tag").commit();
+            }
+        });
 
     }
 

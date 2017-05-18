@@ -67,6 +67,8 @@ public class LiveUpdateAdapter extends RecyclerView.Adapter<LiveUpdateAdapter.Vi
             tvRoadName = (TextView) itemView.findViewById(R.id.tv_road_name);
             cvItem = (LinearLayout) itemView.findViewById(R.id.item_live_update);
             tvRoadStartEndPoint = (TextView) itemView.findViewById(R.id.tv_road_detail);
+            ivRoadListIcon = (ImageView)itemView.findViewById(R.id.iv_road_icon);
+
 
         }
     }
@@ -98,6 +100,7 @@ public class LiveUpdateAdapter extends RecyclerView.Adapter<LiveUpdateAdapter.Vi
         // - replace the contents of the view with that element
         holder.tvRoadName.setText(liveUpdateHelpers.get(position).strRoadName);
         holder.tvRoadStartEndPoint.setText(liveUpdateHelpers.get(position).strRoadStartEndPoint);
+        holder.ivRoadListIcon.setImageResource(liveUpdateHelpers.get(position).imageID);
         // holder.ivRoadListIcon.setImageResource(liveUpdateHelpers.get(position).roadIcon);
         final int itemPosition = position;
         args = new Bundle();
