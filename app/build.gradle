@@ -57,8 +57,8 @@ dependencies {
     compile 'com.google.android.gms:play-services-maps:10.2.1'
     compile 'com.github.imangazalievm:circlemenu:1.0.3'
     compile 'com.android.support:multidex:1.0.0'
-    testCompile 'junit:junit:4.12'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.github.bumptech.glide:glide:4.0.0-RC0'
+    testCompile 'junit:junit:4.12'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.0.0-RC0'
 }

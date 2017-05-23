@@ -1,48 +1,67 @@
 package com.ghosttech.kptrafficapp.fragments;
 
-import android.app.Fragment;
+import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
+
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
+import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.ghosttech.kptrafficapp.R;
 import com.ghosttech.kptrafficapp.utilities.Configuration;
-
-import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class LicenseFragment extends Fragment {
+/**
+ * A simple {@link Fragment} subclass.
+ * Activities that contain this fragment must implement the
+ * {@link ChallanFragment.OnFragmentInteractionListener} interface
+ * to handle interaction events.
+ * Use the {@link ChallanFragment#newInstance} factory method to
+ * create an instance of this fragment.
+ */
+public class ChallanFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     View view;
+    TextView tvLicHolderName, tvLicHolderFatherName, tvLicHolderDistrict, tvLicType, tvLicIssueDate,
+            tvLisExpiryDate, tvCNICNumber, tvLicenseNumber;
+    RequestQueue mRequestQueue;
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-    String strGetLicenseNumber, strGetLicHolderName, strGetLicHolderFName, strGetLicType, strLicDistrict, strLicExpiryDate;
-    TextView tvLicHolderName, tvLicHolderFatherName, tvLicHolderDistrict, tvLicType, tvLicIssueDate,
-            tvLisExpiryDate,tvCNICNumber,tvLicenseNumber;
+
     private OnFragmentInteractionListener mListener;
 
-    public LicenseFragment() {
+    public ChallanFragment() {
         // Required empty public constructor
     }
 
+    /**
+     * Use this factory method to create a new instance of
+     * this fragment using the provided parameters.
+     *
+     * @param param1 Parameter 1.
+     * @param param2 Parameter 2.
+     * @return A new instance of fragment ChallanFragment.
+     */
     // TODO: Rename and change types and number of parameters
-    public static LicenseFragment newInstance(String param1, String param2) {
-        LicenseFragment fragment = new LicenseFragment();
+    public static ChallanFragment newInstance(String param1, String param2) {
+        ChallanFragment fragment = new ChallanFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -63,22 +82,22 @@ public class LicenseFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        view = inflater.inflate(R.layout.fragment_license, container, false);
+        view = inflater.inflate(R.layout.fragment_challan, container, false);
+        Bundle args = getArguments();
+        mRequestQueue = Volley.newRequestQueue(getActivity());
         tvLicHolderName = (TextView) view.findViewById(R.id.tv_name_lic_holder);
         tvLicHolderFatherName = (TextView) view.findViewById(R.id.tv_fn_lic_holder);
         tvLicType = (TextView) view.findViewById(R.id.tv_lic_type);
         tvLicHolderDistrict = (TextView) view.findViewById(R.id.tv_district_lic_holder);
         tvLisExpiryDate = (TextView) view.findViewById(R.id.tv_expiry_date);
-        tvLicenseNumber = (TextView)view.findViewById(R.id.tv_license_number);
-        tvCNICNumber = (TextView)view.findViewById(R.id.tv_cnic);
-        Bundle args = new Bundle(getArguments());
+        tvLicenseNumber = (TextView) view.findViewById(R.id.tv_license_number);
+        tvCNICNumber = (TextView) view.findViewById(R.id.tv_cnic);
         tvLicHolderName.setText(String.valueOf(args.get("name")));
         tvLicHolderDistrict.setText(String.valueOf(args.get("district")));
-        tvLicHolderFatherName.setText(String.valueOf(args.get("f_name")));
-        tvLisExpiryDate.setText(String.valueOf(args.get("expiry_date")));
-        tvLicType.setText(String.valueOf(args.get("lic_type")));
-        tvCNICNumber.setText(String.valueOf(args.get("cnic")));
-        tvLicenseNumber.setText(String.valueOf(args.get("license_number")));
+        tvLicHolderFatherName.setText(String.valueOf(args.get("amount")));
+        tvLisExpiryDate.setText(String.valueOf(args.get("date")));
+        tvLicType.setText(String.valueOf(args.get("status")));
+        tvCNICNumber.setText(String.valueOf(args.get("dutyPoint")));
         return view;
     }
 
@@ -95,38 +114,18 @@ public class LicenseFragment extends Fragment {
         mListener = null;
     }
 
+    /**
+     * This interface must be implemented by activities that contain this
+     * fragment to allow an interaction in this fragment to be communicated
+     * to the activity and potentially other fragments contained in that
+     * activity.
+     * <p>
+     * See the Android Training lesson <a href=
+     * "http://developer.android.com/training/basics/fragments/communicating.html"
+     * >Communicating with Other Fragments</a> for more information.
+     */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
-
-    public void apiCall() {
-        String url = Configuration.END_POINT_LIVE + "license_verification/get_license_data";
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
-            }
-        }) {
-            @Override
-            public String getBodyContentType() {
-                return "application/x-www-form-urlencoded;charset=UTF-8";
-            }
-
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> params = new HashMap<>();
-                params.put("cnic", "");
-                params.put("dl_number", "");
-                return params;
-            }
-        };
-    }
-
-
 }

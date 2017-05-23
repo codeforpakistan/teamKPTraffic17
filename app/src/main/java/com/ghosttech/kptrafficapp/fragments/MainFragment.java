@@ -24,6 +24,7 @@ import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.ExecutorDelivery;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -71,9 +72,10 @@ public class MainFragment extends Fragment {
     EditText etLicNumber;
     Button btnShowLicRecord;
     double dblLat, dblLon;
-    String strCityName, strCheckLatLon, strLicenseNumber, strCNIC, strResponseLicenseID, strResponseDLNumber,
+    String strCityName, strChallanTrackingID, strCheckLatLon, strLicenseNumber, strCNIC, strResponseLicenseID, strResponseDLNumber,
             strResponseCNIC, strResponseLicHolderName, strResponseLicHolderFatherName, strResponseLicType,
             strResponseExpiryDate, strResponseLicHolderDistrict;
+    String strChallanDate,strChallanDistrict,strChallanName,strChallanDutyPoint,strChallanAmount,strChallanStatus;
     TextView mTitleTextView;
     Animation shake;
     LinearLayout btnComplaintSystem, btnLiveTrafficUpdates, btnChallanTracking, btnTrafficEducation,
@@ -140,7 +142,7 @@ public class MainFragment extends Fragment {
                                 String knownName = address.get(0).getFeatureName();
                                 String subadmin = address.get(0).getSubLocality();
                                 Log.d("zma city 2", "city " + city + "\nstate " + state + "\n country " +
-                                        country + "\n postal code " + postalCode + "\nknow name " + knownName+"get sub admin area"+subadmin);
+                                        country + "\n postal code " + postalCode + "\nknow name " + knownName + "get sub admin area" + subadmin);
                                 builder.append(addressStr);
                                 builder.append(" ");
                             }
@@ -204,7 +206,7 @@ public class MainFragment extends Fragment {
         btnLicenseVerification.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                customDialog();
+                customDialogLicenseVerification();
 
 
             }
@@ -223,6 +225,12 @@ public class MainFragment extends Fragment {
                 fragment = new TrafficEducationFragment();
                 getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).
                         addToBackStack("tag").commit();
+            }
+        });
+        btnChallanTracking.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                customDialogChallanStatus();
             }
         });
 
@@ -246,18 +254,56 @@ public class MainFragment extends Fragment {
         mActionBar.setDisplayShowCustomEnabled(true);
     }
 
-    public void customDialog() {
+
+    public void customDialogLicenseVerification() {
         dialog = new Dialog(getActivity());
         //dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.custom_input_dialog);
         dialog.setCancelable(true);
         etLicNumber = (EditText) dialog.findViewById(R.id.et_verify_license);
         btnShowLicRecord = (Button) dialog.findViewById(R.id.btn_search_license_record);
+
         dialog.show();
-        inputValidation();
+        inputValidationLicense();
     }
 
-    public void inputValidation() {
+    public void customDialogChallanStatus() {
+        dialog = new Dialog(getActivity());
+        //dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.custom_input_dialog);
+        dialog.setCancelable(true);
+        etLicNumber = (EditText) dialog.findViewById(R.id.et_verify_license);
+        etLicNumber.setHint("Enter Challan Number");
+        btnShowLicRecord = (Button) dialog.findViewById(R.id.btn_search_license_record);
+        dialog.show();
+        inputValidationChallan();
+    }
+
+    public void inputValidationChallan() {
+        btnShowLicRecord.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                strChallanTrackingID = etLicNumber.getText().toString();
+                if (strChallanTrackingID.toString().equals("")
+                        || strChallanTrackingID.toString().length() > 10) {
+                    Log.d("zma else", strChallanTrackingID);
+                    etLicNumber.startAnimation(shake);
+                } else {
+                    Bundle args = new Bundle();
+                    args.putString("challan_key", strChallanTrackingID);
+                    Log.d("zma challan number", strChallanTrackingID);
+                    fragment = new ChallanFragment();
+                    getFragmentManager().beginTransaction().addToBackStack("tag").replace(R.id.fragment_container, fragment).commit();
+                    fragment.setArguments(args);
+                    apiCallChallan(strChallanTrackingID);
+                    dialog.dismiss();
+                }
+
+            }
+        });
+    }
+
+    public void inputValidationLicense() {
         btnShowLicRecord.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -268,18 +314,18 @@ public class MainFragment extends Fragment {
                     etLicNumber.startAnimation(shake);
                 } else if (strLicenseNumber.toString().length() == 12) {
                     Log.d("zma License", strLicenseNumber);
-                    apiCall(strLicenseNumber);
+                    apiCallLicense(strLicenseNumber);
                 } else if (strLicenseNumber.toString().length() == 13) {
                     strCNIC = strLicenseNumber;
                     Log.d("zma CNiC Cnic", strLicenseNumber);
-                    apiCall(strCNIC);
+                    apiCallLicense(strCNIC);
                 }
 
             }
         });
     }
 
-    public void apiCall(final String cnic) {
+    public void apiCallLicense(final String cnic) {
         String url = Configuration.END_POINT_LIVE + "license_verification/get_license_data";
         final Bundle args = new Bundle();
 //
@@ -358,4 +404,81 @@ public class MainFragment extends Fragment {
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         mRequestQueue.add(jsonObjRequest);
     }
+
+    public void apiCallChallan (final String strChallanID) {
+        String url = Configuration.END_POINT_LIVE + "challan/get_challan_info?";
+        final Bundle args = new Bundle();
+//
+//        Log.d("zma url", url);
+        StringRequest jsonObjRequest = new StringRequest(Request.Method.POST,
+                url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject jsonResponseObject = new JSONObject(response);
+                            boolean status = jsonResponseObject.getBoolean("status");
+                            String str = String.valueOf(response.contains("true"));
+                            Log.d("zma str",str);
+                            Log.d("zma status", String.valueOf(status));
+                            if (status) {
+                                dialog.dismiss();
+                               strChallanDate = jsonResponseObject.getString("date");
+                                strChallanDistrict = jsonResponseObject.getString("district");
+                                strChallanDutyPoint = jsonResponseObject.getString("duty_point");
+                                strChallanName = jsonResponseObject.getString("to_name");
+                                strChallanAmount = jsonResponseObject.getString("amount");
+                                strChallanStatus = jsonResponseObject.getString("status");
+                                args.putString("date", strChallanDate);
+                                args.putString("district", strChallanDistrict);
+                                args.putString("dutyPoint", strChallanDutyPoint);
+                                args.putString("name", strChallanName);
+                                args.putString("amount", strChallanAmount);
+                                args.putString("status", strChallanStatus);
+                                fragment = new ChallanFragment();
+                                getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).addToBackStack("tag").commit();
+                                fragment.setArguments(args);
+                                //TODO extract data from jsonarray data
+                            } else {
+                                new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
+                                        .setTitleText("Oops...")
+                                        .setContentText("No Data found")
+                                        .show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
+                        .setTitleText("Oops...")
+                        .setContentText("Server Error!")
+                        .show();
+                Log.d("zma error registration", String.valueOf(error));
+            }
+        }) {
+            @Override
+            public String getBodyContentType() {
+                return "application/x-www-form-urlencoded;charset=UTF-8";
+            }
+
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("ticket_id", strChallanID);
+                //params.put("dl_license",strLicenseNumber);
+                Log.d("zma params", String.valueOf(params));
+                return params;
+            }
+
+        };
+        jsonObjRequest.setRetryPolicy(new DefaultRetryPolicy(200000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        mRequestQueue.add(jsonObjRequest);
+    }
+
 }
