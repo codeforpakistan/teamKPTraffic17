@@ -25,6 +25,12 @@
                 android:layout_height="135dp"
                 android:layout_marginTop="10sp"
                 android:src="@drawable/emergency_health"
+                android:id="@+id/gif_view" />
+            <ImageView
+                android:layout_width="135dp"
+                android:layout_height="135dp"
+                android:layout_marginTop="10sp"
+                android:src="@drawable/emergency_health"
                 android:id="@+id/traffic_education_image" />
 
             <TextView
@@ -39,7 +45,8 @@
                 android:textStyle="bold"
                 android:id="@+id/image_title"
                 android:layout_alignParentTop="true"
-                android:layout_alignStart="@+id/description_english" />
+                android:layout_alignStart="@+id/description_english"
+                android:layout_alignLeft="@+id/description_english" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -53,7 +60,8 @@
                 android:layout_marginLeft="15sp"
                 android:id="@+id/description_english"
                 android:layout_below="@+id/image_title"
-                android:layout_toEndOf="@+id/traffic_education_image" />
+                android:layout_toEndOf="@+id/traffic_education_image"
+                android:layout_toRightOf="@+id/traffic_education_image" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -68,7 +76,8 @@
                 android:text="Urdu Description Urdu Description Urdu Description Urdu Description"
                 android:textColor="#ababaa"
                 android:layout_below="@+id/description_english"
-                android:layout_toEndOf="@+id/traffic_education_image"/>
+                android:layout_toEndOf="@+id/traffic_education_image"
+                android:layout_toRightOf="@+id/traffic_education_image" />
 
         </RelativeLayout>
 

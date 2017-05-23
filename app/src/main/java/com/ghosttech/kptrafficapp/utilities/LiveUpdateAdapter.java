@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -68,12 +69,8 @@ public class LiveUpdateAdapter extends RecyclerView.Adapter<LiveUpdateAdapter.Vi
             cvItem = (LinearLayout) itemView.findViewById(R.id.item_live_update);
             tvRoadStartEndPoint = (TextView) itemView.findViewById(R.id.tv_road_detail);
             ivRoadListIcon = (ImageView)itemView.findViewById(R.id.iv_road_icon);
-
-
         }
     }
-
-
     // Provide a suitable constructor (depends on the kind of dataset)
     public LiveUpdateAdapter(Context context, List<LiveUpdateHelper> persons) {
         this.liveUpdateHelpers = persons;

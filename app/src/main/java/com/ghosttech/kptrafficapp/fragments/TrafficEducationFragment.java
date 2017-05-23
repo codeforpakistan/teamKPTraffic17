@@ -196,6 +196,12 @@ public class TrafficEducationFragment extends Fragment {
                 trafficEducationHelper.strDescriptionEnglish = jsonObject.getString("image_description_eng");
                 trafficEducationHelper.strDescriptionUrdu = jsonObject.getString("image_description_urdu");
                 trafficEducationHelper.strImage = jsonObject.getString("image");
+                if(jsonObject.getString("image").contains(".gif")){
+                    Log.d("zma image",jsonObject.getString("image"));
+                    Configuration.Traffic_Education_Gif_Image_Boolean = true;
+                    trafficEducationHelper.strImage = jsonObject.getString("image");
+
+                }
 
                 data.add(trafficEducationHelper);
             }
