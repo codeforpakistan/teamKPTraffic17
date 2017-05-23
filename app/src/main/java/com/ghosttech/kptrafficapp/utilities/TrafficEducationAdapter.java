@@ -16,7 +16,6 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.ghosttech.kptrafficapp.R;
-import com.squareup.picasso.Picasso;
 
 import java.util.Collections;
 import java.util.List;
@@ -81,25 +80,12 @@ public class TrafficEducationAdapter extends RecyclerView.Adapter<TrafficEducati
 
 
         TrafficEducationHelper educationHelper = data.get(position);
-        ImageLoader imgLoader = new ImageLoader(context);
         holder.imageTitle.setText(educationHelper.strImageTitle);
         holder.descriptionEnglish.setText(educationHelper.strDescriptionEnglish);
         holder.descriptionUrdu.setText(educationHelper.strDescriptionUrdu);
-//        Glide.with(context).load("http://103.240.220.76/kptraffic/uploads/traffic-education/" + educationHelper.strImage)
-//                .into(holder.ivTrafficEducationImage);
-        if (Configuration.Traffic_Education_Gif_Image_Boolean) {
-            //holder.ivTrafficEducationGif.setVisibility(View.VISIBLE);
-            Log.d("zma adapter gif", String.valueOf(Configuration.Traffic_Education_Gif_Image_Boolean));
-            //holder.ivTrafficEducationImage.setVisibility(View.GONE);
-            loader = R.drawable.back_arrow;
-            imgLoader.DisplayImage(Configuration.END_POINT_LIVE + "http://103.240.220.76/kptraffic/uploads/traffic-education/gifs/" + educationHelper.strImage,
-                    loader, holder.ivTrafficEducationGif);
-        } else {
-           // holder.ivTrafficEducationGif.setVisibility(View.GONE);
-            Log.d("zma adapter image", String.valueOf(Configuration.Traffic_Education_Gif_Image_Boolean));
-            //holder.ivTrafficEducationImage.setVisibility(View.VISIBLE);
-            Picasso.with(context).load("http://103.240.220.76/kptraffic/uploads/traffic-education/" + educationHelper.strImage).into(holder.ivTrafficEducationImage);
-        }
+        Glide.with(context).load("http://103.240.220.76/kptraffic/uploads/traffic-education/" + educationHelper.strImage)
+                .into(holder.ivTrafficEducationImage);
+
     }
 
     // Return the size of your dataset (invoked by the layout manager)
