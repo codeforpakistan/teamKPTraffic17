@@ -31,7 +31,6 @@ public class LicenseFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-    String strGetLicenseNumber, strGetLicHolderName, strGetLicHolderFName, strGetLicType, strLicDistrict, strLicExpiryDate;
     TextView tvLicHolderName, tvLicHolderFatherName, tvLicHolderDistrict, tvLicType, tvLicIssueDate,
             tvLisExpiryDate,tvCNICNumber,tvLicenseNumber;
     private OnFragmentInteractionListener mListener;
@@ -99,34 +98,4 @@ public class LicenseFragment extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
-
-    public void apiCall() {
-        String url = Configuration.END_POINT_LIVE + "license_verification/get_license_data";
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
-            }
-        }) {
-            @Override
-            public String getBodyContentType() {
-                return "application/x-www-form-urlencoded;charset=UTF-8";
-            }
-
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> params = new HashMap<>();
-                params.put("cnic", "");
-                params.put("dl_number", "");
-                return params;
-            }
-        };
-    }
-
-
 }

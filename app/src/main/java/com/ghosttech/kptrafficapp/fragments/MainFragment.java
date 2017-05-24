@@ -2,6 +2,7 @@ package com.ghosttech.kptrafficapp.fragments;
 
 import android.app.Dialog;
 import android.app.Fragment;
+import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -76,6 +77,7 @@ public class MainFragment extends Fragment {
             strResponseExpiryDate, strResponseLicHolderDistrict;
     String strChallanDate, strChallanDistrict, strChallanName, strChallanDutyPoint, strChallanAmount, strChallanStatus;
     TextView mTitleTextView;
+    SweetAlertDialog pDialog;
     Animation shake;
     LinearLayout btnComplaintSystem, btnLiveTrafficUpdates, btnChallanTracking, btnTrafficEducation,
             btnLicenseVerification, btnEmergencyContacts;
@@ -109,6 +111,9 @@ public class MainFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_main, container, false);
+        pDialog = new SweetAlertDialog(getActivity(), SweetAlertDialog.PROGRESS_TYPE);
+        pDialog.getProgressHelper().setBarColor(Color.parseColor("#179e99"));
+        pDialog.setCancelable(false);
         MultiDex.install(getActivity());
         shake = AnimationUtils.loadAnimation(getActivity(), R.anim.shake);
         mRequestQueue = Volley.newRequestQueue(getActivity());
@@ -325,6 +330,8 @@ public class MainFragment extends Fragment {
     }
 
     public void apiCallLicense(final String cnic) {
+        pDialog.setTitleText("Verifying Your License");
+        pDialog.show();
         String url = Configuration.END_POINT_LIVE + "license_verification/get_license_data";
         final Bundle args = new Bundle();
         StringRequest jsonObjRequest = new StringRequest(Request.Method.POST,
@@ -337,6 +344,7 @@ public class MainFragment extends Fragment {
                             boolean status = jsonResponseObject.getBoolean("status");
                             Log.d("zma status", String.valueOf(status));
                             if (status) {
+                                pDialog.dismiss();
                                 dialog.dismiss();
                                 JSONArray jsonArray = jsonResponseObject.getJSONArray("data");
                                 for (int i = 0; i < jsonArray.length(); i++) {
@@ -403,6 +411,8 @@ public class MainFragment extends Fragment {
     }
 
     public void apiCallChallan(final String strChallanID) {
+        pDialog.setTitleText("Verifying Challan ID");
+        pDialog.show();
         String url = Configuration.END_POINT_LIVE + "challan/get_challan_info?TicketId=" + strChallanID;
         Log.d("zma url", url);
         final Bundle args = new Bundle();
@@ -414,16 +424,15 @@ public class MainFragment extends Fragment {
                             try {
                                 JSONObject mainResponse = new JSONObject(response);
                                 if(mainResponse.getBoolean("status")){
+                                    pDialog.dismiss();
                                     JSONObject data = mainResponse.getJSONObject("data");
-                                    String date = data.getString("date");
-                                    String district = data.getString("district");
-                                    String name = data.getString("name");
-                                    String duty_point = data.getString("duty_point");
+                                    strChallanDate = data.getString("date");
+                                    strChallanDistrict = data.getString("district");
+                                    strChallanName = data.getString("name");
+                                    strChallanDutyPoint = data.getString("duty_point");
                                     String ticket_id = data.getString("ticket_id");
-                                    String amount = data.getString("amount");
-                                    String status = data.getString("status");
-
-                                    Log.d("zma data",name+"\n"+date+"\n"+district+"\n"+duty_point+"\n"+ticket_id+"\n"+amount+"\n"+status);
+                                    strChallanAmount = data.getString("amount");
+                                    strChallanStatus = data.getString("status");
 
                                     args.putString("date", strChallanDate);
                                     args.putString("district", strChallanDistrict);
