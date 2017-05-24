@@ -35,7 +35,7 @@ public class TrafficEducationAdapter extends RecyclerView.Adapter<TrafficEducati
         TextView descriptionEnglish;
         TextView descriptionUrdu;
         TextView imageTitle;
-        ImageView ivTrafficEducationImage, ivTrafficEducationGif;
+        ImageView ivTrafficEducationImage;
 
 
         public ViewHolder(View v) {
@@ -45,7 +45,6 @@ public class TrafficEducationAdapter extends RecyclerView.Adapter<TrafficEducati
             descriptionEnglish = (TextView) itemView.findViewById(R.id.description_english);
             descriptionUrdu = (TextView) itemView.findViewById(R.id.description_urdu);
             ivTrafficEducationImage = (ImageView) itemView.findViewById(R.id.traffic_education_image);
-            ivTrafficEducationGif = (ImageView) itemView.findViewById(R.id.gif_view);
 
         }
     }

@@ -329,8 +329,6 @@ public class MainFragment extends Fragment {
     public void apiCallLicense(final String cnic) {
         String url = Configuration.END_POINT_LIVE + "license_verification/get_license_data";
         final Bundle args = new Bundle();
-//
-//        Log.d("zma url", url);
         StringRequest jsonObjRequest = new StringRequest(Request.Method.POST,
                 url,
                 new Response.Listener<String>() {
@@ -407,31 +405,29 @@ public class MainFragment extends Fragment {
     }
 
     public void apiCallChallan(final String strChallanID) {
-        String url = Configuration.END_POINT_LIVE + "challan/get_challan_info?";
-
+        String url = Configuration.END_POINT_LIVE + "challan/get_challan_info?TicketId="+strChallanID;
+Log.d("zma url",url);
         StringRequest jsonObjRequest = new StringRequest(Request.Method.POST,
                 url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         String str = String.valueOf(response.contains("status"));
+                        Log.d("zma status",str);
                         if (str.equals("true")) {
                             try {
-                                Log.d("zma data",response);
                                 JSONObject mainResponse = new JSONObject(response);
                                 JSONObject mainJsonObject = mainResponse.getJSONObject("data");
-                                Log.d("zma data", String.valueOf(mainJsonObject));
+                                //JSONObject jsonObject = mainJsonObject.getJSONObject("name");
+                                Log.d("zma objects",String.valueOf(mainJsonObject+"\n"));
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
-                        }else {
+                        } else {
 
                         }
-
                     }
-
                 }
-
                 , new Response.ErrorListener()
 
         {
@@ -444,8 +440,7 @@ public class MainFragment extends Fragment {
                         .show();
                 Log.d("zma error registration", String.valueOf(error));
             }
-        })
-        {
+        }) {
             @Override
             public String getBodyContentType() {
                 return "application/x-www-form-urlencoded;charset=UTF-8";
