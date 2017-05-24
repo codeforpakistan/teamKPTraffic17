@@ -29,6 +29,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.ghosttech.kptrafficapp.R;
@@ -75,7 +76,7 @@ public class MainFragment extends Fragment {
     String strCityName, strChallanTrackingID, strCheckLatLon, strLicenseNumber, strCNIC, strResponseLicenseID, strResponseDLNumber,
             strResponseCNIC, strResponseLicHolderName, strResponseLicHolderFatherName, strResponseLicType,
             strResponseExpiryDate, strResponseLicHolderDistrict;
-    String strChallanDate,strChallanDistrict,strChallanName,strChallanDutyPoint,strChallanAmount,strChallanStatus;
+    String strChallanDate, strChallanDistrict, strChallanName, strChallanDutyPoint, strChallanAmount, strChallanStatus;
     TextView mTitleTextView;
     Animation shake;
     LinearLayout btnComplaintSystem, btnLiveTrafficUpdates, btnChallanTracking, btnTrafficEducation,
@@ -405,51 +406,35 @@ public class MainFragment extends Fragment {
         mRequestQueue.add(jsonObjRequest);
     }
 
-    public void apiCallChallan (final String strChallanID) {
+    public void apiCallChallan(final String strChallanID) {
         String url = Configuration.END_POINT_LIVE + "challan/get_challan_info?";
-        final Bundle args = new Bundle();
-//
-//        Log.d("zma url", url);
+
         StringRequest jsonObjRequest = new StringRequest(Request.Method.POST,
                 url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        try {
-                            JSONObject jsonResponseObject = new JSONObject(response);
-                            boolean status = jsonResponseObject.getBoolean("status");
-                            String str = String.valueOf(response.contains("true"));
-                            Log.d("zma str",str);
-                            Log.d("zma status", String.valueOf(status));
-                            if (status) {
-                                dialog.dismiss();
-                               strChallanDate = jsonResponseObject.getString("date");
-                                strChallanDistrict = jsonResponseObject.getString("district");
-                                strChallanDutyPoint = jsonResponseObject.getString("duty_point");
-                                strChallanName = jsonResponseObject.getString("to_name");
-                                strChallanAmount = jsonResponseObject.getString("amount");
-                                strChallanStatus = jsonResponseObject.getString("status");
-                                args.putString("date", strChallanDate);
-                                args.putString("district", strChallanDistrict);
-                                args.putString("dutyPoint", strChallanDutyPoint);
-                                args.putString("name", strChallanName);
-                                args.putString("amount", strChallanAmount);
-                                args.putString("status", strChallanStatus);
-                                fragment = new ChallanFragment();
-                                getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).addToBackStack("tag").commit();
-                                fragment.setArguments(args);
-                                //TODO extract data from jsonarray data
-                            } else {
-                                new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
-                                        .setTitleText("Oops...")
-                                        .setContentText("No Data found")
-                                        .show();
+                        String str = String.valueOf(response.contains("status"));
+                        if (str.equals("true")) {
+                            try {
+                                Log.d("zma data",response);
+                                JSONObject mainResponse = new JSONObject(response);
+                                JSONObject mainJsonObject = mainResponse.getJSONObject("data");
+                                Log.d("zma data", String.valueOf(mainJsonObject));
+                            } catch (JSONException e) {
+                                e.printStackTrace();
                             }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+                        }else {
+
                         }
+
                     }
-                }, new Response.ErrorListener() {
+
+                }
+
+                , new Response.ErrorListener()
+
+        {
 
             @Override
             public void onErrorResponse(VolleyError error) {
@@ -459,7 +444,8 @@ public class MainFragment extends Fragment {
                         .show();
                 Log.d("zma error registration", String.valueOf(error));
             }
-        }) {
+        })
+        {
             @Override
             public String getBodyContentType() {
                 return "application/x-www-form-urlencoded;charset=UTF-8";
@@ -469,15 +455,20 @@ public class MainFragment extends Fragment {
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
                 params.put("ticket_id", strChallanID);
-                //params.put("dl_license",strLicenseNumber);
                 Log.d("zma params", String.valueOf(params));
                 return params;
             }
 
         };
-        jsonObjRequest.setRetryPolicy(new DefaultRetryPolicy(200000,
+
+
+        jsonObjRequest.setRetryPolicy(new
+
+                DefaultRetryPolicy(200000,
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)
+
+        );
         mRequestQueue.add(jsonObjRequest);
     }
 
