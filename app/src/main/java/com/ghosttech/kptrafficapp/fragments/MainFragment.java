@@ -405,13 +405,12 @@ public class MainFragment extends Fragment {
     public void apiCallChallan(final String strChallanID) {
         String url = Configuration.END_POINT_LIVE + "challan/get_challan_info?TicketId=" + strChallanID;
         Log.d("zma url", url);
+        final Bundle args = new Bundle();
         StringRequest jsonObjRequest = new StringRequest(Request.Method.POST,
                 url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        String str = String.valueOf(response.contains("status"));
-                        Log.d("zma status", str);
                             try {
                                 JSONObject mainResponse = new JSONObject(response);
                                 if(mainResponse.getBoolean("status")){
@@ -423,6 +422,19 @@ public class MainFragment extends Fragment {
                                     String ticket_id = data.getString("ticket_id");
                                     String amount = data.getString("amount");
                                     String status = data.getString("status");
+
+                                    Log.d("zma data",name+"\n"+date+"\n"+district+"\n"+duty_point+"\n"+ticket_id+"\n"+amount+"\n"+status);
+
+                                    args.putString("date", strChallanDate);
+                                    args.putString("district", strChallanDistrict);
+                                    args.putString("dutyPoint", strChallanDutyPoint);
+                                    args.putString("name", strChallanName);
+                                    args.putString("amount", strChallanAmount);
+                                    args.putString("status", strChallanStatus);
+                                    fragment = new ChallanFragment();
+                                    getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).addToBackStack("tag").commit();
+                                    fragment.setArguments(args);
+
                                 }else{
 
                                 }

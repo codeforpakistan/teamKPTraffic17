@@ -83,8 +83,7 @@ public class ChallanFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_challan, container, false);
-        Bundle args = getArguments();
-        mRequestQueue = Volley.newRequestQueue(getActivity());
+        Bundle args = new Bundle(getArguments());
         tvLicHolderName = (TextView) view.findViewById(R.id.tv_name_lic_holder);
         tvLicHolderFatherName = (TextView) view.findViewById(R.id.tv_fn_lic_holder);
         tvLicType = (TextView) view.findViewById(R.id.tv_lic_type);
@@ -92,7 +91,8 @@ public class ChallanFragment extends Fragment {
         tvLisExpiryDate = (TextView) view.findViewById(R.id.tv_expiry_date);
         tvLicenseNumber = (TextView) view.findViewById(R.id.tv_license_number);
         tvCNICNumber = (TextView) view.findViewById(R.id.tv_cnic);
-        tvLicHolderName.setText(String.valueOf(args.get("name")));
+        tvLicHolderName.setText(String.valueOf(args.getString("name")));
+        Log.d("zma args data",String.valueOf(args.getString("name")));
         tvLicHolderDistrict.setText(String.valueOf(args.get("district")));
         tvLicHolderFatherName.setText(String.valueOf(args.get("amount")));
         tvLisExpiryDate.setText(String.valueOf(args.get("date")));
