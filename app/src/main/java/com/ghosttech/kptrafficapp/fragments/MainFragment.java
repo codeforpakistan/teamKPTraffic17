@@ -24,12 +24,10 @@ import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
-import com.android.volley.ExecutorDelivery;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.ghosttech.kptrafficapp.R;
@@ -405,27 +403,32 @@ public class MainFragment extends Fragment {
     }
 
     public void apiCallChallan(final String strChallanID) {
-        String url = Configuration.END_POINT_LIVE + "challan/get_challan_info?TicketId="+strChallanID;
-Log.d("zma url",url);
+        String url = Configuration.END_POINT_LIVE + "challan/get_challan_info?TicketId=" + strChallanID;
+        Log.d("zma url", url);
         StringRequest jsonObjRequest = new StringRequest(Request.Method.POST,
                 url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         String str = String.valueOf(response.contains("status"));
-                        Log.d("zma status",str);
-                        if (str.equals("true")) {
+                        Log.d("zma status", str);
                             try {
                                 JSONObject mainResponse = new JSONObject(response);
-                                JSONObject mainJsonObject = mainResponse.getJSONObject("data");
-                                //JSONObject jsonObject = mainJsonObject.getJSONObject("name");
-                                Log.d("zma objects",String.valueOf(mainJsonObject+"\n"));
+                                if(mainResponse.getBoolean("status")){
+                                    JSONObject data = mainResponse.getJSONObject("data");
+                                    String date = data.getString("date");
+                                    String district = data.getString("district");
+                                    String name = data.getString("name");
+                                    String duty_point = data.getString("duty_point");
+                                    String ticket_id = data.getString("ticket_id");
+                                    String amount = data.getString("amount");
+                                    String status = data.getString("status");
+                                }else{
+
+                                }
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
-                        } else {
-
-                        }
                     }
                 }
                 , new Response.ErrorListener()
