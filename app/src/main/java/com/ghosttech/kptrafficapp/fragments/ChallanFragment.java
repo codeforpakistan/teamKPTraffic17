@@ -1,6 +1,5 @@
 package com.ghosttech.kptrafficapp.fragments;
 
-import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
@@ -9,21 +8,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.DefaultRetryPolicy;
-import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.ghosttech.kptrafficapp.R;
-import com.ghosttech.kptrafficapp.utilities.Configuration;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -39,8 +26,8 @@ public class ChallanFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     View view;
-    TextView tvLicHolderName, tvLicHolderFatherName, tvLicHolderDistrict, tvLicType, tvLicIssueDate,
-            tvLisExpiryDate, tvCNICNumber, tvLicenseNumber;
+    TextView tvChallanDate, tvChallanDistrict, tvOfficerName, tvDutyPoint,
+            tvChallanAmount, tvChallanStatus;
     RequestQueue mRequestQueue;
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -85,20 +72,19 @@ public class ChallanFragment extends Fragment {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_challan, container, false);
         Bundle args = new Bundle(getArguments());
-        tvLicHolderName = (TextView) view.findViewById(R.id.tv_name_lic_holder);
-        tvLicHolderFatherName = (TextView) view.findViewById(R.id.tv_fn_lic_holder);
-        tvLicType = (TextView) view.findViewById(R.id.tv_lic_type);
-        tvLicHolderDistrict = (TextView) view.findViewById(R.id.tv_district_lic_holder);
-        tvLisExpiryDate = (TextView) view.findViewById(R.id.tv_expiry_date);
-        tvLicenseNumber = (TextView) view.findViewById(R.id.tv_license_number);
-        tvCNICNumber = (TextView) view.findViewById(R.id.tv_cnic);
-        tvLicHolderName.setText(String.valueOf(args.getString("name")));
-        Log.d("zma args data",String.valueOf(args.getString("name")));
-        tvLicHolderDistrict.setText(String.valueOf(args.get("district")));
-        tvLicHolderFatherName.setText(String.valueOf(args.get("amount")));
-        tvLisExpiryDate.setText(String.valueOf(args.get("date")));
-        tvLicType.setText(String.valueOf(args.get("status")));
-        tvCNICNumber.setText(String.valueOf(args.get("dutyPoint")));
+        tvChallanDate = (TextView) view.findViewById(R.id.tv_challan_date);
+        tvChallanDistrict = (TextView) view.findViewById(R.id.tv_challan_district);
+        tvDutyPoint = (TextView) view.findViewById(R.id.tv_duty_point);
+        tvOfficerName = (TextView) view.findViewById(R.id.tv_officer_name);
+        tvChallanAmount = (TextView) view.findViewById(R.id.tv_challan_amount);
+        tvChallanStatus = (TextView) view.findViewById(R.id.tv_challan_status);
+
+        tvChallanDate.setText(String.valueOf(args.getString("date")));
+        tvOfficerName.setText(String.valueOf(args.get("name")));
+        tvChallanDistrict.setText(String.valueOf(args.get("district")));
+        tvChallanAmount.setText(String.valueOf(args.get("amount")));
+        tvDutyPoint.setText(String.valueOf(args.get("dutyPoint")));
+        tvChallanStatus.setText(String.valueOf(args.get("status")));
         return view;
     }
 

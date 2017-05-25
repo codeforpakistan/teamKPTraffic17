@@ -41,85 +41,21 @@
                                 android:layout_height="match_parent"
                                 android:layout_weight="1"
                                 android:gravity="left"
-                                android:text="Name"
+                                android:text="Date"
                                 android:textColor="#669d90"
                                 android:textSize="15sp"
                                 android:textStyle="bold" />
 
                             <TextView
-                                android:id="@+id/tv_name_lic_holder"
+                                android:id="@+id/tv_challan_date"
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
                                 android:layout_weight="1"
                                 android:gravity="left"
-                                android:text="Ali Gul"
+                                android:text="01/01/2090"
                                 android:textColor="#bebdbe"
                                 android:textSize="15sp" />
 
-                        </LinearLayout>
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1.7dp"
-                            android:background="#EEEEEE" />
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="20dp"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:layout_weight="1"
-                                android:gravity="left"
-                                android:text="Father Name"
-                                android:textColor="#45a7a4"
-                                android:textSize="15sp"
-                                android:textStyle="bold" />
-
-                            <TextView
-                                android:id="@+id/tv_fn_lic_holder"
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:layout_weight="1"
-                                android:gravity="left"
-                                android:text="Gul Bashsah"
-                                android:textColor="#bebdbe"
-                                android:textSize="15sp" />
-                        </LinearLayout>
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1.7dp"
-
-                            android:background="#EEEEEE" />
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="20dp"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:layout_weight="1"
-                                android:gravity="left"
-                                android:text="CNIC Number"
-                                android:textColor="#45a7a4"
-                                android:textSize="15sp"
-                                android:textStyle="bold" />
-
-                            <TextView
-                                android:id="@+id/tv_cnic"
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:layout_weight="1"
-                                android:gravity="left"
-                                android:text="12345678900987"
-                                android:textColor="#bebdbe"
-                                android:textSize="15sp" />
                         </LinearLayout>
 
                         <View
@@ -137,21 +73,52 @@
                                 android:layout_height="match_parent"
                                 android:layout_weight="1"
                                 android:gravity="left"
-                                android:text="License Number"
+                                android:text="Challan District"
                                 android:textColor="#45a7a4"
                                 android:textSize="15sp"
                                 android:textStyle="bold" />
 
                             <TextView
-                                android:id="@+id/tv_license_number"
+                                android:id="@+id/tv_challan_district"
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
                                 android:layout_weight="1"
                                 android:gravity="left"
-                                android:text="098765432112"
+                                android:text="Paid/UnPaid"
                                 android:textColor="#bebdbe"
                                 android:textSize="15sp" />
                         </LinearLayout>
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1.7dp"
+                            android:background="#EEEEEE" />
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="20dp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:gravity="left"
+                                android:text="Challan Status"
+                                android:textColor="#45a7a4"
+                                android:textSize="15sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/tv_challan_status"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:gravity="left"
+                                android:text="Paid/UnPaid"
+                                android:textColor="#bebdbe"
+                                android:textSize="15sp" />
+                        </LinearLayout>
+
 
                         <View
                             android:layout_width="match_parent"
@@ -168,18 +135,18 @@
                                 android:layout_height="match_parent"
                                 android:layout_weight="1"
                                 android:gravity="left"
-                                android:text="District"
+                                android:text="Officer Name"
                                 android:textColor="#45a7a4"
                                 android:textSize="15sp"
                                 android:textStyle="bold" />
 
                             <TextView
-                                android:id="@+id/tv_district_lic_holder"
+                                android:id="@+id/tv_officer_name"
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
                                 android:layout_weight="1"
                                 android:gravity="left"
-                                android:text="Nowshera"
+                                android:text="Lal Khan"
                                 android:textColor="#bebdbe"
                                 android:textSize="18sp" />
                         </LinearLayout>
@@ -200,18 +167,18 @@
                                 android:layout_height="match_parent"
                                 android:layout_weight="0.50"
                                 android:gravity="left"
-                                android:text="License Type"
+                                android:text="Duty Point"
                                 android:textColor="#45a7a4"
                                 android:textSize="15sp"
                                 android:textStyle="bold" />
 
                             <TextView
-                                android:id="@+id/tv_lic_type"
+                                android:id="@+id/tv_duty_point"
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
                                 android:layout_weight="0.50"
                                 android:gravity="left"
-                                android:text="M.CYCLE + M.CAR/JEEP ONLY"
+                                android:text="Location"
                                 android:textColor="#bebdbe"
                                 android:textSize="15sp" />
                         </LinearLayout>
@@ -231,18 +198,18 @@
                                 android:layout_height="match_parent"
                                 android:layout_weight="1"
                                 android:gravity="left"
-                                android:text="Expiry Date"
+                                android:text="Challan Amount"
                                 android:textColor="#45a7a4"
                                 android:textSize="15sp"
                                 android:textStyle="bold" />
 
                             <TextView
-                                android:id="@+id/tv_expiry_date"
+                                android:id="@+id/tv_challan_amount"
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
                                 android:layout_weight="1"
                                 android:gravity="left"
-                                android:text="20/12/2016"
+                                android:text="PKR"
                                 android:textColor="#bebdbe"
                                 android:textSize="15sp" />
                         </LinearLayout>

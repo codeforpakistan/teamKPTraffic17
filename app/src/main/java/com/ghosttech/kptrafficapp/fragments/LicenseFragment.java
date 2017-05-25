@@ -6,21 +6,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
+
 import com.ghosttech.kptrafficapp.R;
-import com.ghosttech.kptrafficapp.utilities.Configuration;
-
-import org.json.JSONObject;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class LicenseFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
@@ -63,13 +51,13 @@ public class LicenseFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_license, container, false);
-        tvLicHolderName = (TextView) view.findViewById(R.id.tv_name_lic_holder);
-        tvLicHolderFatherName = (TextView) view.findViewById(R.id.tv_fn_lic_holder);
-        tvLicType = (TextView) view.findViewById(R.id.tv_lic_type);
-        tvLicHolderDistrict = (TextView) view.findViewById(R.id.tv_district_lic_holder);
+        tvLicHolderName = (TextView) view.findViewById(R.id.tv_lh_name);
+        tvLicHolderFatherName = (TextView) view.findViewById(R.id.tv_lh_fname);
+        tvLicType = (TextView) view.findViewById(R.id.tv_license_type);
+        tvLicHolderDistrict = (TextView) view.findViewById(R.id.tv_lh_district);
         tvLisExpiryDate = (TextView) view.findViewById(R.id.tv_expiry_date);
         tvLicenseNumber = (TextView)view.findViewById(R.id.tv_license_number);
-        tvCNICNumber = (TextView)view.findViewById(R.id.tv_cnic);
+        tvCNICNumber = (TextView)view.findViewById(R.id.tv_lh_cnic_number);
         Bundle args = new Bundle(getArguments());
         tvLicHolderName.setText(String.valueOf(args.get("name")));
         tvLicHolderDistrict.setText(String.valueOf(args.get("district")));

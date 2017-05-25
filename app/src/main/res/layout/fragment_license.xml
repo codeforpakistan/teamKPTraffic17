@@ -47,7 +47,7 @@
                                 android:textStyle="bold" />
 
                             <TextView
-                                android:id="@+id/tv_name_lic_holder"
+                                android:id="@+id/tv_lh_name"
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
                                 android:layout_weight="1"
@@ -80,7 +80,7 @@
                                 android:textStyle="bold" />
 
                             <TextView
-                                android:id="@+id/tv_fn_lic_holder"
+                                android:id="@+id/tv_lh_fname"
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
                                 android:layout_weight="1"
@@ -112,7 +112,7 @@
                                 android:textStyle="bold" />
 
                             <TextView
-                                android:id="@+id/tv_cnic"
+                                android:id="@+id/tv_lh_cnic_number"
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
                                 android:layout_weight="1"
@@ -174,7 +174,7 @@
                                 android:textStyle="bold" />
 
                             <TextView
-                                android:id="@+id/tv_district_lic_holder"
+                                android:id="@+id/tv_lh_district"
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
                                 android:layout_weight="1"
@@ -206,7 +206,7 @@
                                 android:textStyle="bold" />
 
                             <TextView
-                                android:id="@+id/tv_lic_type"
+                                android:id="@+id/tv_license_type"
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
                                 android:layout_weight="0.50"
