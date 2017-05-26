@@ -175,6 +175,7 @@ public class ComplaintFragment extends Fragment {
         ivSendComplaint.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                pDialog.show();
                 inputValidation();
 
             }
@@ -199,7 +200,7 @@ public class ComplaintFragment extends Fragment {
         } else if (sourceFile == null) {
             ivStartCamera.startAnimation(shake);
         } else {
-            pDialog.show();
+
             new UploadFileToServer().execute();
         }
     }

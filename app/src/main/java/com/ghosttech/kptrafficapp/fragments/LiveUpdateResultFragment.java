@@ -407,16 +407,52 @@ public class LiveUpdateResultFragment extends Fragment {
                     googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(LiveUpdatesMapCoorindates.GT_ROAD_1, 12));
                     break;
                 case "dalazak_road":
-                    new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
-                            .setTitleText("Oops...")
-                            .setContentText("No path available")
-                            .show();
+                    if (strStatus.equals("Clear")) {
+                        polylineOptions = new PolylineOptions().
+                                addAll(LiveUpdatesMapCoorindates.getArrayDalazakRoad())
+                                .width(10).color(Color.GREEN).geodesic(true);
+                        setText();
+
+
+                    } else if (strStatus.equals("Busy")) {
+                        polylineOptions = new PolylineOptions().
+                                addAll(LiveUpdatesMapCoorindates.getArrayDalazakRoad())
+                                .width(10).color(Color.RED).geodesic(true);
+                        setText();
+
+                    } else if (strStatus.equals("Congested")) {
+                        polylineOptions = new PolylineOptions().
+                                addAll(LiveUpdatesMapCoorindates.getArrayDalazakRoad())
+                                .width(10).color(Color.YELLOW).geodesic(true);
+                        setText();
+                        Log.d("zma second switch", "gt road");
+
+                    }
+                    googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(LiveUpdatesMapCoorindates.DALAZAK_ROAD_1, 12));
                     break;
                 case "warsak_road":
-                    new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
-                            .setTitleText("Oops...")
-                            .setContentText("No path available")
-                            .show();
+                    if (strStatus.equals("Clear")) {
+                        polylineOptions = new PolylineOptions().
+                                addAll(LiveUpdatesMapCoorindates.getArrayWarsakRoad())
+                                .width(10).color(Color.GREEN).geodesic(true);
+                        setText();
+
+
+                    } else if (strStatus.equals("Busy")) {
+                        polylineOptions = new PolylineOptions().
+                                addAll(LiveUpdatesMapCoorindates.getArrayWarsakRoad())
+                                .width(10).color(Color.RED).geodesic(true);
+                        setText();
+
+                    } else if (strStatus.equals("Congested")) {
+                        polylineOptions = new PolylineOptions().
+                                addAll(LiveUpdatesMapCoorindates.getArrayWarsakRoad())
+                                .width(10).color(Color.YELLOW).geodesic(true);
+                        setText();
+                        Log.d("zma second switch", "gt road");
+
+                    }
+                    googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(LiveUpdatesMapCoorindates.DALAZAK_ROAD_1, 12));
                     break;
 
 

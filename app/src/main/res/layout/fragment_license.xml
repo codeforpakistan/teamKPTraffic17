@@ -20,9 +20,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-            <TableLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                <TableLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -95,6 +96,7 @@
                             android:layout_height="1.7dp"
 
                             android:background="#EEEEEE" />
+
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -126,6 +128,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="1.7dp"
                             android:background="#EEEEEE" />
+
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -157,6 +160,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="1.7dp"
                             android:background="#EEEEEE" />
+
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -220,6 +224,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="1.7dp"
                             android:background="#EEEEEE" />
+
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -252,7 +257,7 @@
                             android:layout_height="1.7dp"
                             android:background="#EEEEEE" />
                     </LinearLayout>
-            </TableLayout>
+                </TableLayout>
             </ScrollView>
         </android.support.v7.widget.CardView>
     </RelativeLayout>

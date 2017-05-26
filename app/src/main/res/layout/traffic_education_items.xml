@@ -1,85 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:padding="10dp"
-    android:background="#f3f5f5">
+    android:layout_height="450dp"
+    android:background="#f3f5f5"
+    android:id="@+id/cv"
+    android:padding="10dp">
 
-
-
-    <android.support.v7.widget.CardView
-        android:id="@+id/cv"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:elevation="10dp">
-        <RelativeLayout
-            xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_height="400dp">
+        <TextView
+            android:id="@+id/image_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingLeft="8sp"
-            android:layout_marginBottom="10sp">
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10sp"
-                    android:id="@+id/traffic_education_image" />
-            </LinearLayout>
+            android:layout_above="@+id/description_english"
+            android:layout_alignParentTop="true"
+            android:gravity="center_horizontal"
+            android:paddingBottom="20dp"
+            android:layout_marginTop="5dp"
+            android:paddingRight="11dp"
+            android:text="Image Title"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="#126266"
+            android:textSize="25sp"
+            android:textStyle="bold" />
+        <ImageView
+            android:id="@+id/traffic_education_image"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:layout_marginTop="40sp"
+            android:src="@mipmap/ic_launcher" />
 
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="Image Title"
-                android:paddingRight="11dp"
-                android:textSize="25sp"
-                android:textColor="#126266"
-                android:layout_marginTop="5dp"
-                android:textStyle="bold"
-                android:id="@+id/image_title"
-                android:layout_alignParentTop="true"
-                android:layout_alignStart="@+id/description_english"
-                android:layout_alignLeft="@+id/description_english" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:textSize="18sp"
-                android:text="English Description"
-                android:paddingRight="11dp"
-                android:textColor="#ababaa"
-                android:layout_marginTop="8dp"
-                android:layout_marginLeft="15sp"
-                android:id="@+id/description_english"
-                android:layout_below="@+id/image_title"
-                android:layout_toEndOf="@+id/traffic_education_image"
-                android:layout_toRightOf="@+id/traffic_education_image" />
+        <TextView
+            android:id="@+id/description_english"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/traffic_education_image"
+            android:text="English Description"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="#ababaa"
+            android:textSize="18sp" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/description_urdu"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:layout_marginLeft="15sp"
-                android:layout_marginTop="6sp"
-                android:paddingRight="14dp"
-                android:textSize="18sp"
-                android:gravity="right"
-                android:text="Urdu Description Urdu Description Urdu Description Urdu Description"
-                android:textColor="#ababaa"
-                android:layout_below="@+id/description_english"
-                android:layout_toEndOf="@+id/traffic_education_image"
-                android:layout_toRightOf="@+id/traffic_education_image" />
+        <TextView
+            android:id="@+id/description_urdu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/description_english"
+            android:gravity="right"
+            android:text="Urdu Description Urdu Description Urdu Description Urdu Description"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="#ababaa"
+            android:textSize="18sp"
 
-        </RelativeLayout>
+            />
 
+    </RelativeLayout>
 
-    </android.support.v7.widget.CardView>
-
-</LinearLayout>
+</android.support.v7.widget.CardView>

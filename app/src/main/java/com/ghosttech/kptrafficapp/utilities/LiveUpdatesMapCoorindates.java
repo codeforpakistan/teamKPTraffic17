@@ -25,6 +25,95 @@ public class LiveUpdatesMapCoorindates {
     public static final ArrayList<LatLng> ARRAY_SADDAR_ROAD = new ArrayList<>();//define array name
     public static final LatLng GT_ROAD_1 = new LatLng(34.017106, 71.621971);
     public static final ArrayList<LatLng> ARRAY_GT_ROAD = new ArrayList<>();//define array name
+    public static final ArrayList<LatLng> ARRAY_DALAZAK_ROAD = new ArrayList<>();//define array name
+    public static final LatLng DALAZAK_ROAD_1 = new LatLng(34.018197, 71.580108);//initialize first point of the route like this
+    public static final ArrayList<LatLng> ARRAY_WARSAK_ROAD = new ArrayList<>();//define array name
+    public static final LatLng WARSAK_ROAD = new LatLng(34.013902, 71.542008);//initialize first point of the route like this
+
+
+    public static ArrayList<LatLng> getArrayWarsakRoad() {
+        ARRAY_WARSAK_ROAD.add(new LatLng(34.013985, 71.541996));//copy the coordinate of the starting point from above
+        ARRAY_WARSAK_ROAD.add(new LatLng(34.014031, 71.541923));//define rest of the path one by one
+        ARRAY_WARSAK_ROAD.add(new LatLng(34.014294, 71.541778));
+        ARRAY_WARSAK_ROAD.add(new LatLng(34.014589, 71.541632));
+        ARRAY_WARSAK_ROAD.add(new LatLng(34.014733, 71.541564));
+        ARRAY_WARSAK_ROAD.add(new LatLng(34.014945, 71.541428));
+        ARRAY_WARSAK_ROAD.add(new LatLng(34.015439, 71.541133));
+        ARRAY_WARSAK_ROAD.add(new LatLng(34.015646, 71.541009));
+        ARRAY_WARSAK_ROAD.add(new LatLng(34.016317, 71.540628));
+        ARRAY_WARSAK_ROAD.add(new LatLng(34.016891, 71.540295));
+        ARRAY_WARSAK_ROAD.add(new LatLng(34.017634, 71.539882));
+        ARRAY_WARSAK_ROAD.add(new LatLng(34.018514, 71.539375));
+        ARRAY_WARSAK_ROAD.add(new LatLng(34.018973, 71.539139));
+        ARRAY_WARSAK_ROAD.add(new LatLng(34.020289, 71.538399));
+        ARRAY_WARSAK_ROAD.add(new LatLng(34.020673, 71.538174));
+        ARRAY_WARSAK_ROAD.add(new LatLng(34.021447, 71.537726));
+        ARRAY_WARSAK_ROAD.add(new LatLng(34.021554, 71.537672));
+        ARRAY_WARSAK_ROAD.add(new LatLng(34.021881, 71.537428));
+        ARRAY_WARSAK_ROAD.add(new LatLng(34.022583, 71.537004));
+        ARRAY_WARSAK_ROAD.add(new LatLng(34.023579, 71.536451));
+        ARRAY_WARSAK_ROAD.add(new LatLng(34.024475, 71.535941));
+        ARRAY_WARSAK_ROAD.add(new LatLng(34.025251, 71.535488));
+        ARRAY_WARSAK_ROAD.add(new LatLng(34.026167, 71.534986));
+        ARRAY_WARSAK_ROAD.add(new LatLng(34.026887, 71.534610));
+        ARRAY_WARSAK_ROAD.add(new LatLng(34.027503, 71.534299));
+        ARRAY_WARSAK_ROAD.add(new LatLng(34.027921, 71.534063));
+        ARRAY_WARSAK_ROAD.add(new LatLng(34.028712, 71.533607));
+        ARRAY_WARSAK_ROAD.add(new LatLng(34.029579, 71.533116));
+        ARRAY_WARSAK_ROAD.add(new LatLng(34.030628, 71.532510));
+        ARRAY_WARSAK_ROAD.add(new LatLng(34.031330, 71.532070));
+        ARRAY_WARSAK_ROAD.add(new LatLng(34.032066, 71.531676));
+        ARRAY_WARSAK_ROAD.add(new LatLng(34.032715, 71.531292));
+        ARRAY_WARSAK_ROAD.add(new LatLng(34.033409, 71.530916));
+        ARRAY_WARSAK_ROAD.add(new LatLng(34.033838, 71.530696));
+        ARRAY_WARSAK_ROAD.add(new LatLng(34.034047, 71.530570));
+        return ARRAY_WARSAK_ROAD;
+    }
+
+    public static ArrayList<LatLng> getArrayDalazakRoad() {
+        ARRAY_DALAZAK_ROAD.add(new LatLng(34.018197, 71.580108));//copy the coordinate of the starting point from above
+        ARRAY_DALAZAK_ROAD.add(new LatLng(34.018199, 71.580594));//define rest of the path one by one
+        ARRAY_DALAZAK_ROAD.add(new LatLng(34.018230, 71.581881));
+        ARRAY_DALAZAK_ROAD.add(new LatLng(34.018279, 71.583276));
+        ARRAY_DALAZAK_ROAD.add(new LatLng(34.018319, 71.584585));
+        ARRAY_DALAZAK_ROAD.add(new LatLng(34.018352, 71.585325));
+        ARRAY_DALAZAK_ROAD.add(new LatLng(34.018846, 71.586162));
+        ARRAY_DALAZAK_ROAD.add(new LatLng(34.019182, 71.586680));
+        ARRAY_DALAZAK_ROAD.add(new LatLng(34.019499, 71.587098));
+        ARRAY_DALAZAK_ROAD.add(new LatLng(34.019890, 71.587602));
+        ARRAY_DALAZAK_ROAD.add(new LatLng(34.020088, 71.588042));
+        ARRAY_DALAZAK_ROAD.add(new LatLng(34.020624, 71.588739));
+        ARRAY_DALAZAK_ROAD.add(new LatLng(34.020924, 71.589171));
+        ARRAY_DALAZAK_ROAD.add(new LatLng(34.021540, 71.590177));
+        ARRAY_DALAZAK_ROAD.add(new LatLng(34.022100, 71.590995));
+        ARRAY_DALAZAK_ROAD.add(new LatLng(34.022480, 71.591483));
+        ARRAY_DALAZAK_ROAD.add(new LatLng(34.022989, 71.592317));
+        ARRAY_DALAZAK_ROAD.add(new LatLng(34.023327, 71.592757));
+        ARRAY_DALAZAK_ROAD.add(new LatLng(34.023627, 71.593186));
+        ARRAY_DALAZAK_ROAD.add(new LatLng(34.024287, 71.594114));
+        ARRAY_DALAZAK_ROAD.add(new LatLng(34.024558, 71.594516));
+        ARRAY_DALAZAK_ROAD.add(new LatLng(34.025096, 71.595401));
+        ARRAY_DALAZAK_ROAD.add(new LatLng(34.025676, 71.596222));
+        ARRAY_DALAZAK_ROAD.add(new LatLng(34.026074, 71.596828));
+        ARRAY_DALAZAK_ROAD.add(new LatLng(34.026319, 71.597142));
+        ARRAY_DALAZAK_ROAD.add(new LatLng(34.026921, 71.598049));
+        ARRAY_DALAZAK_ROAD.add(new LatLng(34.027686, 71.599251));
+        ARRAY_DALAZAK_ROAD.add(new LatLng(34.027997, 71.599852));
+        ARRAY_DALAZAK_ROAD.add(new LatLng(34.028657, 71.600936));
+        ARRAY_DALAZAK_ROAD.add(new LatLng(34.029028, 71.601529));
+        ARRAY_DALAZAK_ROAD.add(new LatLng(34.029622, 71.602487));
+        ARRAY_DALAZAK_ROAD.add(new LatLng(34.030269, 71.603576));
+        ARRAY_DALAZAK_ROAD.add(new LatLng(34.030836, 71.604555));
+        ARRAY_DALAZAK_ROAD.add(new LatLng(34.031398, 71.605537));
+        ARRAY_DALAZAK_ROAD.add(new LatLng(34.031689, 71.606119));
+        ARRAY_DALAZAK_ROAD.add(new LatLng(34.031971, 71.606642));
+        ARRAY_DALAZAK_ROAD.add(new LatLng(34.032409, 71.607393));
+        ARRAY_DALAZAK_ROAD.add(new LatLng(34.032774, 71.607972));
+        ARRAY_DALAZAK_ROAD.add(new LatLng(34.014639, 71.572949));
+        ARRAY_DALAZAK_ROAD.add(new LatLng(34.033019, 71.608621));
+        ARRAY_DALAZAK_ROAD.add(new LatLng(34.033190, 71.608881));
+        return ARRAY_DALAZAK_ROAD;
+    }
 
     public static ArrayList<LatLng> getArrayGtRoad() {
         ARRAY_GT_ROAD.add(new LatLng(34.017106, 71.621971));//copy the coordinate of the starting point from above
