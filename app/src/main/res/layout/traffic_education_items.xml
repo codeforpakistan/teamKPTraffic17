@@ -1,44 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="450dp"
-    android:background="#f3f5f5"
     android:id="@+id/cv"
-    android:padding="10dp">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="10dp"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    android:background="#f3f5f5">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="400dp">
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/traffic_education_image"
+            android:layout_width="match_parent"
+            android:layout_height="217dp"
+            android:src="@drawable/test_image_traffic_edu" />
+
         <TextView
-            android:id="@+id/image_title"
+            android:id="@+id/tv_image_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/description_english"
-            android:layout_alignParentTop="true"
-            android:gravity="center_horizontal"
-            android:paddingBottom="20dp"
+            android:layout_below="@+id/traffic_education_image"
+            android:layout_marginLeft="5dp"
             android:layout_marginTop="5dp"
+            android:gravity="left"
             android:paddingRight="11dp"
             android:text="Image Title"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="#126266"
-            android:textSize="25sp"
+            android:textSize="20sp"
             android:textStyle="bold" />
-        <ImageView
-            android:id="@+id/traffic_education_image"
-            android:layout_width="match_parent"
-            android:layout_height="300dp"
-            android:layout_marginTop="40sp"
-            android:src="@mipmap/ic_launcher" />
-
-
 
         <TextView
             android:id="@+id/description_english"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/traffic_education_image"
-            android:text="English Description"
+            android:layout_below="@+id/tv_image_title"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:text="English Description English Description here here"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="#ababaa"
             android:textSize="18sp" />
@@ -48,14 +50,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/description_english"
+            android:layout_marginRight="10dp"
             android:gravity="right"
             android:text="Urdu Description Urdu Description Urdu Description Urdu Description"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="#ababaa"
             android:textSize="18sp"
-
             />
-
     </RelativeLayout>
-
 </android.support.v7.widget.CardView>

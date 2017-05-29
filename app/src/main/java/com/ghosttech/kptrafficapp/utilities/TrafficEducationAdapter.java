@@ -41,7 +41,7 @@ public class TrafficEducationAdapter extends RecyclerView.Adapter<TrafficEducati
         public ViewHolder(View v) {
             super(v);
             cv = (CardView) itemView.findViewById(R.id.cv);
-            imageTitle = (TextView) itemView.findViewById(R.id.image_title);
+            imageTitle = (TextView) itemView.findViewById(R.id.tv_image_title);
             descriptionEnglish = (TextView) itemView.findViewById(R.id.description_english);
             descriptionUrdu = (TextView) itemView.findViewById(R.id.description_urdu);
             ivTrafficEducationImage = (ImageView) itemView.findViewById(R.id.traffic_education_image);

@@ -2,8 +2,10 @@ package com.ghosttech.kptrafficapp.fragments;
 
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -23,17 +25,17 @@ import com.ghosttech.kptrafficapp.R;
 import com.ghosttech.kptrafficapp.utilities.Configuration;
 import com.ghosttech.kptrafficapp.utilities.TrafficEducationAdapter;
 import com.ghosttech.kptrafficapp.utilities.TrafficEducationHelper;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
+
+import static android.R.id.list;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -59,7 +61,7 @@ public class TrafficEducationFragment extends Fragment {
     private RecyclerView.LayoutManager mLayoutManager;
     private OnFragmentInteractionListener mListener;
     SweetAlertDialog pDialog;
-
+    TrafficEducationHelper trafficEducationHelper;
     public TrafficEducationFragment() {
         // Required empty public constructor
     }
@@ -96,6 +98,24 @@ public class TrafficEducationFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_traffic_education, container, false);
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.rv);
+        final SwipeRefreshLayout swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // Your code to refresh the list here.
+                // Make sure you call swipeContainer.setRefreshing(false)
+                // once the network request has completed successfully.
+                data.clear();
+                apiCall();
+                swipeContainer.setRefreshing(false);
+            }
+        });
+        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
+
         pDialog = new SweetAlertDialog(getActivity(), SweetAlertDialog.PROGRESS_TYPE);
         pDialog.getProgressHelper().setBarColor(Color.parseColor("#179e99"));
         pDialog.setTitleText("Wait a while");
@@ -155,6 +175,7 @@ public class TrafficEducationFragment extends Fragment {
 
             @Override
             public void onErrorResponse(VolleyError error) {
+                pDialog.dismiss();
                 new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
                         .setTitleText("Oops...")
                         .setContentText("Server Error!")
@@ -191,13 +212,13 @@ public class TrafficEducationFragment extends Fragment {
             JSONArray jsonArray = json.getJSONArray("data");
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
-                TrafficEducationHelper trafficEducationHelper = new TrafficEducationHelper();
+                trafficEducationHelper = new TrafficEducationHelper();
                 trafficEducationHelper.strImageTitle = jsonObject.getString("image_title");
                 trafficEducationHelper.strDescriptionEnglish = jsonObject.getString("image_description_eng");
                 trafficEducationHelper.strDescriptionUrdu = jsonObject.getString("image_description_urdu");
                 trafficEducationHelper.strImage = jsonObject.getString("image");
-                if(jsonObject.getString("image").contains(".gif")){
-                    Log.d("zma image",jsonObject.getString("image"));
+                if (jsonObject.getString("image").contains(".gif")) {
+                    Log.d("zma image", jsonObject.getString("image"));
                     Configuration.Traffic_Education_Gif_Image_Boolean = true;
                     trafficEducationHelper.strImage = jsonObject.getString("image");
 
@@ -205,7 +226,7 @@ public class TrafficEducationFragment extends Fragment {
 
                 data.add(trafficEducationHelper);
             }
-            mRecyclerView = (RecyclerView) view.findViewById(R.id.rv);
+
             mLayoutManager = new LinearLayoutManager(getActivity());
             mRecyclerView.setLayoutManager(mLayoutManager);
 
@@ -218,6 +239,9 @@ public class TrafficEducationFragment extends Fragment {
             mRecyclerView.setAdapter(mAdapter);
 
             mAdapter.notifyDataSetChanged();
+
         }
+
     }
+
 }
