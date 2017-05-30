@@ -2,6 +2,7 @@ package com.ghosttech.kptrafficapp.fragments;
 
 import android.app.Dialog;
 import android.app.Fragment;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
@@ -32,6 +33,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.ghosttech.kptrafficapp.R;
+import com.ghosttech.kptrafficapp.utilities.CheckNetwork;
 import com.ghosttech.kptrafficapp.utilities.Configuration;
 
 import org.json.JSONArray;
@@ -68,6 +70,8 @@ public class MainFragment extends Fragment {
     Fragment fragment;
     View view;
     Dialog dialog;
+    SharedPreferences sharedPreferences;
+    SharedPreferences.Editor editor;
     RequestQueue mRequestQueue;
     EditText etLicNumber;
     Button btnShowLicRecord;
@@ -114,6 +118,8 @@ public class MainFragment extends Fragment {
         pDialog = new SweetAlertDialog(getActivity(), SweetAlertDialog.PROGRESS_TYPE);
         pDialog.getProgressHelper().setBarColor(Color.parseColor("#179e99"));
         pDialog.setCancelable(false);
+        sharedPreferences = getActivity().getSharedPreferences("com.ghosttech.kptraffic", 0);
+        editor = sharedPreferences.edit();
         MultiDex.install(getActivity());
         shake = AnimationUtils.loadAnimation(getActivity(), R.anim.shake);
         mRequestQueue = Volley.newRequestQueue(getActivity());
@@ -191,52 +197,52 @@ public class MainFragment extends Fragment {
         btnLicenseVerification = (LinearLayout) view.findViewById(R.id.linear_layout_lv);
         btnLiveTrafficUpdates = (LinearLayout) view.findViewById(R.id.linear_layout_lu);
         btnTrafficEducation = (LinearLayout) view.findViewById(R.id.linear_layout_te);
-        btnComplaintSystem.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                fragment = new ComplaintFragment();
-                getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).
-                        addToBackStack("tag").commit();
-            }
-        });
-        btnLiveTrafficUpdates.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                fragment = new LiveUpdateFragment();
-                getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).
-                        addToBackStack("tag").commit();
-            }
-        });
-        btnLicenseVerification.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                customDialogLicenseVerification();
+            btnComplaintSystem.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    fragment = new ComplaintFragment();
+                    getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).
+                            addToBackStack("tag").commit();
+                }
+            });
+            btnLiveTrafficUpdates.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    fragment = new LiveUpdateFragment();
+                    getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).
+                            addToBackStack("tag").commit();
+                }
+            });
+            btnLicenseVerification.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    customDialogLicenseVerification();
 
 
-            }
-        });
-        btnEmergencyContacts.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                fragment = new MainEmergencyFragment();
-                getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).
-                        addToBackStack("tag").commit();
-            }
-        });
-        btnTrafficEducation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                fragment = new TrafficEducationFragment();
-                getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).
-                        addToBackStack("tag").commit();
-            }
-        });
-        btnChallanTracking.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                customDialogChallanStatus();
-            }
-        });
+                }
+            });
+            btnEmergencyContacts.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    fragment = new MainEmergencyFragment();
+                    getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).
+                            addToBackStack("tag").commit();
+                }
+            });
+            btnTrafficEducation.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    fragment = new TrafficEducationFragment();
+                    getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).
+                            addToBackStack("tag").commit();
+                }
+            });
+            btnChallanTracking.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    customDialogChallanStatus();
+                }
+            });
 
     }
 
@@ -421,35 +427,35 @@ public class MainFragment extends Fragment {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                            try {
-                                JSONObject mainResponse = new JSONObject(response);
-                                if(mainResponse.getBoolean("status")){
-                                    pDialog.dismiss();
-                                    JSONObject data = mainResponse.getJSONObject("data");
-                                    strChallanDate = data.getString("date");
-                                    strChallanDistrict = data.getString("district");
-                                    strChallanName = data.getString("name");
-                                    strChallanDutyPoint = data.getString("duty_point");
-                                    String ticket_id = data.getString("ticket_id");
-                                    strChallanAmount = data.getString("amount");
-                                    strChallanStatus = data.getString("status");
+                        try {
+                            JSONObject mainResponse = new JSONObject(response);
+                            if (mainResponse.getBoolean("status")) {
+                                pDialog.dismiss();
+                                JSONObject data = mainResponse.getJSONObject("data");
+                                strChallanDate = data.getString("date");
+                                strChallanDistrict = data.getString("district");
+                                strChallanName = data.getString("name");
+                                strChallanDutyPoint = data.getString("duty_point");
+                                String ticket_id = data.getString("ticket_id");
+                                strChallanAmount = data.getString("amount");
+                                strChallanStatus = data.getString("status");
 
-                                    args.putString("date", strChallanDate);
-                                    args.putString("district", strChallanDistrict);
-                                    args.putString("dutyPoint", strChallanDutyPoint);
-                                    args.putString("name", strChallanName);
-                                    args.putString("amount", strChallanAmount);
-                                    args.putString("status", strChallanStatus);
-                                    fragment = new ChallanFragment();
-                                    getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).addToBackStack("tag").commit();
-                                    fragment.setArguments(args);
+                                args.putString("date", strChallanDate);
+                                args.putString("district", strChallanDistrict);
+                                args.putString("dutyPoint", strChallanDutyPoint);
+                                args.putString("name", strChallanName);
+                                args.putString("amount", strChallanAmount);
+                                args.putString("status", strChallanStatus);
+                                fragment = new ChallanFragment();
+                                getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).addToBackStack("tag").commit();
+                                fragment.setArguments(args);
 
-                                }else{
+                            } else {
 
-                                }
-                            } catch (JSONException e) {
-                                e.printStackTrace();
                             }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
                 , new Response.ErrorListener()
