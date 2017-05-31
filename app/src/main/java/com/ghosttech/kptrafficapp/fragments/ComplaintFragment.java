@@ -16,11 +16,13 @@ import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -30,12 +32,15 @@ import android.widget.TextView;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.ghosttech.kptrafficapp.R;
+import com.ghosttech.kptrafficapp.utilities.CheckNetwork;
 import com.ghosttech.kptrafficapp.utilities.Configuration;
 import com.ghosttech.kptrafficapp.utilities.GeneralUtils;
 import com.ghosttech.kptrafficapp.utilities.HTTPMultiPartEntity;
 import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.orhanobut.dialogplus.DialogPlus;
+import com.orhanobut.dialogplus.GridHolder;
 import com.orhanobut.dialogplus.OnClickListener;
+import com.orhanobut.dialogplus.OnItemClickListener;
 import com.orhanobut.dialogplus.ViewHolder;
 
 import org.apache.http.HttpEntity;
@@ -89,6 +94,7 @@ public class ComplaintFragment extends Fragment {
     SweetAlertDialog pDialog;
     RequestQueue requestQueue;
     boolean flag = false;
+    DialogPlus dialog;
 
     public ComplaintFragment() {
         // Required empty public constructor
@@ -200,8 +206,20 @@ public class ComplaintFragment extends Fragment {
         } else if (sourceFile == null) {
             ivStartCamera.startAnimation(shake);
         } else {
-
-            new UploadFileToServer().execute();
+            if (CheckNetwork.isInternetAvailable(getActivity())) {
+                new UploadFileToServer().execute();
+            } else {
+                new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
+                        .setTitleText("Oops!")
+                        .setContentText("You don't have internet connection")
+                        .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                getActivity().finish();
+                            }
+                        })
+                        .show();
+            }
         }
     }
 
@@ -234,7 +252,7 @@ public class ComplaintFragment extends Fragment {
             String responseString = null;
             if (flag) {
 
-                Log.d("zma flag",String.valueOf(flag));
+                Log.d("zma flag", String.valueOf(flag));
                 HttpClient httpclient = new DefaultHttpClient();
 
                 HttpPost httppost = new HttpPost(Configuration.END_POINT_LIVE + "complaints/image");
@@ -308,8 +326,8 @@ public class ComplaintFragment extends Fragment {
                             .setContentText("Something went wrong!")
                             .show();
                 }
-            }else{
-                Log.d("zma flag else",String.valueOf(flag));
+            } else {
+                Log.d("zma flag else", String.valueOf(flag));
                 HttpClient httpclient = new DefaultHttpClient();
 
                 HttpPost httppost = new HttpPost(Configuration.END_POINT_LIVE + "complaints/video");
@@ -384,7 +402,7 @@ public class ComplaintFragment extends Fragment {
                             .show();
                 }
             }
-                return responseString;
+            return responseString;
 
         }
     }
@@ -458,32 +476,34 @@ public class ComplaintFragment extends Fragment {
             if (requestCode == CAMERA_CAPTURE) {
                 try {
                     Bitmap photo = (Bitmap) data.getExtras().get("data");
+
                     // ivContent.setImageBitmap(photo);
                     // CALL THIS METHOD TO GET THE URI FROM THE BITMAP
                     Uri tempUri = GeneralUtils.getImageUri(getActivity(), photo);
                     // CALL THIS METHOD TO GET THE ACTUAL PATH
                     sourceFile = new File(GeneralUtils.getRealPathFromURI(getActivity(), tempUri));
-                    if (sourceFile.toString().length()>0){
-                        Log.d("zma source pic",String.valueOf(sourceFile));
+                    if (sourceFile.toString().length() > 0) {
+                        Log.d("zma source pic", String.valueOf(sourceFile));
                         flag = true;
-                        Log.d("zma flag camera",String.valueOf(flag));
+                        dialog.dismiss();
+                        Log.d("zma flag camera", String.valueOf(flag));
                     }
                     Log.d("zma pic", sourceFile.toString());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
 
-            }else if (requestCode == CAMERA_VIDEO_CAPTURE) {
+            } else if (requestCode == CAMERA_VIDEO_CAPTURE) {
 
                 Uri picUri = data.getData();
                 Bundle extras = data.getExtras();
                 String path = data.getData().toString();
                 sourceFile = new File(GeneralUtils.getRealPathFromURI(getActivity(), picUri));
-                if (sourceFile.toString().length()>0){
-                    Log.d("zma source video",String.valueOf(sourceFile));
+                if (sourceFile.toString().length() > 0) {
+                    Log.d("zma source video", String.valueOf(sourceFile));
                 }
                 Log.d("zma video", sourceFile.toString());
-
+                dialog.dismiss();
 
             } else if (resultCode == RESULT_LOAD_VIDEO) {
                 Uri selectedVideo = data.getData();
@@ -495,8 +515,8 @@ public class ComplaintFragment extends Fragment {
                 // String videoPath = cursor.getString(columnIndex);
                 String videoPath = data.getData().toString();
                 sourceFile = new File(videoPath);
-                if (sourceFile.toString().length()>0){
-                    Log.d("zma source video",String.valueOf(sourceFile));
+                if (sourceFile.toString().length() > 0) {
+                    Log.d("zma source video", String.valueOf(sourceFile));
                 }
                 cursor.close();
 
@@ -506,7 +526,8 @@ public class ComplaintFragment extends Fragment {
     }
 
     private void bottomCustomDialog() {
-        DialogPlus dialog = DialogPlus.newDialog(getActivity())
+        dialog = DialogPlus.newDialog(getActivity())
+                .setAdapter(new ArrayAdapter<>(getActivity(),android.R.layout.simple_list_item_1,new String[]{""}))
                 .setContentHolder(new ViewHolder(R.layout.custom_bottom_option_menu))
                 .setOnClickListener(new OnClickListener() {
                     @Override
@@ -528,9 +549,13 @@ public class ComplaintFragment extends Fragment {
                         });
                     }
                 })
-                .setExpanded(false)  // This will enable the expand feature, (similar to android L share dialog)
+
+                // This will enable the expand feature, (similar to android L share dialog)
+                .setInAnimation(R.anim.fade_in_center)
+                .setOutAnimation(R.anim.fade_out_center)
                 .create();
         dialog.show();
+
     }
 
 

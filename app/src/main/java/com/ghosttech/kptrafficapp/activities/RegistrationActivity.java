@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.ghosttech.kptrafficapp.R;
 import com.ghosttech.kptrafficapp.fragments.LoginFragment;
@@ -21,10 +22,12 @@ public class RegistrationActivity extends AppCompatActivity {
         sharedPreferences = getSharedPreferences("com.ghosttech.kptraffic", 0);
         editor = sharedPreferences.edit();
         String prefCNIC = sharedPreferences.getString("true", "");
-        if (prefCNIC != null) {
+        if (prefCNIC.toString().length()>0) {
+            Log.d("zma shared pref",prefCNIC);
             fragment = new MainFragment();
             getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
         } else {
+            Log.d("zma shared pref else",prefCNIC);
             fragment = new LoginFragment();
             getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).
                     commit();

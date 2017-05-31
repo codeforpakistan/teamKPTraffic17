@@ -27,6 +27,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.ghosttech.kptrafficapp.R;
+import com.ghosttech.kptrafficapp.utilities.CheckNetwork;
 import com.ghosttech.kptrafficapp.utilities.Configuration;
 
 import java.util.HashMap;
@@ -136,7 +137,9 @@ public class RegistrationFragment extends Fragment {
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                formValidation();
+
+                    formValidation();
+
 
             }
         });
@@ -163,8 +166,21 @@ public class RegistrationFragment extends Fragment {
             etEmail.startAnimation(shake);
         } else {
             Log.d("zma data", strName + "\n" + strEmail + "\n" + strPhoneNumber + "\n" + strCNIC);
+            if (CheckNetwork.isInternetAvailable(getActivity())) {
             pDialog.show();
             apiCall();
+            }else{
+                new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
+                        .setTitleText("Oops!")
+                        .setContentText("You don't have internet connection")
+                        .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                getActivity().finish();
+                            }
+                        })
+                        .show();
+            }
         }
     }
 
@@ -179,12 +195,25 @@ public class RegistrationFragment extends Fragment {
                         boolean status = response.contains("true");
                         if (status) {
                             pDialog.dismiss();
-                            fragment = new LoginFragment();
-                            getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
-                            etCNIC.setText("");
-                            etEmail.setText("");
-                            etPhoneNumber.setText("");
-                            etName.setText("");
+                            new SweetAlertDialog(getActivity(), SweetAlertDialog.SUCCESS_TYPE)
+                                    .setTitleText("Success")
+                                    .setContentText("You have been registered")
+                                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                        @Override
+                                        public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                            fragment = new LoginFragment();
+                                            getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
+                                            etCNIC.setText("");
+                                            etEmail.setText("");
+                                            etPhoneNumber.setText("");
+                                            etName.setText("");
+                                            getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).
+                                                    commit();
+
+                                        }
+                                    })
+                                    .show();
+
                             Log.d("Zma response", response);
 
                         } else if (response.contains("false")) {

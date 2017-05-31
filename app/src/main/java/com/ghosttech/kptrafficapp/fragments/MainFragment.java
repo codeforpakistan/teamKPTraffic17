@@ -123,7 +123,11 @@ public class MainFragment extends Fragment {
         MultiDex.install(getActivity());
         shake = AnimationUtils.loadAnimation(getActivity(), R.anim.shake);
         mRequestQueue = Volley.newRequestQueue(getActivity());
-        onButtonClick();
+        if (CheckNetwork.isInternetAvailable(getActivity())) {
+            onButtonClick();
+        }else {
+
+        }
         customActionBar();
         //((AppCompatActivity) getActivity()).getSupportActionBar().hide();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

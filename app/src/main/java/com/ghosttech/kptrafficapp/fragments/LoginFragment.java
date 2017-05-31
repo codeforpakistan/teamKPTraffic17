@@ -29,6 +29,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.ghosttech.kptrafficapp.R;
+import com.ghosttech.kptrafficapp.utilities.CheckNetwork;
 import com.ghosttech.kptrafficapp.utilities.Configuration;
 
 import java.util.HashMap;
@@ -56,6 +57,7 @@ public class LoginFragment extends Fragment {
     TextView tvSkip;
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
+
     public LoginFragment() {
         // Required empty public constructor
     }
@@ -132,7 +134,21 @@ public class LoginFragment extends Fragment {
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                formValidation();
+                if (CheckNetwork.isInternetAvailable(getActivity())) {
+                    formValidation();
+                } else {
+                    new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
+                            .setTitleText("Oops!")
+                            .setContentText("You don't have internet connection")
+                            .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                @Override
+                                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                    getActivity().finish();
+
+                                }
+                            })
+                            .show();
+                }
             }
         });
     }
@@ -143,8 +159,8 @@ public class LoginFragment extends Fragment {
         Animation shake = AnimationUtils.loadAnimation(getActivity(), R.anim.shake);
         if (strCNIC.equals("") || strCNIC.length() < 13 || strCNIC.contains("-")) {
             etCNIC.startAnimation(shake);
-            Snackbar.make(view, "Wrong CNIC " , Snackbar.LENGTH_LONG).show();
-        } else{
+            Snackbar.make(view, "Wrong CNIC ", Snackbar.LENGTH_LONG).show();
+        } else {
             pDialog.show();
             apiCall();
 
@@ -160,14 +176,14 @@ public class LoginFragment extends Fragment {
                     public void onResponse(String response) {
                         if (response.contains("true")) {
                             pDialog.dismiss();
-                            editor.putString("true",strCNIC).commit();
+                            editor.putString("true", strCNIC).commit();
                             fragment = new MainFragment();
                             getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).
                                     commit();
-                            etCNIC.setText("");
+
                             Log.d("Zma response", response);
 
-                        }else if (response.contains("false")){
+                        } else if (response.contains("false")) {
                             pDialog.dismiss();
                             new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
                                     .setTitleText("Oops...")
@@ -176,7 +192,7 @@ public class LoginFragment extends Fragment {
                         }
 
                     }
-                },  new Response.ErrorListener() {
+                }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
@@ -186,7 +202,7 @@ public class LoginFragment extends Fragment {
                 Log.d("zma error registration", String.valueOf(error));
 
             }
-        }){
+        }) {
             @Override
             public String getBodyContentType() {
                 return "application/x-www-form-urlencoded;charset=UTF-8";
@@ -205,7 +221,6 @@ public class LoginFragment extends Fragment {
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         mRequestQueue.add(jsonObjRequest);
     }
-
 
 
     public void customActionBar() {
