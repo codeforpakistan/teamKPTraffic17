@@ -183,7 +183,7 @@ public class LiveUpdateAdapter extends RecyclerView.Adapter<LiveUpdateAdapter.Vi
         final SweetAlertDialog pDialog = new SweetAlertDialog(((AppCompatActivity) context), SweetAlertDialog.PROGRESS_TYPE);
         pDialog.getProgressHelper().setBarColor(Color.parseColor("#179e99"));
         pDialog.setTitleText("Wait a while");
-        pDialog.setCancelable(false);
+        pDialog.setCancelable(true);
         pDialog.show();
 
         String url = Configuration.END_POINT_LIVE + "live_updates/get_updates?flag=" + strRoadName;

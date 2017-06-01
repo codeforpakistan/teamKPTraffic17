@@ -119,7 +119,7 @@ public class LiveUpdateFragment extends Fragment {
         View mCustomView = mInflater.inflate(R.layout.custom_action_bar, null);
         TextView mTitleTextView = (TextView) mCustomView.findViewById(R.id.title_text);
         ImageView mBackArrow = (ImageView) mCustomView.findViewById(R.id.iv_back_arrow);
-        mTitleTextView.setText("Live Road Update");
+        mTitleTextView.setText("Check different road status");
         mBackArrow.setImageResource(R.drawable.back_arrow);
         mBackArrow.setOnClickListener(new View.OnClickListener() {
             @Override

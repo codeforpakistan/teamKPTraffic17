@@ -138,7 +138,7 @@ public class RegistrationFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
-                    formValidation();
+                formValidation();
 
 
             }
@@ -167,9 +167,9 @@ public class RegistrationFragment extends Fragment {
         } else {
             Log.d("zma data", strName + "\n" + strEmail + "\n" + strPhoneNumber + "\n" + strCNIC);
             if (CheckNetwork.isInternetAvailable(getActivity())) {
-            pDialog.show();
-            apiCall();
-            }else{
+                pDialog.show();
+                apiCall();
+            } else {
                 new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
                         .setTitleText("Oops!")
                         .setContentText("You don't have internet connection")
@@ -198,21 +198,14 @@ public class RegistrationFragment extends Fragment {
                             new SweetAlertDialog(getActivity(), SweetAlertDialog.SUCCESS_TYPE)
                                     .setTitleText("Success")
                                     .setContentText("You have been registered")
-                                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                                        @Override
-                                        public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                            fragment = new LoginFragment();
-                                            getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
-                                            etCNIC.setText("");
-                                            etEmail.setText("");
-                                            etPhoneNumber.setText("");
-                                            etName.setText("");
-                                            getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).
-                                                    commit();
-
-                                        }
-                                    })
                                     .show();
+                            fragment = new LoginFragment();
+                            getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
+                            etCNIC.setText("");
+                            etEmail.setText("");
+                            etPhoneNumber.setText("");
+                            etName.setText("");
+
 
                             Log.d("Zma response", response);
 

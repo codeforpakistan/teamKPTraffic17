@@ -415,7 +415,7 @@ public class ComplaintFragment extends Fragment {
         View mCustomView = mInflater.inflate(R.layout.custom_action_bar, null);
         TextView mTitleTextView = (TextView) mCustomView.findViewById(R.id.title_text);
         ImageView mBackArrow = (ImageView) mCustomView.findViewById(R.id.iv_back_arrow);
-        mTitleTextView.setText("Write a Complaint");
+        mTitleTextView.setText("Write a complaint here");
         mActionBar.setCustomView(mCustomView);
         mActionBar.setDisplayShowCustomEnabled(true);
         mBackArrow.setOnClickListener(new View.OnClickListener() {

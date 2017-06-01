@@ -74,7 +74,7 @@ public class MainFragment extends Fragment {
     SharedPreferences.Editor editor;
     RequestQueue mRequestQueue;
     EditText etLicNumber;
-    Button btnShowLicRecord;
+    Button btnShowRecord;
     double dblLat, dblLon;
     String strCityName, strChallanTrackingID, strCheckLatLon, strLicenseNumber, strCNIC, strResponseLicenseID, strResponseDLNumber,
             strResponseCNIC, strResponseLicHolderName, strResponseLicHolderFatherName, strResponseLicType,
@@ -271,30 +271,27 @@ public class MainFragment extends Fragment {
 
     public void customDialogLicenseVerification() {
         dialog = new Dialog(getActivity());
-        //dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.custom_input_dialog);
         dialog.setCancelable(true);
         etLicNumber = (EditText) dialog.findViewById(R.id.et_verify_license);
-        btnShowLicRecord = (Button) dialog.findViewById(R.id.btn_search_license_record);
-
+        btnShowRecord = (Button) dialog.findViewById(R.id.btn_search_license_record);
         dialog.show();
         inputValidationLicense();
     }
 
     public void customDialogChallanStatus() {
         dialog = new Dialog(getActivity());
-        //dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.custom_input_dialog);
         dialog.setCancelable(true);
         etLicNumber = (EditText) dialog.findViewById(R.id.et_verify_license);
         etLicNumber.setHint("Enter Challan Number");
-        btnShowLicRecord = (Button) dialog.findViewById(R.id.btn_search_license_record);
+        btnShowRecord = (Button) dialog.findViewById(R.id.btn_search_license_record);
         dialog.show();
         inputValidationChallan();
     }
 
     public void inputValidationChallan() {
-        btnShowLicRecord.setOnClickListener(new View.OnClickListener() {
+        btnShowRecord.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 strChallanTrackingID = etLicNumber.getText().toString();
@@ -303,12 +300,6 @@ public class MainFragment extends Fragment {
                     Log.d("zma else", strChallanTrackingID);
                     etLicNumber.startAnimation(shake);
                 } else {
-                    Bundle args = new Bundle();
-                    args.putString("challan_key", strChallanTrackingID);
-                    Log.d("zma challan number", strChallanTrackingID);
-                    fragment = new ChallanFragment();
-                    getFragmentManager().beginTransaction().addToBackStack("tag").replace(R.id.fragment_container, fragment).commit();
-                    fragment.setArguments(args);
                     apiCallChallan(strChallanTrackingID);
                     dialog.dismiss();
                 }
@@ -318,7 +309,7 @@ public class MainFragment extends Fragment {
     }
 
     public void inputValidationLicense() {
-        btnShowLicRecord.setOnClickListener(new View.OnClickListener() {
+        btnShowRecord.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 strLicenseNumber = etLicNumber.getText().toString();
@@ -331,7 +322,6 @@ public class MainFragment extends Fragment {
                     apiCallLicense(strLicenseNumber);
                 } else if (strLicenseNumber.toString().length() == 13) {
                     strCNIC = strLicenseNumber;
-                    Log.d("zma CNiC Cnic", strLicenseNumber);
                     apiCallLicense(strCNIC);
                 }
 
@@ -407,8 +397,7 @@ public class MainFragment extends Fragment {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
-                params.put("cnic", strCNIC);
-                //params.put("dl_license",strLicenseNumber);
+                params.put("cnic", cnic);
                 Log.d("zma params", String.valueOf(params));
                 return params;
             }
@@ -474,21 +463,7 @@ public class MainFragment extends Fragment {
                         .show();
                 Log.d("zma error registration", String.valueOf(error));
             }
-        }) {
-            @Override
-            public String getBodyContentType() {
-                return "application/x-www-form-urlencoded;charset=UTF-8";
-            }
-
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> params = new HashMap<>();
-                params.put("ticket_id", strChallanID);
-                Log.d("zma params", String.valueOf(params));
-                return params;
-            }
-
-        };
+        });
 
 
         jsonObjRequest.setRetryPolicy(new

@@ -6,12 +6,15 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -98,6 +101,7 @@ public class TrafficEducationFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_traffic_education, container, false);
+        customActionBar();
         mRecyclerView = (RecyclerView) view.findViewById(R.id.rv);
         final SwipeRefreshLayout swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -242,6 +246,26 @@ public class TrafficEducationFragment extends Fragment {
 
         }
 
+    }
+    public void customActionBar() {
+        android.support.v7.app.ActionBar mActionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        mActionBar.setDisplayShowHomeEnabled(false);
+        mActionBar.setDisplayShowTitleEnabled(false);
+        LayoutInflater mInflater = LayoutInflater.from(getActivity());
+        View mCustomView = mInflater.inflate(R.layout.custom_action_bar, null);
+        TextView mTitleTextView = (TextView) mCustomView.findViewById(R.id.title_text);
+        ImageView mBackArrow = (ImageView) mCustomView.findViewById(R.id.iv_back_arrow);
+        mTitleTextView.setText("Educate yourself and drive safe");
+        mBackArrow.setImageResource(R.drawable.back_arrow);
+        mBackArrow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Fragment fragment = new MainFragment();
+                getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
+            }
+        });
+        mActionBar.setCustomView(mCustomView);
+        mActionBar.setDisplayShowCustomEnabled(true);
     }
 
 }

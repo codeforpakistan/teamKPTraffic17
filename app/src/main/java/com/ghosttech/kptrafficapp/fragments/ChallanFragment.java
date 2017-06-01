@@ -3,10 +3,12 @@ package com.ghosttech.kptrafficapp.fragments;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
@@ -71,6 +73,7 @@ public class ChallanFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_challan, container, false);
+        customActionBar();
         Bundle args = new Bundle(getArguments());
         tvChallanDate = (TextView) view.findViewById(R.id.tv_challan_date);
         tvChallanDistrict = (TextView) view.findViewById(R.id.tv_challan_district);
@@ -115,4 +118,25 @@ public class ChallanFragment extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+    public void customActionBar() {
+        android.support.v7.app.ActionBar mActionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        mActionBar.setDisplayShowHomeEnabled(false);
+        mActionBar.setDisplayShowTitleEnabled(false);
+        LayoutInflater mInflater = LayoutInflater.from(getActivity());
+        View mCustomView = mInflater.inflate(R.layout.custom_action_bar, null);
+        TextView mTitleTextView = (TextView) mCustomView.findViewById(R.id.title_text);
+        ImageView mBackArrow = (ImageView) mCustomView.findViewById(R.id.iv_back_arrow);
+        mTitleTextView.setText("Your challan status");
+        mBackArrow.setImageResource(R.drawable.back_arrow);
+        mBackArrow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Fragment fragment = new MainFragment();
+                getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
+            }
+        });
+        mActionBar.setCustomView(mCustomView);
+        mActionBar.setDisplayShowCustomEnabled(true);
+    }
+
 }
