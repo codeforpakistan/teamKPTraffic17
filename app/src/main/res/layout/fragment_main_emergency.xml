@@ -6,15 +6,13 @@
     android:gravity="center"
     android:orientation="vertical"
     tools:context="com.ghosttech.kptrafficapp.fragments.MainEmergencyFragment">
-    <com.jaredrummler.materialspinner.MaterialSpinner
-        android:id="@+id/spinner"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="kuch bhi" />
+
     <FrameLayout
-        android:layout_width="300dp"
+        android:layout_width="wrap_content"
         android:layout_height="300dp"
-        android:layout_gravity="center">
+        android:layout_gravity="center"
+        android:layout_marginTop="60dp"
+        android:layout_weight="0.8">
 
         <ImageView
             android:layout_width="match_parent"
@@ -37,9 +35,9 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="   Rescue 1122"
                 android:textSize="10sp"
-                android:textStyle="bold"
-                android:text="   Rescue 1122" />
+                android:textStyle="bold" />
         </LinearLayout>
 
         <LinearLayout
@@ -57,9 +55,9 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="         Health"
                 android:textSize="10sp"
-                android:textStyle="bold"
-                android:text="         Health" />
+                android:textStyle="bold" />
         </LinearLayout>
 
         <LinearLayout
@@ -77,9 +75,9 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="    Mechanics"
                 android:textSize="10sp"
-                android:textStyle="bold"
-                android:text="    Mechanics" />
+                android:textStyle="bold" />
         </LinearLayout>
 
         <LinearLayout
@@ -98,10 +96,50 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="Highway Officer"
                 android:textSize="10sp"
-                android:textStyle="bold"
-                android:text="Highway Officer" />
+                android:textStyle="bold" />
         </LinearLayout>
     </FrameLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1.8"
+        android:gravity="bottom"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@color/colorPrimary"
+            android:orientation="horizontal"
+
+            >
+
+            <ImageView
+                android:id="@+id/iv_website_link"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:padding="5dp"
+                android:src="@drawable/footer_web_icon" />
+
+            <ImageView
+                android:id="@+id/iv_home_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:padding="5dp"
+                android:src="@drawable/footer_home_icon" />
+
+            <ImageView
+                android:id="@+id/iv_setting_menu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:padding="5dp"
+                android:src="@drawable/footer_settings_icon" />
+        </LinearLayout>
+    </LinearLayout>
 </LinearLayout>

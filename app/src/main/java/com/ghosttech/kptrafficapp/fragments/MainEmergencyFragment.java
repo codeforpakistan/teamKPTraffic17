@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import com.ghosttech.kptrafficapp.R;
 import com.imangazaliev.circlemenu.CircleMenu;
 import com.imangazaliev.circlemenu.CircleMenuButton;
+import com.thefinestartist.finestwebview.FinestWebView;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -30,7 +31,8 @@ public class MainEmergencyFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-    ImageView ivHealthEmergency,ivMechanicsEmergency,ivRescueEmergency, ivHighOfficer;
+    ImageView ivHealthEmergency, ivMechanicsEmergency, ivRescueEmergency, ivHighOfficer, ivHomeButton, ivSettingButton, ivWebsiteButton;
+    Fragment fragment;
     private OnFragmentInteractionListener mListener;
 
     public MainEmergencyFragment() {
@@ -69,17 +71,11 @@ public class MainEmergencyFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_main_emergency, container, false);
-        ivHealthEmergency = (ImageView)view.findViewById(R.id.iv_emergency_health);
-        ivHighOfficer = (ImageView)view.findViewById(R.id.iv_emergency_highway_officer);
-        ivMechanicsEmergency = (ImageView)view.findViewById(R.id.iv_emergency_mechanics);
-        ivRescueEmergency = (ImageView)view.findViewById(R.id.iv_emergency_rescue_1122);
-//        CircleMenu circleMenu = (CircleMenu) view.findViewById(R.id.circleMenu);
-//        circleMenu.setOnItemClickListener(new CircleMenu.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(CircleMenuButton menuButton) {
-//
-//            }
-//        });
+        ivHealthEmergency = (ImageView) view.findViewById(R.id.iv_emergency_health);
+        ivHighOfficer = (ImageView) view.findViewById(R.id.iv_emergency_highway_officer);
+        ivMechanicsEmergency = (ImageView) view.findViewById(R.id.iv_emergency_mechanics);
+        ivRescueEmergency = (ImageView) view.findViewById(R.id.iv_emergency_rescue_1122);
+        footerButtons();
         return view;
     }
 
@@ -110,5 +106,30 @@ public class MainEmergencyFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    public void footerButtons() {
+        ivHomeButton = (ImageView) view.findViewById(R.id.iv_home_button);
+        ivSettingButton = (ImageView) view.findViewById(R.id.iv_setting_menu);
+        ivWebsiteButton = (ImageView) view.findViewById(R.id.iv_website_link);
+        ivHomeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                fragment = new MainFragment();
+                getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
+            }
+        });
+        ivWebsiteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new FinestWebView.Builder(getActivity())
+                        .titleDefault("KP Traffic Police Official Website")
+                        .titleFont("Roboto-Medium.ttf")
+                        .disableIconForward(true)
+                        .disableIconBack(true)
+                        .show("http://www.ptpkp.gov.pk/");
+                //startActivity(new Intent(getActivity(), FinestWebViewActivity.class));
+            }
+        });
     }
 }

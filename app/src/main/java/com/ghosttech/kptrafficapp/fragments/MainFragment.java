@@ -2,6 +2,7 @@ package com.ghosttech.kptrafficapp.fragments;
 
 import android.app.Dialog;
 import android.app.Fragment;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.location.Address;
@@ -35,6 +36,7 @@ import com.android.volley.toolbox.Volley;
 import com.ghosttech.kptrafficapp.R;
 import com.ghosttech.kptrafficapp.utilities.CheckNetwork;
 import com.ghosttech.kptrafficapp.utilities.Configuration;
+import com.thefinestartist.finestwebview.FinestWebView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -69,6 +71,7 @@ public class MainFragment extends Fragment {
     private String mParam2;
     Fragment fragment;
     View view;
+    TextView tvUserName;
     Dialog dialog;
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
@@ -76,6 +79,7 @@ public class MainFragment extends Fragment {
     EditText etLicNumber;
     Button btnShowRecord;
     double dblLat, dblLon;
+    ImageView ivSettingButton, ivWebsiteButton;
     String strCityName, strChallanTrackingID, strCheckLatLon, strLicenseNumber, strCNIC, strResponseLicenseID, strResponseDLNumber,
             strResponseCNIC, strResponseLicHolderName, strResponseLicHolderFatherName, strResponseLicType,
             strResponseExpiryDate, strResponseLicHolderDistrict;
@@ -115,17 +119,20 @@ public class MainFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_main, container, false);
+        tvUserName = (TextView)view.findViewById(R.id.tv_user_name);
         pDialog = new SweetAlertDialog(getActivity(), SweetAlertDialog.PROGRESS_TYPE);
         pDialog.getProgressHelper().setBarColor(Color.parseColor("#179e99"));
         pDialog.setCancelable(false);
         sharedPreferences = getActivity().getSharedPreferences("com.ghosttech.kptraffic", 0);
         editor = sharedPreferences.edit();
+        tvUserName.setText(sharedPreferences.getString("user_name",null));
+        footerButtons();
         MultiDex.install(getActivity());
         shake = AnimationUtils.loadAnimation(getActivity(), R.anim.shake);
         mRequestQueue = Volley.newRequestQueue(getActivity());
         if (CheckNetwork.isInternetAvailable(getActivity())) {
             onButtonClick();
-        }else {
+        } else {
 
         }
         customActionBar();
@@ -201,52 +208,52 @@ public class MainFragment extends Fragment {
         btnLicenseVerification = (LinearLayout) view.findViewById(R.id.linear_layout_lv);
         btnLiveTrafficUpdates = (LinearLayout) view.findViewById(R.id.linear_layout_lu);
         btnTrafficEducation = (LinearLayout) view.findViewById(R.id.linear_layout_te);
-            btnComplaintSystem.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    fragment = new ComplaintFragment();
-                    getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).
-                            addToBackStack("tag").commit();
-                }
-            });
-            btnLiveTrafficUpdates.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    fragment = new LiveUpdateFragment();
-                    getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).
-                            addToBackStack("tag").commit();
-                }
-            });
-            btnLicenseVerification.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    customDialogLicenseVerification();
+        btnComplaintSystem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                fragment = new ComplaintFragment();
+                getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).
+                        addToBackStack("tag").commit();
+            }
+        });
+        btnLiveTrafficUpdates.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                fragment = new LiveUpdateFragment();
+                getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).
+                        addToBackStack("tag").commit();
+            }
+        });
+        btnLicenseVerification.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                customDialogLicenseVerification();
 
 
-                }
-            });
-            btnEmergencyContacts.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    fragment = new MainEmergencyFragment();
-                    getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).
-                            addToBackStack("tag").commit();
-                }
-            });
-            btnTrafficEducation.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    fragment = new TrafficEducationFragment();
-                    getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).
-                            addToBackStack("tag").commit();
-                }
-            });
-            btnChallanTracking.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    customDialogChallanStatus();
-                }
-            });
+            }
+        });
+        btnEmergencyContacts.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                fragment = new MainEmergencyFragment();
+                getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).
+                        addToBackStack("tag").commit();
+            }
+        });
+        btnTrafficEducation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                fragment = new TrafficEducationFragment();
+                getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).
+                        addToBackStack("tag").commit();
+            }
+        });
+        btnChallanTracking.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                customDialogChallanStatus();
+            }
+        });
 
     }
 
@@ -476,4 +483,18 @@ public class MainFragment extends Fragment {
         mRequestQueue.add(jsonObjRequest);
     }
 
+    public void footerButtons() {
+        ivSettingButton = (ImageView) view.findViewById(R.id.iv_setting_menu);
+        ivWebsiteButton = (ImageView) view.findViewById(R.id.iv_website_link);
+        ivWebsiteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new FinestWebView.Builder(getActivity())
+                        .titleDefault("KP Traffic Police Official Website")
+                        .titleFont("Roboto-Medium.ttf")
+                        .disableIconForward(true)
+                        .disableIconBack(true)
+                        .show("http://www.ptpkp.gov.pk/");            }
+        });
+    }
 }

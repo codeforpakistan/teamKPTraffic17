@@ -16,7 +16,6 @@ import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +24,6 @@ import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -38,10 +36,9 @@ import com.ghosttech.kptrafficapp.utilities.GeneralUtils;
 import com.ghosttech.kptrafficapp.utilities.HTTPMultiPartEntity;
 import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.orhanobut.dialogplus.DialogPlus;
-import com.orhanobut.dialogplus.GridHolder;
 import com.orhanobut.dialogplus.OnClickListener;
-import com.orhanobut.dialogplus.OnItemClickListener;
 import com.orhanobut.dialogplus.ViewHolder;
+import com.thefinestartist.finestwebview.FinestWebView;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -84,7 +81,7 @@ public class ComplaintFragment extends Fragment {
     private Uri fileUri;
     private static final int CAMERA_RECORD_VIDEO_REQUEST_CODE = 200;
     Animation shake;
-    ImageView ivStartCamera, ivSendComplaint;
+    ImageView ivStartCamera, ivSendComplaint, ivImagePreview, ivHomeButton, ivSettingButton, ivWebsiteButton;
     EditText etDescription;
     File sourceFile;
     final int CAMERA_CAPTURE = 1;
@@ -95,6 +92,7 @@ public class ComplaintFragment extends Fragment {
     RequestQueue requestQueue;
     boolean flag = false;
     DialogPlus dialog;
+
 
     public ComplaintFragment() {
         // Required empty public constructor
@@ -125,8 +123,10 @@ public class ComplaintFragment extends Fragment {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_complaint, container, false);
         requestQueue = Volley.newRequestQueue(getActivity());
+        footerButtons();
         spComlaintType = (MaterialSpinner) view.findViewById(R.id.spinner);
         ivSendComplaint = (ImageView) view.findViewById(R.id.iv_send_button);
+        ivImagePreview = (ImageView) view.findViewById(R.id.iv_image_preview);
         spComlaintType.setItems("Complaint Type", "Traffic Jam", "Wardens Corruption", "Other");
         shake = AnimationUtils.loadAnimation(getActivity(), R.anim.shake);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -212,7 +212,7 @@ public class ComplaintFragment extends Fragment {
                 new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
                         .setTitleText("Oops!")
                         .setContentText("You don't have internet connection")
-                        .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                     .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
                             @Override
                             public void onClick(SweetAlertDialog sweetAlertDialog) {
                                 getActivity().finish();
@@ -489,6 +489,7 @@ public class ComplaintFragment extends Fragment {
                         Log.d("zma flag camera", String.valueOf(flag));
                     }
                     Log.d("zma pic", sourceFile.toString());
+                    ivImagePreview.setImageBitmap(photo);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -527,7 +528,7 @@ public class ComplaintFragment extends Fragment {
 
     private void bottomCustomDialog() {
         dialog = DialogPlus.newDialog(getActivity())
-                .setAdapter(new ArrayAdapter<>(getActivity(),android.R.layout.simple_list_item_1,new String[]{""}))
+                .setAdapter(new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, new String[]{""}))
                 .setContentHolder(new ViewHolder(R.layout.custom_bottom_option_menu))
                 .setOnClickListener(new OnClickListener() {
                     @Override
@@ -556,6 +557,31 @@ public class ComplaintFragment extends Fragment {
                 .create();
         dialog.show();
 
+    }
+
+    public void footerButtons() {
+        ivHomeButton = (ImageView) view.findViewById(R.id.iv_home_button);
+        ivSettingButton = (ImageView) view.findViewById(R.id.iv_setting_menu);
+        ivWebsiteButton = (ImageView) view.findViewById(R.id.iv_website_link);
+        ivHomeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                fragment = new MainFragment();
+                getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
+            }
+        });
+        ivWebsiteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new FinestWebView.Builder(getActivity())
+                        .titleDefault("KP Traffic Police Official Website")
+                        .titleFont("Roboto-Medium.ttf")
+                        .disableIconForward(true)
+                        .disableIconBack(true)
+                        .show("http://www.ptpkp.gov.pk/");
+                //startActivity(new Intent(getActivity(), FinestWebViewActivity.class));
+            }
+        });
     }
 
 

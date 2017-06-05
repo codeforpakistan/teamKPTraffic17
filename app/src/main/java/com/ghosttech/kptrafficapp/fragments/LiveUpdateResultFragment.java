@@ -24,6 +24,7 @@ import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.thefinestartist.finestwebview.FinestWebView;
 
 import java.util.ArrayList;
 
@@ -54,7 +55,7 @@ public class LiveUpdateResultFragment extends Fragment {
     Fragment fragment;
     View view;
     TextView tvRoadStatus, tvUpdateTime;
-
+    ImageView  ivHomeButton, ivSettingButton, ivWebsiteButton;
 
     private OnFragmentInteractionListener mListener;
 
@@ -499,6 +500,28 @@ public class LiveUpdateResultFragment extends Fragment {
         tvUpdateTime.setText(String.valueOf(args.get("response_time")));
         tvRoadStatus.setText(String.valueOf(args.get("status")));
     }
-
+    public void footerButtons() {
+        ivHomeButton = (ImageView) view.findViewById(R.id.iv_home_button);
+        ivSettingButton = (ImageView) view.findViewById(R.id.iv_setting_menu);
+        ivWebsiteButton = (ImageView) view.findViewById(R.id.iv_website_link);
+        ivHomeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                fragment = new MainFragment();
+                getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
+            }
+        });
+        ivWebsiteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new FinestWebView.Builder(getActivity())
+                        .titleDefault("KP Traffic Police Official Website")
+                        .titleFont("Roboto-Medium.ttf")
+                        .disableIconForward(true)
+                        .disableIconBack(true)
+                        .show("http://www.ptpkp.gov.pk/");
+            }
+        });
+    }
 
 }

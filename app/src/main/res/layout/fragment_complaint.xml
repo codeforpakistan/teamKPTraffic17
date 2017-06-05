@@ -124,6 +124,13 @@
                             android:src="@drawable/send_complaint_icon" />
                     </LinearLayout>
                 </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/iv_image_preview"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:layout_gravity="center_horizontal"
+                    />
             </LinearLayout>
         </TableLayout>
     </ScrollView>
@@ -136,6 +143,7 @@
         android:layout_weight="1">
 
         <ImageView
+            android:id="@+id/iv_website_link"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -143,6 +151,7 @@
             android:src="@drawable/footer_web_icon" />
 
         <ImageView
+            android:id="@+id/iv_home_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -150,6 +159,7 @@
             android:src="@drawable/footer_home_icon" />
 
         <ImageView
+            android:id="@+id/iv_setting_menu"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"

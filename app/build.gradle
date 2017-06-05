@@ -59,6 +59,7 @@ dependencies {
     compile 'com.android.support:multidex:1.0.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.github.bumptech.glide:glide:4.0.0-RC0'
+    compile 'com.thefinestartist:finestwebview:1.2.7'
     testCompile 'junit:junit:4.12'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.0.0-RC0'
 }

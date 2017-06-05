@@ -23,10 +23,11 @@
             app:srcCompat="@drawable/main_screen_logo" />
 
         <TextView
+            android:id="@+id/tv_user_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="Kashif Ahmad"
+            android:text="User Name"
             android:textColor="#fff"
             android:textStyle="bold" />
 
@@ -208,6 +209,7 @@
         android:orientation="horizontal">
 
         <ImageView
+            android:id="@+id/iv_website_link"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -215,13 +217,7 @@
             android:src="@drawable/footer_web_icon" />
 
         <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:padding="5dp"
-            android:src="@drawable/footer_home_icon" />
-
-        <ImageView
+            android:id="@+id/iv_setting_menu"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"

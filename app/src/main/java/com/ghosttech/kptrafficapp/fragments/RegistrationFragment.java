@@ -35,6 +35,8 @@ import java.util.Map;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
+import static com.thefinestartist.utils.content.ContextUtil.getSharedPreferences;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -102,6 +104,8 @@ public class RegistrationFragment extends Fragment {
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_registration, container, false);
         mRequestQueue = Volley.newRequestQueue(getActivity());
+        sharedPreferences = getActivity().getSharedPreferences("com.ghosttech.kptraffic", 0);
+        editor = sharedPreferences.edit();
         shake = AnimationUtils.loadAnimation(getActivity(), R.anim.shake);
         MultiDex.install(getActivity());
         pDialog = new SweetAlertDialog(getActivity(), SweetAlertDialog.PROGRESS_TYPE);
@@ -242,6 +246,7 @@ public class RegistrationFragment extends Fragment {
                 params.put("name", strName);
                 params.put("cnic", strCNIC);
                 params.put("phone_no", strPhoneNumber);
+                editor.putString("user_name",strName).commit();
                 return params;
             }
 
