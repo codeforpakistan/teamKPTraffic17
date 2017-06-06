@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.location.Location;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -26,6 +27,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
@@ -212,7 +214,7 @@ public class ComplaintFragment extends Fragment {
                 new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
                         .setTitleText("Oops!")
                         .setContentText("You don't have internet connection")
-                     .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                        .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
                             @Override
                             public void onClick(SweetAlertDialog sweetAlertDialog) {
                                 getActivity().finish();
@@ -412,10 +414,10 @@ public class ComplaintFragment extends Fragment {
         mActionBar.setDisplayShowHomeEnabled(false);
         mActionBar.setDisplayShowTitleEnabled(false);
         LayoutInflater mInflater = LayoutInflater.from(getActivity());
-        View mCustomView = mInflater.inflate(R.layout.custom_action_bar, null);
+        View mCustomView = mInflater.inflate(R.layout.custom_action_bar_complaint_fragment, null);
         TextView mTitleTextView = (TextView) mCustomView.findViewById(R.id.title_text);
         ImageView mBackArrow = (ImageView) mCustomView.findViewById(R.id.iv_back_arrow);
-        mTitleTextView.setText("Write a complaint here");
+        mTitleTextView.setText("Write a complaint here           ");
         mActionBar.setCustomView(mCustomView);
         mActionBar.setDisplayShowCustomEnabled(true);
         mBackArrow.setOnClickListener(new View.OnClickListener() {
@@ -444,7 +446,9 @@ public class ComplaintFragment extends Fragment {
     public void cameraVIntent() {
 
         Intent videoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+        videoIntent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 10);
         startActivityForResult(videoIntent, CAMERA_VIDEO_CAPTURE);
+
 
     }
 
@@ -458,7 +462,6 @@ public class ComplaintFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         if (requestCode == RESULT_LOAD_IMAGE && null != data) {
             Uri selectedImage = data.getData();
             String[] filePathColumn = {MediaStore.Images.Media.DATA};
@@ -476,7 +479,6 @@ public class ComplaintFragment extends Fragment {
             if (requestCode == CAMERA_CAPTURE) {
                 try {
                     Bitmap photo = (Bitmap) data.getExtras().get("data");
-
                     // ivContent.setImageBitmap(photo);
                     // CALL THIS METHOD TO GET THE URI FROM THE BITMAP
                     Uri tempUri = GeneralUtils.getImageUri(getActivity(), photo);
@@ -498,7 +500,7 @@ public class ComplaintFragment extends Fragment {
 
                 Uri picUri = data.getData();
                 Bundle extras = data.getExtras();
-                String path = data.getData().toString();
+//                String path = data.getData().toString();
                 sourceFile = new File(GeneralUtils.getRealPathFromURI(getActivity(), picUri));
                 if (sourceFile.toString().length() > 0) {
                     Log.d("zma source video", String.valueOf(sourceFile));

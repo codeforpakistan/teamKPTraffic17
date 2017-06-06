@@ -54,9 +54,9 @@ public class GeneralUtils {
 
     }
 
-    public static boolean isValidPass(String pass){
-         if(StringUtils.isEmpty(pass)&& StringUtils.getLength(pass)<4 && StringUtils.getLength(pass)>10)
-             return false;
+    public static boolean isValidPass(String pass) {
+        if (StringUtils.isEmpty(pass) && StringUtils.getLength(pass) < 4 && StringUtils.getLength(pass) > 10)
+            return false;
         return true;
     }
 
@@ -67,11 +67,17 @@ public class GeneralUtils {
         return Uri.parse(path);
     }
 
-    public static String getRealPathFromURI(Context context,Uri uri) {
-        Cursor cursor = context.getContentResolver().query(uri, null, null, null, null);
-        cursor.moveToFirst();
-        int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+    public static String getRealPathFromURI(Context context, Uri uri) {
+        Cursor cursor = null;
+        int idx = 0;
+        if (uri != null) {
+            cursor = context.getContentResolver().query(uri, null, null, null, null);
+            cursor.moveToFirst();
+
+            idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+        }
         return cursor.getString(idx);
+
     }
 
 }
