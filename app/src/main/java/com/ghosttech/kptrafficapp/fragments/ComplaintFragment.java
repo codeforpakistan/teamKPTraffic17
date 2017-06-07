@@ -496,13 +496,14 @@ public class ComplaintFragment extends Fragment {
                     e.printStackTrace();
                 }
 
-            } else if (requestCode == CAMERA_VIDEO_CAPTURE) {
+            } else if (requestCode == CAMERA_VIDEO_CAPTURE && requestCode !=RESULT_CANCELED) {
 
-                Uri picUri = data.getData();
+
                 Bundle extras = data.getExtras();
 //                String path = data.getData().toString();
-                sourceFile = new File(GeneralUtils.getRealPathFromURI(getActivity(), picUri));
-                if (sourceFile.toString().length() > 0) {
+                if (sourceFile.toString() !=null) {
+                    Uri picUri = data.getData();
+                    sourceFile = new File(GeneralUtils.getRealPathFromURI(getActivity(), picUri));
                     Log.d("zma source video", String.valueOf(sourceFile));
                 }
                 Log.d("zma video", sourceFile.toString());

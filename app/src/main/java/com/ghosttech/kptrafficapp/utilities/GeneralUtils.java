@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.util.Log;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -70,13 +71,17 @@ public class GeneralUtils {
     public static String getRealPathFromURI(Context context, Uri uri) {
         Cursor cursor = null;
         int idx = 0;
-        if (uri != null) {
+        String getpath = null;
+        if (cursor!=null && cursor.moveToFirst() ) {
+            //cursor.moveToFirst();
             cursor = context.getContentResolver().query(uri, null, null, null, null);
-            cursor.moveToFirst();
-
             idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+             getpath = cursor.getString(idx);
+            Log.d("zma cursor", String.valueOf(idx));
+            cursor.close();
         }
-        return cursor.getString(idx);
+        return getpath;
+
 
     }
 
