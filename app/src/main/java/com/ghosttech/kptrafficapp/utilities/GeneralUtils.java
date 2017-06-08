@@ -5,7 +5,6 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.util.Log;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -55,8 +54,8 @@ public class GeneralUtils {
 
     }
 
-    public static boolean isValidPass(String pass) {
-        if (StringUtils.isEmpty(pass) && StringUtils.getLength(pass) < 4 && StringUtils.getLength(pass) > 10)
+    public static boolean isValidPass(String pass){
+        if(StringUtils.isEmpty(pass)&& StringUtils.getLength(pass)<4 && StringUtils.getLength(pass)>10)
             return false;
         return true;
     }
@@ -68,21 +67,11 @@ public class GeneralUtils {
         return Uri.parse(path);
     }
 
-    public static String getRealPathFromURI(Context context, Uri uri) {
-        Cursor cursor = null;
-        int idx = 0;
-        String getpath = null;
-        if (cursor!=null && cursor.moveToFirst() ) {
-            //cursor.moveToFirst();
-            cursor = context.getContentResolver().query(uri, null, null, null, null);
-            idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
-             getpath = cursor.getString(idx);
-            Log.d("zma cursor", String.valueOf(idx));
-            cursor.close();
-        }
-        return getpath;
-
-
+    public static String getRealPathFromURI(Context context,Uri uri) {
+        Cursor cursor = context.getContentResolver().query(uri, null, null, null, null);
+        cursor.moveToFirst();
+        int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+        return cursor.getString(idx);
     }
 
 }
