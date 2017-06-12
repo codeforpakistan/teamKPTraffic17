@@ -198,7 +198,7 @@ public class ComplaintFragment extends Fragment {
             public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
                 Snackbar.make(view, "Clicked " + item, Snackbar.LENGTH_LONG).show();
                 spinnerID = String.valueOf(position);
-                Log.d("zma id", spinnerID);
+                Log.d("zma spinner id", spinnerID);
             }
         });
         if (spComlaintType.getText().equals("Complaint Type")) {
@@ -207,11 +207,10 @@ public class ComplaintFragment extends Fragment {
             etDescription.startAnimation(shake);
         } else if (sourceFile == null) {
             ivStartCamera.startAnimation(shake);
-            Log.d("zma source valid",sourceFile.toString());
 
         } else {
             if (CheckNetwork.isInternetAvailable(getActivity())) {
-                pDialog.show();
+              //  pDialog.show();
                 new UploadFileToServer().execute();
             } else {
                 new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
@@ -358,7 +357,7 @@ public class ComplaintFragment extends Fragment {
                     }
                     // Adding file data to http body
                     // Extra parameters if you want to pass to server
-                    entity.addPart("complaint_type_id", new StringBody(spinnerID));
+                    entity.addPart("complaint_type_id", new StringBody("22"));
                     entity.addPart("signup_id", new StringBody("21"));
                     entity.addPart("latitude", new StringBody(String.valueOf(dblLat)));
                     entity.addPart("longitude", new StringBody(String.valueOf(dblLon)));
@@ -368,6 +367,8 @@ public class ComplaintFragment extends Fragment {
                     // Making server call
                     HttpResponse response = httpclient.execute(httppost);
                     HttpEntity r_entity = response.getEntity();
+                    fragment = new MainFragment();
+                    getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
                     int statusCode = response.getStatusLine().getStatusCode();
                     if (statusCode == 200) {
                       //  pDialog.dismiss();
@@ -439,6 +440,7 @@ public class ComplaintFragment extends Fragment {
     public void cameraIntent() {
 
         Intent captureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
         startActivityForResult(captureIntent, CAMERA_CAPTURE);
 
     }
@@ -453,6 +455,7 @@ public class ComplaintFragment extends Fragment {
     public void cameraVIntent() {
 
         Intent videoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+        videoIntent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 10);
         startActivityForResult(videoIntent, CAMERA_VIDEO_CAPTURE);
 
     }
@@ -484,7 +487,10 @@ public class ComplaintFragment extends Fragment {
         } else if (requestCode != RESULT_CANCELED || data != null) {
             if (requestCode == CAMERA_CAPTURE) {
                 try {
-                    Bitmap photo = (Bitmap) data.getExtras().get("data");
+                    Bitmap photo = null;
+                    if (data != null) {
+                        photo = (Bitmap) data.getExtras().get("data");
+                    }
 
                     // ivContent.setImageBitmap(photo);
                     // CALL THIS METHOD TO GET THE URI FROM THE BITMAP
@@ -503,19 +509,17 @@ public class ComplaintFragment extends Fragment {
                     e.printStackTrace();
                 }
 
-            } else if (requestCode == CAMERA_VIDEO_CAPTURE) {
+            } else if (requestCode != RESULT_CANCELED || data != null){
+                if (requestCode == CAMERA_VIDEO_CAPTURE) {
+                    Bundle extras = data.getExtras();
+                   String path = data.getData().toString();
+                    Uri picUri = data.getData();
+                    Log.d("zma pic uri", picUri.toString());
+                    sourceFile = new File(GeneralUtils.getRealPathFromURI(getActivity(), Uri.parse(path)));
+                    Log.d("zma video", String.valueOf(sourceFile));
 
-                Uri picUri = data.getData();
-                Bundle extras = data.getExtras();
-                String path = data.getData().toString();
-                sourceFile = new File(GeneralUtils.getRealPathFromURI(getActivity(), picUri));
-                if (sourceFile.toString().length() > 0) {
-                    Log.d("zma source video", String.valueOf(sourceFile));
                 }
-                Log.d("zma video", sourceFile.toString());
-                dialog.dismiss();
-
-            } else if (resultCode == RESULT_LOAD_VIDEO) {
+        }else if (resultCode == RESULT_LOAD_VIDEO) {
                 Uri selectedVideo = data.getData();
                 String[] filePathColumn = {MediaStore.Video.Media.DATA};
                 Cursor cursor = getActivity().getContentResolver().query(selectedVideo,
@@ -588,7 +592,6 @@ public class ComplaintFragment extends Fragment {
                         .disableIconForward(true)
                         .disableIconBack(true)
                         .show("http://www.ptpkp.gov.pk/");
-                //startActivity(new Intent(getActivity(), FinestWebViewActivity.class));
             }
         });
     }

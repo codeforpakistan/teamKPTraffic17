@@ -171,7 +171,7 @@ public class RegistrationFragment extends Fragment {
         } else {
             Log.d("zma data", strName + "\n" + strEmail + "\n" + strPhoneNumber + "\n" + strCNIC);
             if (CheckNetwork.isInternetAvailable(getActivity())) {
-                pDialog.show();
+
                 apiCall();
             } else {
                 new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
@@ -189,6 +189,7 @@ public class RegistrationFragment extends Fragment {
     }
 
     public void apiCall() {
+        pDialog.show();
         String url = Configuration.END_POINT_LIVE + "signup/signup";
         Log.d("zma url", url);
         StringRequest jsonObjRequest = new StringRequest(Request.Method.POST,
@@ -246,7 +247,7 @@ public class RegistrationFragment extends Fragment {
                 params.put("name", strName);
                 params.put("cnic", strCNIC);
                 params.put("phone_no", strPhoneNumber);
-                editor.putString("user_name",strName).commit();
+                editor.putString("user_name", strName).commit();
                 return params;
             }
 
