@@ -76,6 +76,7 @@ public class MainEmergencyFragment extends Fragment {
         ivMechanicsEmergency = (ImageView) view.findViewById(R.id.iv_emergency_mechanics);
         ivRescueEmergency = (ImageView) view.findViewById(R.id.iv_emergency_rescue_1122);
         footerButtons();
+        onEmergencyButtonClick();
         return view;
     }
 
@@ -107,6 +108,14 @@ public class MainEmergencyFragment extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+    public void onEmergencyButtonClick(){
+        ivHealthEmergency.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+    }
 
     public void footerButtons() {
         ivHomeButton = (ImageView) view.findViewById(R.id.iv_home_button);
@@ -131,5 +140,8 @@ public class MainEmergencyFragment extends Fragment {
                 //startActivity(new Intent(getActivity(), FinestWebViewActivity.class));
             }
         });
+    }
+    public void apiCall(){
+
     }
 }
