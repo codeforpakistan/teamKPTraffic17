@@ -1,7 +1,10 @@
 package com.ghosttech.kptrafficapp.fragments;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.app.Fragment;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -57,6 +60,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 import io.nlopez.smartlocation.OnLocationUpdatedListener;
 import io.nlopez.smartlocation.SmartLocation;
 
+import static android.R.id.message;
 import static android.app.Activity.RESULT_CANCELED;
 
 public class ComplaintFragment extends Fragment {
@@ -71,14 +75,12 @@ public class ComplaintFragment extends Fragment {
     private String mParam2;
     View view;
     long totalSize = 0;
-    String contentPath;
     MaterialSpinner spComlaintType;
     String spinnerID, strDesciption;
 
     double dblLat, dblLon;
     private OnFragmentInteractionListener mListener;
     Fragment fragment;
-    private Uri fileUri;
     private static final int CAMERA_RECORD_VIDEO_REQUEST_CODE = 200;
     Animation shake;
     ImageView ivStartCamera, ivSendComplaint, ivImagePreview, ivHomeButton, ivSettingButton, ivWebsiteButton;
@@ -210,7 +212,7 @@ public class ComplaintFragment extends Fragment {
 
         } else {
             if (CheckNetwork.isInternetAvailable(getActivity())) {
-              //  pDialog.show();
+                pDialog.show();
                 new UploadFileToServer().execute();
             } else {
                 new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
@@ -248,7 +250,7 @@ public class ComplaintFragment extends Fragment {
             String responseString;
             if (flag) {
 
-                Log.d("zma flag", String.valueOf(flag));
+                Log.d("zma flag if", String.valueOf(flag));
                 HttpClient httpclient = new DefaultHttpClient();
 
                 HttpPost httppost = new HttpPost(Configuration.END_POINT_LIVE + "complaints/image");
@@ -262,14 +264,10 @@ public class ComplaintFragment extends Fragment {
                                     publishProgress((int) ((num / (float) totalSize) * 100));
                                 }
                             });
-                    try {
-                        File msourceFile = new File(sourceFile.getPath());
-                        entity.addPart("image", new FileBody(msourceFile));
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
                     // Adding file data to http body
                     // Extra parameters if you want to pass to server
+                    File msourceFile = new File(sourceFile.getPath());
+                    entity.addPart("image", new FileBody(msourceFile));
                     Looper.prepare();
                     entity.addPart("complaint_type_id", new StringBody("2"));
                     entity.addPart("signup_id", new StringBody("21"));
@@ -282,53 +280,21 @@ public class ComplaintFragment extends Fragment {
                     HttpResponse response = httpclient.execute(httppost);
                     HttpEntity r_entity = response.getEntity();
                     pDialog.dismiss();
-                    fragment = new MainFragment();
-                    getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
-                    new SweetAlertDialog(getActivity(), SweetAlertDialog.SUCCESS_TYPE)
-                            .setTitleText("Good job")
-                            .setContentText("Your complaint has been registered!")
-                            .setConfirmText("OK")
-                            .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                                @Override
-                                public void onClick(SweetAlertDialog sweetAlertDialog) {
 
-                                }
-                            })
-                            .show();
+
                     int statusCode = response.getStatusLine().getStatusCode();
-
-                    if (statusCode == 200) {
-                        Log.d("zma status code",String.valueOf(statusCode));
-                        // Server response
-
-                        responseString = EntityUtils.toString(r_entity);
-                        Log.d("zma response", responseString);
-
-                        if (responseString.contains("true")) {
-
-
-
-                        }
-                    } else {
-                        responseString = "Error occurred! Http Status Code: "
-                                + statusCode;
-                       // pDialog.dismiss();
-                        new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
-                                .setTitleText("Oops...")
-                                .setContentText("Something went wrong!")
-                                .show();
-                    }
-
+                    responseString = EntityUtils.toString(r_entity);
+                    Log.d("zma status code if", String.valueOf(statusCode));
                 } catch (ClientProtocolException e) {
                     responseString = e.toString();
-                  //  pDialog.dismiss();
+                    //  pDialog.dismiss();
                     new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
                             .setTitleText("Oops...")
                             .setContentText("Something went wrong!")
                             .show();
                 } catch (IOException e) {
                     responseString = e.toString();
-                   // pDialog.dismiss();
+                    // pDialog.dismiss();
                     new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
                             .setTitleText("Oops...")
                             .setContentText("Something went wrong!")
@@ -370,42 +336,19 @@ public class ComplaintFragment extends Fragment {
                     fragment = new MainFragment();
                     getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
                     int statusCode = response.getStatusLine().getStatusCode();
-                    if (statusCode == 200) {
-                      //  pDialog.dismiss();
-                        // Server response
-                        fragment = new MainFragment();
-                        getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
-                        responseString = EntityUtils.toString(r_entity);
-                        Log.d("zma response", responseString);
-                        Looper.prepare();
-                        if (responseString.contains("true")) {
-
-                            new SweetAlertDialog(getActivity(), SweetAlertDialog.SUCCESS_TYPE)
-                                    .setTitleText("Good job")
-                                    .setContentText("Your complaint has been registered!")
-                                    .show();
-
-                        }
-                    } else {
-                        responseString = "Error occurred! Http Status Code: "
-                                + statusCode;
-                      //  pDialog.dismiss();
-                        new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
-                                .setTitleText("Oops...")
-                                .setContentText("Something went wrong!")
-                                .show();
-                    }
+                    responseString = EntityUtils.toString(r_entity);
+                    pDialog.dismiss();
 
                 } catch (ClientProtocolException e) {
                     responseString = e.toString();
-                   // pDialog.dismiss();
+                    // pDialog.dismiss();
                     new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
                             .setTitleText("Oops...")
                             .setContentText("Something went wrong!")
                             .show();
                 } catch (IOException e) {
                     responseString = e.toString();
-                   // pDialog.dismiss();
+                    // pDialog.dismiss();
                     new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
                             .setTitleText("Oops...")
                             .setContentText("Something went wrong!")
@@ -509,17 +452,17 @@ public class ComplaintFragment extends Fragment {
                     e.printStackTrace();
                 }
 
-            } else if (requestCode != RESULT_CANCELED || data != null){
+            } else if (requestCode != RESULT_CANCELED || data != null) {
                 if (requestCode == CAMERA_VIDEO_CAPTURE) {
                     Bundle extras = data.getExtras();
-                   String path = data.getData().toString();
+                    String path = data.getData().toString();
                     Uri picUri = data.getData();
-                    Log.d("zma pic uri", picUri.toString());
+                    Log.d("zma pic path", path);
                     sourceFile = new File(GeneralUtils.getRealPathFromURI(getActivity(), Uri.parse(path)));
                     Log.d("zma video", String.valueOf(sourceFile));
 
                 }
-        }else if (resultCode == RESULT_LOAD_VIDEO) {
+            } else if (resultCode == RESULT_LOAD_VIDEO) {
                 Uri selectedVideo = data.getData();
                 String[] filePathColumn = {MediaStore.Video.Media.DATA};
                 Cursor cursor = getActivity().getContentResolver().query(selectedVideo,
@@ -551,14 +494,20 @@ public class ComplaintFragment extends Fragment {
                         ivCameraPicture.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                cameraIntent();
+                                //  cameraIntent();
+                                Intent captureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                                startActivityForResult(captureIntent, CAMERA_CAPTURE);
 
                             }
                         });
                         ivCameraVideo.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                cameraVIntent();
+                                Intent videoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+                                videoIntent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 10);
+                                startActivityForResult(videoIntent, CAMERA_VIDEO_CAPTURE);
+                                //   cameraVIntent();
+
                             }
                         });
                     }
@@ -596,5 +545,18 @@ public class ComplaintFragment extends Fragment {
         });
     }
 
+    public void showAlertDialog() {
+        final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+
+        alertDialog.setTitle("Great");
+        alertDialog.setMessage("Hey man");
+        alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                alertDialog.dismiss();
+            }
+        });
+
+        alertDialog.show();
+    }
 
 }
