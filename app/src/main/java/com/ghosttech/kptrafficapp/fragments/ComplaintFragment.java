@@ -3,7 +3,6 @@ package com.ghosttech.kptrafficapp.fragments;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.app.Fragment;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -60,8 +59,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 import io.nlopez.smartlocation.OnLocationUpdatedListener;
 import io.nlopez.smartlocation.SmartLocation;
 
-import static android.R.id.message;
-import static android.app.Activity.RESULT_CANCELED;
+import static android.app.Activity.RESULT_OK;
 
 public class ComplaintFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
@@ -381,22 +379,16 @@ public class ComplaintFragment extends Fragment {
     }
 
     public void cameraIntent() {
-
         Intent captureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-
         startActivityForResult(captureIntent, CAMERA_CAPTURE);
-
     }
 
     public void galleryIntent() {
-
         Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(i, RESULT_LOAD_IMAGE);
-
     }
 
     public void cameraVIntent() {
-
         Intent videoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
         videoIntent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 10);
         startActivityForResult(videoIntent, CAMERA_VIDEO_CAPTURE);
@@ -404,16 +396,13 @@ public class ComplaintFragment extends Fragment {
     }
 
     public void galleryVIntent() {
-
         Intent vv = new Intent(Intent.ACTION_PICK, MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(vv, RESULT_LOAD_VIDEO);
-
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         if (requestCode == RESULT_LOAD_IMAGE && null != data) {
             Uri selectedImage = data.getData();
             String[] filePathColumn = {MediaStore.Images.Media.DATA};
@@ -425,60 +414,48 @@ public class ComplaintFragment extends Fragment {
             sourceFile = new File(picturePath);
             Log.d("zma path", picturePath.toString());
             cursor.close();
-            //ivContent.setImageBitmap(BitmapFactory.decodeFile(picturePath));
-
-        } else if (requestCode != RESULT_CANCELED || data != null) {
-            if (requestCode == CAMERA_CAPTURE) {
-                try {
-                    Bitmap photo = null;
-                    if (data != null) {
-                        photo = (Bitmap) data.getExtras().get("data");
-                    }
-
-                    // ivContent.setImageBitmap(photo);
-                    // CALL THIS METHOD TO GET THE URI FROM THE BITMAP
-                    Uri tempUri = GeneralUtils.getImageUri(getActivity(), photo);
-                    // CALL THIS METHOD TO GET THE ACTUAL PATH
-                    sourceFile = new File(GeneralUtils.getRealPathFromURI(getActivity(), tempUri));
-                    if (sourceFile.toString().length() > 0) {
-                        Log.d("zma source pic", String.valueOf(sourceFile));
-                        flag = true;
-                        dialog.dismiss();
-                        Log.d("zma flag camera", String.valueOf(flag));
-                    }
-                    Log.d("zma pic", sourceFile.toString());
-                    ivImagePreview.setImageBitmap(photo);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-            } else if (requestCode != RESULT_CANCELED || data != null) {
-                if (requestCode == CAMERA_VIDEO_CAPTURE) {
-                    Bundle extras = data.getExtras();
-                    String path = data.getData().toString();
-                    Uri picUri = data.getData();
-                    Log.d("zma pic path", path);
-                    sourceFile = new File(GeneralUtils.getRealPathFromURI(getActivity(), Uri.parse(path)));
-                    Log.d("zma video", String.valueOf(sourceFile));
-
-                }
-            } else if (resultCode == RESULT_LOAD_VIDEO) {
-                Uri selectedVideo = data.getData();
-                String[] filePathColumn = {MediaStore.Video.Media.DATA};
-                Cursor cursor = getActivity().getContentResolver().query(selectedVideo,
-                        filePathColumn, null, null, null);
-                cursor.moveToFirst();
-                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-                // String videoPath = cursor.getString(columnIndex);
-                String videoPath = data.getData().toString();
-                sourceFile = new File(videoPath);
-                if (sourceFile.toString().length() > 0) {
-                    Log.d("zma source video", String.valueOf(sourceFile));
-                }
-                cursor.close();
-
+        } else if (resultCode == RESULT_OK && requestCode == CAMERA_CAPTURE && data != null) {
+            Bitmap photo = (Bitmap) data.getExtras().get("data");
+            Uri tempUri = GeneralUtils.getImageUri(getActivity(), photo);
+            sourceFile = new File(GeneralUtils.getRealPathFromURI(getActivity(), tempUri));
+            if (sourceFile != null) {
+                flag = true;
+            } else {
+                flag = false;
             }
+        } else if (resultCode == RESULT_OK && requestCode == CAMERA_VIDEO_CAPTURE && data != null) {
+            Uri picUri = data.getData();
+            sourceFile = new File(GeneralUtils.getRealPathFromURI(getActivity(), picUri));
+        } else if (resultCode == RESULT_OK) {
+            Uri uri = data.getData();
+            sourceFile = new File(GeneralUtils.getRealPathFromURI(getActivity(), uri));
         }
+//                if (requestCode == CAMERA_VIDEO_CAPTURE) {
+//                    Bundle extras = data.getExtras();
+//                    String path = data.getData().toString();
+//                    Uri picUri = data.getData();
+//                    Log.d("zma pic path", path);
+//                    sourceFile = new File(GeneralUtils.getRealPathFromURI(getActivity(), Uri.parse(path)));
+//                    Log.d("zma video", String.valueOf(sourceFile));
+//
+//                }
+//            } else if (resultCode == RESULT_LOAD_VIDEO) {
+//                Uri selectedVideo = data.getData();
+//                String[] filePathColumn = {MediaStore.Video.Media.DATA};
+//                Cursor cursor = getActivity().getContentResolver().query(selectedVideo,
+//                        filePathColumn, null, null, null);
+//                cursor.moveToFirst();
+//                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+//                // String videoPath = cursor.getString(columnIndex);
+//                String videoPath = data.getData().toString();
+//                sourceFile = new File(videoPath);
+//                if (sourceFile.toString().length() > 0) {
+//                    Log.d("zma source video", String.valueOf(sourceFile));
+//                }
+//                cursor.close();
+//
+//            }
+//        }
 
     }
 
