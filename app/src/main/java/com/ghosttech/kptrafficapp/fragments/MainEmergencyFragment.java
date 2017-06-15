@@ -1,18 +1,34 @@
 package com.ghosttech.kptrafficapp.fragments;
 
 import android.content.Context;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.ghosttech.kptrafficapp.R;
+import com.ghosttech.kptrafficapp.utilities.Configuration;
 import com.imangazaliev.circlemenu.CircleMenu;
 import com.imangazaliev.circlemenu.CircleMenuButton;
 import com.thefinestartist.finestwebview.FinestWebView;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import cn.pedant.SweetAlert.SweetAlertDialog;
+import io.nlopez.smartlocation.OnLocationUpdatedListener;
+import io.nlopez.smartlocation.SmartLocation;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -34,6 +50,8 @@ public class MainEmergencyFragment extends Fragment {
     ImageView ivHealthEmergency, ivMechanicsEmergency, ivRescueEmergency, ivHighOfficer, ivHomeButton, ivSettingButton, ivWebsiteButton;
     Fragment fragment;
     private OnFragmentInteractionListener mListener;
+    double dblLat, dblLon;
+    String strRescue, strHealth, strMechanics, strHighwayOfficers;
 
     public MainEmergencyFragment() {
         // Required empty public constructor
@@ -75,6 +93,16 @@ public class MainEmergencyFragment extends Fragment {
         ivHighOfficer = (ImageView) view.findViewById(R.id.iv_emergency_highway_officer);
         ivMechanicsEmergency = (ImageView) view.findViewById(R.id.iv_emergency_mechanics);
         ivRescueEmergency = (ImageView) view.findViewById(R.id.iv_emergency_rescue_1122);
+        SmartLocation.with(getActivity()).location()
+                .start(new OnLocationUpdatedListener() {
+
+                    @Override
+                    public void onLocationUpdated(Location location) {
+                        dblLat = location.getLatitude();
+                        dblLon = location.getLongitude();
+                        Log.d("Location : ", "" + dblLat + " " + dblLon);
+                    }
+                });
         footerButtons();
         onEmergencyButtonClick();
         return view;
@@ -108,11 +136,39 @@ public class MainEmergencyFragment extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
-    public void onEmergencyButtonClick(){
+
+    public void onEmergencyButtonClick() {
+        final Bundle bundle = new Bundle();
+        ivRescueEmergency.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                strRescue = "1";
+                Fragment fragment = new EmergencyFragmentList();
+                bundle.putString("emergency_id",strRescue);
+                getFragmentManager().beginTransaction().replace(R.id.fragment_container,fragment).commit();
+                //getFragmentManager()
+            }
+        });
         ivHealthEmergency.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                strHealth = "2";
+                bundle.putString("emergency_id",strHealth);
 
+            }
+        });
+        ivMechanicsEmergency.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                strMechanics = "3";
+                bundle.putString("emergency_id",strMechanics);
+            }
+        });
+        ivHighOfficer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                strHighwayOfficers = "4";
+                bundle.putString("emergency_id",strHighwayOfficers);
             }
         });
     }
@@ -141,7 +197,5 @@ public class MainEmergencyFragment extends Fragment {
             }
         });
     }
-    public void apiCall(){
 
-    }
 }

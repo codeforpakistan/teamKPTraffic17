@@ -215,6 +215,7 @@ public class RegistrationFragment extends Fragment {
                             Log.d("Zma response", response);
 
                         } else if (response.contains("false")) {
+                            pDialog.dismiss();
                             etCNIC.setText("");
                             new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
                                     .setTitleText("Oops...")
@@ -228,6 +229,7 @@ public class RegistrationFragment extends Fragment {
 
             @Override
             public void onErrorResponse(VolleyError error) {
+                pDialog.dismiss();
                 new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
                         .setTitleText("Oops...")
                         .setContentText("Server Error!")

@@ -145,16 +145,16 @@ public class ComplaintFragment extends Fragment {
         pDialog.setTitleText("Sending complaint");
         customActionBar();
 
-        SmartLocation.with(getActivity()).location()
-                .start(new OnLocationUpdatedListener() {
+            SmartLocation.with(getActivity()).location()
+                    .start(new OnLocationUpdatedListener() {
 
-                    @Override
-                    public void onLocationUpdated(Location location) {
-                        dblLat = location.getLatitude();
-                        dblLon = location.getLongitude();
-                        Log.d("Location : ", "" + dblLat + " " + dblLon);
-                    }
-                });
+                        @Override
+                        public void onLocationUpdated(Location location) {
+                            dblLat = location.getLatitude();
+                            dblLon = location.getLongitude();
+                            Log.d("Location : ", "" + dblLat + " " + dblLon);
+                        }
+                    });
         onSendButton();
         footerButtons();
         return view;
@@ -272,6 +272,7 @@ public class ComplaintFragment extends Fragment {
                     entity.addPart("latitude", new StringBody(String.valueOf(dblLat)));
                     entity.addPart("longitude", new StringBody(String.valueOf(dblLon)));
                     entity.addPart("description", new StringBody(strDesciption));
+                    entity.addPart("complaints_status_id", new StringBody("2"));
                     totalSize = entity.getContentLength();
                     httppost.setEntity(entity);
                     // Making server call
@@ -285,14 +286,14 @@ public class ComplaintFragment extends Fragment {
                     Log.d("zma status code if", String.valueOf(statusCode));
                 } catch (ClientProtocolException e) {
                     responseString = e.toString();
-                    //  pDialog.dismiss();
+                      pDialog.dismiss();
                     new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
                             .setTitleText("Oops...")
                             .setContentText("Something went wrong!")
                             .show();
                 } catch (IOException e) {
                     responseString = e.toString();
-                    // pDialog.dismiss();
+                     pDialog.dismiss();
                     new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
                             .setTitleText("Oops...")
                             .setContentText("Something went wrong!")
@@ -326,6 +327,7 @@ public class ComplaintFragment extends Fragment {
                     entity.addPart("latitude", new StringBody(String.valueOf(dblLat)));
                     entity.addPart("longitude", new StringBody(String.valueOf(dblLon)));
                     entity.addPart("description", new StringBody(strDesciption));
+                    entity.addPart("Pending", new StringBody("2"));
                     totalSize = entity.getContentLength();
                     httppost.setEntity(entity);
                     // Making server call

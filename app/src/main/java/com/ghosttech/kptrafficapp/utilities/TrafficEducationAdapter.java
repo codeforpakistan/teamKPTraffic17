@@ -32,9 +32,7 @@ public class TrafficEducationAdapter extends RecyclerView.Adapter<TrafficEducati
     public class ViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
         CardView cv;
-        TextView descriptionEnglish;
-        TextView descriptionUrdu;
-        TextView imageTitle;
+        TextView descriptionEnglish, descriptionUrdu,imageTitle;
         ImageView ivTrafficEducationImage;
 
 
