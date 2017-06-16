@@ -13,11 +13,35 @@ public class EmergencyHelper {
     String strHelperName,strHelperPhoneNumber,strHelperDistance,strHelperLocation;
 
 
-    EmergencyHelper(String strHelperName, String strHelperDistance, String strHelperLocation,String strHelperPhoneNumber) {
-        this.strHelperName = strHelperName;
-        this.strHelperDistance = strHelperDistance;
-        this.strHelperLocation = strHelperLocation;
-        this.strHelperPhoneNumber = strHelperPhoneNumber;
+    public String getStrHelperDistance() {
+        return strHelperDistance;
+    }
 
+    public String getStrHelperLocation() {
+        return strHelperLocation;
+    }
+
+    public String getStrHelperName() {
+        return strHelperName;
+    }
+
+    public String getStrHelperPhoneNumber() {
+        return strHelperPhoneNumber;
+    }
+
+    public void setStrHelperDistance(String strHelperDistance) {
+        this.strHelperDistance = strHelperDistance;
+    }
+
+    public void setStrHelperLocation(String strHelperLocation) {
+        this.strHelperLocation = strHelperLocation;
+    }
+
+    public void setStrHelperName(String strHelperName) {
+        this.strHelperName = strHelperName;
+    }
+
+    public void setStrHelperPhoneNumber(String strHelperPhoneNumber) {
+        this.strHelperPhoneNumber = strHelperPhoneNumber;
     }
 }

@@ -1,5 +1,6 @@
 package com.ghosttech.kptrafficapp.fragments;
 
+import android.Manifest;
 import android.app.Dialog;
 import android.app.Fragment;
 import android.content.Intent;
@@ -139,7 +140,7 @@ public class MainFragment extends Fragment {
         //((AppCompatActivity) getActivity()).getSupportActionBar().hide();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION,
-                    android.Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
+                    android.Manifest.permission.ACCESS_COARSE_LOCATION, android.Manifest.permission.CALL_PHONE}, 1);
         }
         SmartLocation.with(getActivity()).location()
                 .start(new OnLocationUpdatedListener() {

@@ -1,34 +1,31 @@
 package com.ghosttech.kptrafficapp.fragments;
 
-import android.content.Context;
-import android.graphics.Color;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.ghosttech.kptrafficapp.R;
 import com.ghosttech.kptrafficapp.utilities.Configuration;
 import com.ghosttech.kptrafficapp.utilities.EmergencyHelper;
 import com.ghosttech.kptrafficapp.utilities.EmergencyListAdapter;
-import com.ghosttech.kptrafficapp.utilities.TrafficEducationAdapter;
-import com.ghosttech.kptrafficapp.utilities.TrafficEducationHelper;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -56,18 +53,16 @@ public class EmergencyFragmentList extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
+    RecyclerView recyclerView;
+    List<EmergencyHelper> list;
+    EmergencyListAdapter emergencyListAdapter;
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-    private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
-    SweetAlertDialog pDialog;
+    private String strEmergencyTypeID;
+    double dblLat, dblLon;
     private OnFragmentInteractionListener mListener;
-    EmergencyHelper emergencyHelper;
-    List<EmergencyHelper> data = new ArrayList<>();
-    double dblLat,dblLon;
+
     public EmergencyFragmentList() {
         // Required empty public constructor
     }
@@ -96,6 +91,7 @@ public class EmergencyFragmentList extends Fragment {
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
+
         }
     }
 
@@ -103,7 +99,13 @@ public class EmergencyFragmentList extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view =  inflater.inflate(R.layout.fragment_emergency_fragment_list, container, false);
+        View view = inflater.inflate(R.layout.emergency_fragment_list, container, false);
+        Bundle args = new Bundle(getArguments());
+        strEmergencyTypeID = args.getString("emergency_id");
+        recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
+        recyclerView.setLayoutManager(mLayoutManager);
+        Log.d("zma emergency type", strEmergencyTypeID);
         SmartLocation.with(getActivity()).location()
                 .start(new OnLocationUpdatedListener() {
 
@@ -112,29 +114,13 @@ public class EmergencyFragmentList extends Fragment {
                         dblLat = location.getLatitude();
                         dblLon = location.getLongitude();
                         Log.d("Location : ", "" + dblLat + " " + dblLon);
-                    }});
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.rv);
-        final SwipeRefreshLayout swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
-        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                // Your code to refresh the list here.
-                // Make sure you call swipeContainer.setRefreshing(false)
-                // once the network request has completed successfully.
-                //apiCall();
-                swipeContainer.setRefreshing(false);
-            }
-        });
-        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
-                android.R.color.holo_green_light,
-                android.R.color.holo_orange_light,
-                android.R.color.holo_red_light);
-
-        pDialog = new SweetAlertDialog(getActivity(), SweetAlertDialog.PROGRESS_TYPE);
-        pDialog.getProgressHelper().setBarColor(Color.parseColor("#179e99"));
-        pDialog.setTitleText("Wait a while");
-        pDialog.setCancelable(false);
-        apiCall("1");
+                    }
+                });
+        getData("3",String.valueOf(dblLat),String.valueOf(dblLon));
+        //getData(strEmergencyTypeID, String.valueOf(dblLat), String.valueOf(dblLat));
+        list = new ArrayList<>();
+        emergencyListAdapter = new EmergencyListAdapter(getActivity(), list);
+        recyclerView.setAdapter(emergencyListAdapter);
         return view;
     }
 
@@ -166,81 +152,58 @@ public class EmergencyFragmentList extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
-    public void apiCall(final String strEmergencyTpe) {
-        pDialog.show();
-        String url = Configuration.END_POINT_LIVE + "emergency_contacts/getEmergencyContact?" +
-                "category_id="+3+"&latitude="+String.valueOf("34.345324345")+"&"+"longitude="+String.valueOf("71.2342343");
-        final Bundle args = new Bundle();
-//
-//        Log.d("zma url", url);
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, new Response.Listener<JSONObject>() {
+
+    public void getData(final String strCategoryID, final String latitude, final String longitude) {
+        Log.d("zma log", String.valueOf(latitude));
+        Log.d("zma lat", String.valueOf(longitude));
+        final String url = Configuration.END_POINT_LIVE + "emergency_contacts/getEmergencyContact?category_id=" + strCategoryID + "&latitude=" + latitude + "&longitude=" + longitude;
+        Log.d("zma url", url);
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 try {
-                    boolean status = response.getBoolean("status");
-                    Log.d("zma emer status",String.valueOf(status));
-                    Log.d("zma response bahar",String.valueOf(response));
-                    if (status){
-                        pDialog.dismiss();
-                        Log.d("zma response",String.valueOf(response));
+
+                    Log.d("zma url", url + "\n" + response.getBoolean("status") + "\n" + String.valueOf(response));
+                    list.clear();
+
+                    if (response.getBoolean("status")) {
+                        JSONArray data = response.getJSONArray("data");
+                        for (int i = 0; i < data.length(); i++) {
+                            JSONObject shopObject = data.getJSONObject(i);
+                            EmergencyHelper helper = new EmergencyHelper();
+                            helper.setStrHelperDistance(shopObject.getString("distance"));
+                            helper.setStrHelperLocation(shopObject.getString("district_name"));
+                            helper.setStrHelperName(shopObject.getString("name"));
+                            helper.setStrHelperPhoneNumber(shopObject.getString("contact_no"));
+                            Log.d("zma phone number",shopObject.getString("contact_no"));
+                            list.add(helper);
+                        }
+                        emergencyListAdapter.notifyDataSetChanged();
+                    } else {
+                        new SweetAlertDialog(getActivity(),SweetAlertDialog.WARNING_TYPE)
+                                .setTitleText("Oops!")
+                                .setContentText("No data found around your location")
+                                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                    @Override
+                                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                        Fragment fragment = new MainEmergencyFragment();
+                                        getFragmentManager().beginTransaction().replace(R.id.fragment_container,fragment).commit();
+                                    }
+                                }).show();
+                        Toast.makeText(getActivity(), "Error", Toast.LENGTH_SHORT).show();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-
-            }
-        }){
-            @Override
-            public String getBodyContentType() {
-                return "application/x-www-form-urlencoded;charset=UTF-8";
-            }
-
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> params = new HashMap<>();
-                params.put("category_id",strEmergencyTpe);
-                params.put("latitude",String.valueOf("34.34543"));
-                params.put("longitude",String.valueOf("71.234234"));
-                return params;
-            }
-        };
-       /* StringRequest jsonObjRequest = new StringRequest(Request.Method.POST,
-                url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            pDialog.dismiss();
-                            JSONObject jsonObject = new JSONObject(response);
-                            String status = jsonObject.getString("status");
-                            Log.d("zma emer status",status);
-                            if (status.equals("true")) {
-                                JSONArray jsonArray = jsonObject.getJSONArray("data");
-                                for (int i = 0; i < jsonArray.length(); i++) {
-                                    JSONObject temp = jsonArray.getJSONObject(i);
-                                    Log.d("zma emergency response", String.valueOf(temp));
-                                }
-                            }
-
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }, new Response.ErrorListener() {
-
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                pDialog.dismiss();
-                new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
-                        .setTitleText("Oops...")
-                        .setContentText("Server Error!")
-                        .show();
-                Log.d("zma error registration", String.valueOf(error));
+                if (error instanceof TimeoutError || error instanceof NoConnectionError) {
+                    Toast.makeText(getActivity(), "Check your internet connection", Toast.LENGTH_SHORT).show();
+                }
+//                Toast.makeText(getActivity(), "Something went wrong, try later", Toast.LENGTH_SHORT).show();
             }
         }) {
             @Override
@@ -251,34 +214,18 @@ public class EmergencyFragmentList extends Fragment {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
-                params.put("category_id",strEmergencyTpe);
-                params.put("latitude",String.valueOf(dblLat));
-                params.put("longitude",String.valueOf(dblLon));
-                //params.put("dl_license",strLicenseNumber);
-                Log.d("zma params", String.valueOf(params));
+                params.put("category_id", strCategoryID);
+                params.put("latitude", latitude);
+                params.put("longitude", longitude);
                 return params;
             }
-
-        };*/
-        jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(200000,
+        };
+        request.setRetryPolicy(new DefaultRetryPolicy(200000,
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
-        requestQueue.add(jsonObjectRequest);
-        mLayoutManager = new LinearLayoutManager(getActivity());
-        mRecyclerView.setLayoutManager(mLayoutManager);
+        requestQueue.add(request);
 
-        // use this setting to improve performance if you know that changes
-        // in content do not change the layout size of the RecyclerView
-        mRecyclerView.setHasFixedSize(true);
-
-        // specify an adapter (see also next example)
-        mAdapter = new EmergencyListAdapter(data);
-        mRecyclerView.setAdapter(mAdapter);
-
-        mAdapter.notifyDataSetChanged();
     }
-
-
-
 }

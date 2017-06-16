@@ -5,16 +5,24 @@ package com.ghosttech.kptrafficapp.utilities;
  */
 
 
-
 import java.util.ArrayList;
 import java.util.List;
 
+import android.Manifest;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.text.SpannableString;
+import android.text.style.UnderlineSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.ghosttech.kptrafficapp.R;
@@ -22,12 +30,15 @@ import com.ghosttech.kptrafficapp.R;
 public class EmergencyListAdapter extends RecyclerView.Adapter<EmergencyListAdapter.ViewHolder> {
     private ArrayList<String> mDataset;
     List<EmergencyHelper> emergencyHelperList;
+    Context context;
+
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         // each data item is just a string in this case
         CardView cv;
-        TextView tvEmergencyHelperName, tvEmergencyPhone, tvEmergencyLocation, tvEmergencyDistance;
-        ImageView ivCallHelper, ivHelperIcon;
+        TextView tvEmergencyHelperName, tvEmergencyPhone, tvEmergencyLocation, tvEmergencyDistance, tvCallNow;
+        ImageView ivCallNow, ivHelperIcon;
+        LinearLayout lLCallNow;
 
 
         public ViewHolder(View v) {
@@ -36,40 +47,68 @@ public class EmergencyListAdapter extends RecyclerView.Adapter<EmergencyListAdap
             tvEmergencyPhone = (TextView) itemView.findViewById(R.id.tv_emergency_phone);
             tvEmergencyDistance = (TextView) itemView.findViewById(R.id.tvDistance);
             tvEmergencyLocation = (TextView) itemView.findViewById(R.id.tv_emergency_location);
-            ivCallHelper = (ImageView) itemView.findViewById(R.id.ivCallNow);
+            ivCallNow = (ImageView) itemView.findViewById(R.id.ivCallNow);
             ivHelperIcon = (ImageView) itemView.findViewById(R.id.iv_emergency_icon);
+            lLCallNow = (LinearLayout) itemView.findViewById(R.id.ll_call_now);
+            tvCallNow = (TextView) itemView.findViewById(R.id.tvCallNow);
+            SpannableString content = new SpannableString("Call Now");
+            content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
+            tvCallNow.setText(content);
 
         }
     }
 
 
-
-
     // Provide a suitable constructor (depends on the kind of dataset)
-        public EmergencyListAdapter(List<EmergencyHelper> emergencyHelperList) {
-            this.emergencyHelperList = emergencyHelperList;;
-        }
+    public EmergencyListAdapter(Context context, List<EmergencyHelper> emergencyHelperList) {
+        this.emergencyHelperList = emergencyHelperList;
+        ;
+        this.context = context;
 
-        // Create new views (invoked by the layout manager)
-        @Override
-        public EmergencyListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
-                                                       int viewType) {
-            // create a new view
-            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.custom_emergency_layout, parent, false);
-            // set the view's size, margins, paddings and layout parameters
-            ViewHolder vh = new ViewHolder(v);
-            return vh;
-        }
+    }
 
-        // Replace the contents of a view (invoked by the layout manager)
-        @Override
-        public void onBindViewHolder(ViewHolder holder, int position) {
-            // - get element from your dataset at this position
-            // - replace the contents of the view with that element
-            holder.tvEmergencyHelperName.setText(emergencyHelperList.get(position).strHelperName);
-            holder.tvEmergencyDistance.setText(emergencyHelperList.get(position).strHelperDistance);
-            holder.tvEmergencyLocation.setText(emergencyHelperList.get(position).strHelperLocation);
-            holder.tvEmergencyPhone.setText(emergencyHelperList.get(position).strHelperPhoneNumber);
+    // Create new views (invoked by the layout manager)
+    @Override
+    public EmergencyListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
+                                                              int viewType) {
+        // create a new view
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.custom_emergency_layout, parent, false);
+        // set the view's size, margins, paddings and layout parameters
+        ViewHolder vh = new ViewHolder(v);
+        return vh;
+    }
+
+    // Replace the contents of a view (invoked by the layout manager)
+    @Override
+    public void onBindViewHolder(ViewHolder holder, int position) {
+        // - get element from your dataset at this position
+        // - replace the contents of the view with that element
+        final EmergencyHelper helper = emergencyHelperList.get(position);
+        holder.tvEmergencyHelperName.setText(helper.getStrHelperName());
+        holder.tvEmergencyDistance.setText(helper.getStrHelperDistance());
+        holder.tvEmergencyLocation.setText(helper.getStrHelperLocation());
+
+        holder.tvEmergencyPhone.setText(helper.getStrHelperPhoneNumber());
+        holder.lLCallNow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent callIntent = new Intent(Intent.ACTION_CALL);
+                callIntent.setData(Uri.parse("tel:" + helper.getStrHelperPhoneNumber()));
+                callIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                if (ActivityCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                    // TODO: Consider calling
+                    //    ActivityCompat#requestPermissions
+                    // here to request the missing permissions, and then overriding
+                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                    //                                          int[] grantResults)
+                    // to handle the case where the user grants the permission. See the documentation
+                    // for ActivityCompat#requestPermissions for more details.
+                    return;
+                }
+                context.startActivity(callIntent);
+                }
+            });
+
 
         }
 

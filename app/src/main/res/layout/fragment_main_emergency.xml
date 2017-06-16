@@ -30,7 +30,7 @@
                 android:id="@+id/iv_emergency_rescue_1122"
                 android:layout_width="70dp"
                 android:layout_height="70dp"
-                android:src="@drawable/emergency_image_without_shadow_mechanics" />
+                android:src="@drawable/emergency_rescue_icon" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -50,7 +50,7 @@
                 android:id="@+id/iv_emergency_health"
                 android:layout_width="70dp"
                 android:layout_height="70dp"
-                android:src="@drawable/emergency_image_without_shadow_mechanics" />
+                android:src="@drawable/emergency_health_icon" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -70,7 +70,7 @@
                 android:id="@+id/iv_emergency_mechanics"
                 android:layout_width="70dp"
                 android:layout_height="70dp"
-                android:src="@drawable/emergency_image_without_shadow_mechanics" />
+                android:src="@drawable/emergency_mechanics_icon" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -91,7 +91,7 @@
                 android:layout_width="70dp"
                 android:layout_height="70dp"
 
-                android:src="@drawable/emergency_image_without_shadow_mechanics" />
+                android:src="@drawable/emergency_highway_officer_icon" />
 
             <TextView
                 android:layout_width="wrap_content"

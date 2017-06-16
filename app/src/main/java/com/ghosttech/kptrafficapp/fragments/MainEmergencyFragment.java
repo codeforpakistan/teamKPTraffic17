@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -52,6 +53,7 @@ public class MainEmergencyFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
     double dblLat, dblLon;
     String strRescue, strHealth, strMechanics, strHighwayOfficers;
+    LinearLayout lLCallView;
 
     public MainEmergencyFragment() {
         // Required empty public constructor
@@ -93,16 +95,6 @@ public class MainEmergencyFragment extends Fragment {
         ivHighOfficer = (ImageView) view.findViewById(R.id.iv_emergency_highway_officer);
         ivMechanicsEmergency = (ImageView) view.findViewById(R.id.iv_emergency_mechanics);
         ivRescueEmergency = (ImageView) view.findViewById(R.id.iv_emergency_rescue_1122);
-        SmartLocation.with(getActivity()).location()
-                .start(new OnLocationUpdatedListener() {
-
-                    @Override
-                    public void onLocationUpdated(Location location) {
-                        dblLat = location.getLatitude();
-                        dblLon = location.getLongitude();
-                        Log.d("Location : ", "" + dblLat + " " + dblLon);
-                    }
-                });
         footerButtons();
         onEmergencyButtonClick();
         return view;
@@ -139,14 +131,13 @@ public class MainEmergencyFragment extends Fragment {
 
     public void onEmergencyButtonClick() {
         final Bundle bundle = new Bundle();
+        fragment = new EmergencyFragmentList();
         ivRescueEmergency.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 strRescue = "1";
-                Fragment fragment = new EmergencyFragmentList();
                 bundle.putString("emergency_id",strRescue);
-                getFragmentManager().beginTransaction().replace(R.id.fragment_container,fragment).commit();
-                //getFragmentManager()
+                getFragmentManager().beginTransaction().replace(R.id.fragment_container,fragment).addToBackStack("tag").commit();
             }
         });
         ivHealthEmergency.setOnClickListener(new View.OnClickListener() {
@@ -154,6 +145,9 @@ public class MainEmergencyFragment extends Fragment {
             public void onClick(View view) {
                 strHealth = "2";
                 bundle.putString("emergency_id",strHealth);
+                getFragmentManager().beginTransaction().replace(R.id.fragment_container,fragment).addToBackStack("tag").commit();
+
+
 
             }
         });
@@ -162,6 +156,8 @@ public class MainEmergencyFragment extends Fragment {
             public void onClick(View view) {
                 strMechanics = "3";
                 bundle.putString("emergency_id",strMechanics);
+                getFragmentManager().beginTransaction().replace(R.id.fragment_container,fragment).addToBackStack("tag").commit();
+
             }
         });
         ivHighOfficer.setOnClickListener(new View.OnClickListener() {
@@ -169,8 +165,11 @@ public class MainEmergencyFragment extends Fragment {
             public void onClick(View view) {
                 strHighwayOfficers = "4";
                 bundle.putString("emergency_id",strHighwayOfficers);
+                getFragmentManager().beginTransaction().replace(R.id.fragment_container,fragment).addToBackStack("tag").commit();
+
             }
         });
+        fragment.setArguments(bundle);
     }
 
     public void footerButtons() {
