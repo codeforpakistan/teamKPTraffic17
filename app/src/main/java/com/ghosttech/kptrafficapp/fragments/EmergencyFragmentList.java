@@ -1,5 +1,6 @@
 package com.ghosttech.kptrafficapp.fragments;
 
+import android.graphics.Color;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
@@ -61,6 +62,7 @@ public class EmergencyFragmentList extends Fragment {
     private String mParam2;
     private String strEmergencyTypeID;
     double dblLat, dblLon;
+    SweetAlertDialog pDialog;
     private OnFragmentInteractionListener mListener;
 
     public EmergencyFragmentList() {
@@ -101,6 +103,11 @@ public class EmergencyFragmentList extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.emergency_fragment_list, container, false);
         Bundle args = new Bundle(getArguments());
+        pDialog = new SweetAlertDialog(getActivity(), SweetAlertDialog.PROGRESS_TYPE);
+        pDialog.getProgressHelper().setBarColor(Color.parseColor("#179e99"));
+        pDialog.setTitleText("Wait a while");
+        pDialog.setCancelable(false);
+        pDialog.show();
         strEmergencyTypeID = args.getString("emergency_id");
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
@@ -116,7 +123,8 @@ public class EmergencyFragmentList extends Fragment {
                         Log.d("Location : ", "" + dblLat + " " + dblLon);
                     }
                 });
-        getData("3",String.valueOf(dblLat),String.valueOf(dblLon));
+        getData(strEmergencyTypeID,"34.124062","71.806503");
+       // getData(strEmergencyTypeID,String.valueOf(dblLat),String.valueOf(dblLon));
         //getData(strEmergencyTypeID, String.valueOf(dblLat), String.valueOf(dblLat));
         list = new ArrayList<>();
         emergencyListAdapter = new EmergencyListAdapter(getActivity(), list);
@@ -167,6 +175,7 @@ public class EmergencyFragmentList extends Fragment {
                     list.clear();
 
                     if (response.getBoolean("status")) {
+                        pDialog.dismiss();
                         JSONArray data = response.getJSONArray("data");
                         for (int i = 0; i < data.length(); i++) {
                             JSONObject shopObject = data.getJSONObject(i);
@@ -180,6 +189,7 @@ public class EmergencyFragmentList extends Fragment {
                         }
                         emergencyListAdapter.notifyDataSetChanged();
                     } else {
+                        pDialog.dismiss();
                         new SweetAlertDialog(getActivity(),SweetAlertDialog.WARNING_TYPE)
                                 .setTitleText("Oops!")
                                 .setContentText("No data found around your location")
@@ -188,9 +198,10 @@ public class EmergencyFragmentList extends Fragment {
                                     public void onClick(SweetAlertDialog sweetAlertDialog) {
                                         Fragment fragment = new MainEmergencyFragment();
                                         getFragmentManager().beginTransaction().replace(R.id.fragment_container,fragment).commit();
+                                        sweetAlertDialog.dismiss();
+
                                     }
                                 }).show();
-                        Toast.makeText(getActivity(), "Error", Toast.LENGTH_SHORT).show();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -200,6 +211,7 @@ public class EmergencyFragmentList extends Fragment {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                pDialog.dismiss();
                 if (error instanceof TimeoutError || error instanceof NoConnectionError) {
                     Toast.makeText(getActivity(), "Check your internet connection", Toast.LENGTH_SHORT).show();
                 }

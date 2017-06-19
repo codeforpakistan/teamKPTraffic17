@@ -19,14 +19,17 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
@@ -40,6 +43,7 @@ import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.orhanobut.dialogplus.DialogPlus;
 import com.orhanobut.dialogplus.OnClickListener;
 import com.orhanobut.dialogplus.ViewHolder;
+import com.thefinestartist.Base;
 import com.thefinestartist.finestwebview.FinestWebView;
 
 import org.apache.http.HttpEntity;
@@ -60,6 +64,7 @@ import io.nlopez.smartlocation.OnLocationUpdatedListener;
 import io.nlopez.smartlocation.SmartLocation;
 
 import static android.app.Activity.RESULT_OK;
+import static com.thefinestartist.utils.service.ServiceUtil.getSystemService;
 
 public class ComplaintFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
@@ -123,7 +128,16 @@ public class ComplaintFragment extends Fragment {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_complaint, container, false);
         requestQueue = Volley.newRequestQueue(getActivity());
-
+        Base.initialize(getActivity());
+        ScrollView scrollView = (ScrollView) view.findViewById(R.id.sv_complaint);
+        scrollView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                InputMethodManager imm = (InputMethodManager) getSystemService(getActivity().INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                return false;
+            }
+        });
         spComlaintType = (MaterialSpinner) view.findViewById(R.id.spinner);
         ivSendComplaint = (ImageView) view.findViewById(R.id.iv_send_button);
         ivImagePreview = (ImageView) view.findViewById(R.id.iv_image_preview);

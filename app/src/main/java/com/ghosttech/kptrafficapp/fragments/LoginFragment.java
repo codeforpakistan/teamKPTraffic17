@@ -32,6 +32,8 @@ import com.ghosttech.kptrafficapp.R;
 import com.ghosttech.kptrafficapp.utilities.CheckNetwork;
 import com.ghosttech.kptrafficapp.utilities.Configuration;
 
+import org.json.JSONObject;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -176,6 +178,8 @@ public class LoginFragment extends Fragment {
                     public void onResponse(String response) {
                         if (response.contains("true")) {
                             pDialog.dismiss();
+                            JSONObject jsonObject = new JSONObject();
+
                             editor.putString("true", strCNIC).commit();
                             fragment = new MainFragment();
                             getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).

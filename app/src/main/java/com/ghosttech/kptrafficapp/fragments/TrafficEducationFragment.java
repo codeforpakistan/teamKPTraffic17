@@ -1,18 +1,23 @@
 package com.ghosttech.kptrafficapp.fragments;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.support.v4.widget.AutoScrollHelper;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -28,6 +33,9 @@ import com.ghosttech.kptrafficapp.R;
 import com.ghosttech.kptrafficapp.utilities.Configuration;
 import com.ghosttech.kptrafficapp.utilities.TrafficEducationAdapter;
 import com.ghosttech.kptrafficapp.utilities.TrafficEducationHelper;
+import com.mancj.materialsearchbar.MaterialSearchBar;
+import com.thefinestartist.Base;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -38,7 +46,7 @@ import java.util.Map;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
-import static android.R.id.list;
+import static com.thefinestartist.utils.service.ServiceUtil.getSystemService;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -53,6 +61,7 @@ public class TrafficEducationFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private MaterialSearchBar searchBar;
     List<TrafficEducationHelper> data = new ArrayList<>();
     View view;
     // TODO: Rename and change types of parameters
@@ -102,29 +111,46 @@ public class TrafficEducationFragment extends Fragment {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_traffic_education, container, false);
         customActionBar();
+        Base.initialize(getActivity());
+        searchBar = (MaterialSearchBar) view.findViewById(R.id.searchBar);
+        searchBar.setHint("Custom hint");
+        searchBar.setSpeechMode(false);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.rv);
-        final SwipeRefreshLayout swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
-        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        mRecyclerView.setOnTouchListener(new View.OnTouchListener() {
+
             @Override
-            public void onRefresh() {
-                // Your code to refresh the list here.
-                // Make sure you call swipeContainer.setRefreshing(false)
-                // once the network request has completed successfully.
-                data.clear();
-                apiCall();
-                swipeContainer.setRefreshing(false);
+            public boolean onTouch(View v, MotionEvent event) {
+
+                InputMethodManager imm = (InputMethodManager) getSystemService(getActivity().INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+
+                return false;
             }
         });
-        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
-                android.R.color.holo_green_light,
-                android.R.color.holo_orange_light,
-                android.R.color.holo_red_light);
+        //final SwipeRefreshLayout swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
+//        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+//            @Override
+//            public void onRefresh() {
+//                // Your code to refresh the list here.
+//                // Make sure you call swipeContainer.setRefreshing(false)
+//                // once the network request has completed successfully.
+//                data.clear();
+//                apiCall();
+//                swipeContainer.setRefreshing(false);
+//
+//            }
+//        });
+//        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
+//                android.R.color.holo_green_light,
+//                android.R.color.holo_orange_light,
+//                android.R.color.holo_red_light);
 
         pDialog = new SweetAlertDialog(getActivity(), SweetAlertDialog.PROGRESS_TYPE);
         pDialog.getProgressHelper().setBarColor(Color.parseColor("#179e99"));
         pDialog.setTitleText("Wait a while");
         pDialog.setCancelable(false);
         apiCall();
+        searchEducationList();
         return view;
     }
 
@@ -267,5 +293,42 @@ public class TrafficEducationFragment extends Fragment {
         mActionBar.setCustomView(mCustomView);
         mActionBar.setDisplayShowCustomEnabled(true);
     }
+    public void searchEducationList(){
 
+        searchBar.addTextChangeListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence query, int i, int i1, int i2) {
+                Log.d("LOG_TAG", getClass().getSimpleName() + " text changed " + searchBar.getText());
+
+                query = query.toString().toLowerCase();
+                // Toast.makeText(TrafficSigns.this, "Query is: "+query, Toast.LENGTH_SHORT).show();
+                List<TrafficEducationHelper> newData = new ArrayList<>();
+
+                for (int j = 0; j < data.size(); j++) {
+                    final String test = data.get(j).strImageTitle.toLowerCase();
+                    final String test2 = data.get(j).strDescriptionEnglish.toLowerCase();
+
+                 /*  final String text = trafficEducationHelper.strImageTitle.toLowerCase();
+                    final String text2 = trafficEducationHelper.strDescriptionEnglish.toLowerCase();
+                    Log.e("matched", text+"\n");*/
+                    if (test.contains(query) || test2.contains(query)) {
+                        newData.add(data.get(j));
+                    }
+                }
+                // specify an adapter (see also next example)
+                mAdapter = new TrafficEducationAdapter(getActivity(), newData);
+                mRecyclerView.setAdapter(mAdapter);
+
+                mAdapter.notifyDataSetChanged();
+            }
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+    }
 }

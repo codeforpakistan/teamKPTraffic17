@@ -11,18 +11,29 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
+import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.ghosttech.kptrafficapp.R;
 import com.ghosttech.kptrafficapp.utilities.Configuration;
+import com.ghosttech.kptrafficapp.utilities.EmergencyHelper;
 import com.imangazaliev.circlemenu.CircleMenu;
 import com.imangazaliev.circlemenu.CircleMenuButton;
 import com.thefinestartist.finestwebview.FinestWebView;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -54,6 +65,7 @@ public class MainEmergencyFragment extends Fragment {
     double dblLat, dblLon;
     String strRescue, strHealth, strMechanics, strHighwayOfficers;
     LinearLayout lLCallView;
+     Bundle bundle;
 
     public MainEmergencyFragment() {
         // Required empty public constructor
@@ -95,6 +107,7 @@ public class MainEmergencyFragment extends Fragment {
         ivHighOfficer = (ImageView) view.findViewById(R.id.iv_emergency_highway_officer);
         ivMechanicsEmergency = (ImageView) view.findViewById(R.id.iv_emergency_mechanics);
         ivRescueEmergency = (ImageView) view.findViewById(R.id.iv_emergency_rescue_1122);
+        bundle = new Bundle();
         footerButtons();
         onEmergencyButtonClick();
         return view;
@@ -130,14 +143,16 @@ public class MainEmergencyFragment extends Fragment {
     }
 
     public void onEmergencyButtonClick() {
-        final Bundle bundle = new Bundle();
         fragment = new EmergencyFragmentList();
+        final String strLat = String.valueOf(dblLat);
+        final String strLon = String.valueOf(dblLon);
         ivRescueEmergency.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 strRescue = "1";
                 bundle.putString("emergency_id",strRescue);
-                getFragmentManager().beginTransaction().replace(R.id.fragment_container,fragment).addToBackStack("tag").commit();
+                getData(strRescue,strLat,strLon);
+
             }
         });
         ivHealthEmergency.setOnClickListener(new View.OnClickListener() {
@@ -145,7 +160,7 @@ public class MainEmergencyFragment extends Fragment {
             public void onClick(View view) {
                 strHealth = "2";
                 bundle.putString("emergency_id",strHealth);
-                getFragmentManager().beginTransaction().replace(R.id.fragment_container,fragment).addToBackStack("tag").commit();
+                getData(strRescue,strLat,strLon);
 
 
 
@@ -156,7 +171,7 @@ public class MainEmergencyFragment extends Fragment {
             public void onClick(View view) {
                 strMechanics = "3";
                 bundle.putString("emergency_id",strMechanics);
-                getFragmentManager().beginTransaction().replace(R.id.fragment_container,fragment).addToBackStack("tag").commit();
+                getData(strRescue,strLat,strLon);
 
             }
         });
@@ -165,8 +180,7 @@ public class MainEmergencyFragment extends Fragment {
             public void onClick(View view) {
                 strHighwayOfficers = "4";
                 bundle.putString("emergency_id",strHighwayOfficers);
-                getFragmentManager().beginTransaction().replace(R.id.fragment_container,fragment).addToBackStack("tag").commit();
-
+                getData(strRescue,strLat,strLon);
             }
         });
         fragment.setArguments(bundle);
@@ -196,5 +210,96 @@ public class MainEmergencyFragment extends Fragment {
             }
         });
     }
+    public void getData(final String strCategoryID, final String latitude, final String longitude) {
+        Log.d("zma log", String.valueOf(latitude));
+        Log.d("zma lat", String.valueOf(longitude));
+        final String url = Configuration.END_POINT_LIVE + "emergency_contacts/getEmergencyContact?category_id=" + strCategoryID + "&latitude=" + latitude + "&longitude=" + longitude;
+        Log.d("zma url", url);
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
 
+                    Log.d("zma url", url + "\n" + response.getBoolean("status") + "\n" + String.valueOf(response));
+                   // list.clear();
+
+                    if (response.getBoolean("status")) {
+                       // pDialog.dismiss();
+                        JSONArray data = response.getJSONArray("data");
+                        getFragmentManager().beginTransaction().replace(R.id.fragment_container,fragment).addToBackStack("tag").commit();
+//                        for (int i = 0; i < data.length(); i++) {
+//                            JSONObject shopObject = data.getJSONObject(i);
+//                            EmergencyHelper helper = new EmergencyHelper();
+//                            helper.setStrHelperDistance(shopObject.getString("distance"));
+//                            helper.setStrHelperLocation(shopObject.getString("district_name"));
+//                            helper.setStrHelperName(shopObject.getString("name"));
+//                            helper.setStrHelperPhoneNumber(shopObject.getString("contact_no"));
+//                            Log.d("zma phone number",shopObject.getString("contact_no"));
+//                            list.add(helper);
+//                        }
+                       // emergencyListAdapter.notifyDataSetChanged();
+                    } else {
+                       // pDialog.dismiss();
+                        new SweetAlertDialog(getActivity(),SweetAlertDialog.WARNING_TYPE)
+                                .setTitleText("Oops!")
+                                .setContentText("No data found around your location")
+                                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                    @Override
+                                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                        Fragment fragment = new MainEmergencyFragment();
+                                        getFragmentManager().beginTransaction().replace(R.id.fragment_container,fragment).commit();
+                                        sweetAlertDialog.dismiss();
+
+                                    }
+                                }).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+              //  pDialog.dismiss();
+                if (error instanceof TimeoutError || error instanceof NoConnectionError) {
+                    Toast.makeText(getActivity(), "Check your internet connection", Toast.LENGTH_SHORT).show();
+                }
+//                Toast.makeText(getActivity(), "Something went wrong, try later", Toast.LENGTH_SHORT).show();
+            }
+        }) {
+            @Override
+            public String getBodyContentType() {
+                return "application/x-www-form-urlencoded;charset=UTF-8";
+            }
+
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("category_id", strCategoryID);
+                params.put("latitude", latitude);
+                params.put("longitude", longitude);
+                return params;
+            }
+        };
+        request.setRetryPolicy(new DefaultRetryPolicy(200000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
+        RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
+        requestQueue.add(request);
+
+    }
+    public void getMyLocation(){
+        SmartLocation.with(getActivity()).location()
+                .start(new OnLocationUpdatedListener() {
+
+                    @Override
+                    public void onLocationUpdated(Location location) {
+                        dblLat = location.getLatitude();
+                        dblLon = location.getLongitude();
+                        Log.d("Location : ", "" + dblLat + " " + dblLon);
+                    }
+                });
+    }
 }

@@ -224,5 +224,6 @@
             android:padding="5dp"
             android:src="@drawable/footer_settings_icon" />
     </LinearLayout>
+
 </LinearLayout>
 
