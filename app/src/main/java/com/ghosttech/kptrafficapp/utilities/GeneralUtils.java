@@ -69,8 +69,10 @@ public class GeneralUtils {
 
     public static String getRealPathFromURI(Context context,Uri uri) {
         Cursor cursor = context.getContentResolver().query(uri, null, null, null, null);
-        cursor.moveToFirst();
-        int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+        int idx = 0;
+        if (cursor !=null && cursor.moveToFirst()) {
+             idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+        }
         return cursor.getString(idx);
     }
 

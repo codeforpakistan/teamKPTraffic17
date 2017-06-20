@@ -32,6 +32,8 @@ import com.ghosttech.kptrafficapp.R;
 import com.ghosttech.kptrafficapp.utilities.CheckNetwork;
 import com.ghosttech.kptrafficapp.utilities.Configuration;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -54,7 +56,7 @@ public class LoginFragment extends Fragment {
     Fragment fragment;
     private OnFragmentInteractionListener mListener;
     RequestQueue mRequestQueue;
-    String strCNIC;
+    String strCNIC, strUserID;
     SweetAlertDialog pDialog;
     TextView tvSkip;
     SharedPreferences sharedPreferences;
@@ -178,14 +180,23 @@ public class LoginFragment extends Fragment {
                     public void onResponse(String response) {
                         if (response.contains("true")) {
                             pDialog.dismiss();
-                            JSONObject jsonObject = new JSONObject();
-
+                            try {
+                                JSONObject jsonObject = new JSONObject(response);
+                                JSONArray jsonArray = jsonObject.getJSONArray("data");
+                                for (int i = 0; i < jsonArray.length(); i++) {
+                                    JSONObject temp = jsonArray.getJSONObject(i);
+                                    strUserID = temp.getString("user_id");
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            editor.putString("user_id", strUserID).commit();
                             editor.putString("true", strCNIC).commit();
                             fragment = new MainFragment();
                             getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).
                                     commit();
 
-                            Log.d("Zma response", response);
+                            Log.d("Zma response", response + "\n" + strUserID);
 
                         } else if (response.contains("false")) {
                             pDialog.dismiss();

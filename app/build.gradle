@@ -62,5 +62,6 @@ dependencies {
     compile 'com.thefinestartist:finestwebview:1.2.7'
     testCompile 'junit:junit:4.12'
     compile 'com.github.mancj:MaterialSearchBar:0.7'
+    compile 'com.iceteck.silicompressorr:silicompressor:2.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.0.0-RC0'
 }
