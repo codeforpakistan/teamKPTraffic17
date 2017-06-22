@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#fff"
-    tools:context="com.ghosttech.kptrafficapp.fragments.ComplaintFragment"
+    tools:context="com.ghosttech.kptrafficapp.fragments.ComplaintRegistrationFragment"
     android:orientation="vertical">
 
     <ScrollView

@@ -1,5 +1,6 @@
 package com.ghosttech.kptrafficapp.fragments;
 
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.location.Location;
 import android.net.Uri;
@@ -63,6 +64,7 @@ public class EmergencyFragmentList extends Fragment {
     private String strEmergencyTypeID;
     double dblLat, dblLon;
     SweetAlertDialog pDialog;
+
     private OnFragmentInteractionListener mListener;
 
     public EmergencyFragmentList() {

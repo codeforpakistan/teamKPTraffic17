@@ -1,9 +1,7 @@
 package com.ghosttech.kptrafficapp.fragments;
 
-import android.Manifest;
 import android.app.Dialog;
 import android.app.Fragment;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.location.Address;
@@ -212,7 +210,7 @@ public class MainFragment extends Fragment {
         btnComplaintSystem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                fragment = new ComplaintFragment();
+                fragment = new ComplaintRegistrationFragment();
                 getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).
                         addToBackStack("tag").commit();
             }
@@ -244,7 +242,7 @@ public class MainFragment extends Fragment {
         btnTrafficEducation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                fragment = new TrafficEducationFragment();
+                fragment = new MyComplaintsFragment();
                 getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).
                         addToBackStack("tag").commit();
             }

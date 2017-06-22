@@ -70,12 +70,12 @@ import static android.app.Activity.RESULT_OK;
 import static com.thefinestartist.utils.content.ContextUtil.getSharedPreferences;
 import static com.thefinestartist.utils.service.ServiceUtil.getSystemService;
 
-public class ComplaintFragment extends Fragment {
+public class ComplaintRegistrationFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    private static final String TAG = ComplaintFragment.class.getSimpleName();
+    private static final String TAG = ComplaintRegistrationFragment.class.getSimpleName();
     private ProgressBar progressBar;
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -105,13 +105,13 @@ public class ComplaintFragment extends Fragment {
     SharedPreferences.Editor editor;
     Calendar calendar = Calendar.getInstance();
 
-    public ComplaintFragment() {
+    public ComplaintRegistrationFragment() {
         // Required empty public constructor
     }
 
     // TODO: Rename and change types and number of parameters
-    public static ComplaintFragment newInstance(String param1, String param2) {
-        ComplaintFragment fragment = new ComplaintFragment();
+    public static ComplaintRegistrationFragment newInstance(String param1, String param2) {
+        ComplaintRegistrationFragment fragment = new ComplaintRegistrationFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);

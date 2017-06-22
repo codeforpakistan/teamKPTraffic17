@@ -10,7 +10,7 @@ import java.util.List;
  */
 
 public class EmergencyHelper {
-    String strHelperName,strHelperPhoneNumber,strHelperDistance,strHelperLocation;
+    String strHelperName, strHelperPhoneNumber, strHelperDistance, strHelperLocation;
 
 
     public String getStrHelperDistance() {
