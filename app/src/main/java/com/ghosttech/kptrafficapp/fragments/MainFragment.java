@@ -23,6 +23,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -122,6 +123,12 @@ public class MainFragment extends Fragment {
         pDialog = new SweetAlertDialog(getActivity(), SweetAlertDialog.PROGRESS_TYPE);
         pDialog.getProgressHelper().setBarColor(Color.parseColor("#179e99"));
         pDialog.setCancelable(false);
+
+//        Bundle args = getArguments();
+//        boolean status = args.getBoolean("status");
+//        if (status){
+//            Toast.makeText(getActivity(), "Good nice", Toast.LENGTH_SHORT).show();
+//        }
         sharedPreferences = getActivity().getSharedPreferences("com.ghosttech.kptraffic", 0);
         editor = sharedPreferences.edit();
         tvUserName.setText(sharedPreferences.getString("user_name",null));

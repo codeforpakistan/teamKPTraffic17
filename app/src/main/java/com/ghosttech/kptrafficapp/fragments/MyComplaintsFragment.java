@@ -116,7 +116,8 @@ public class MyComplaintsFragment extends Fragment {
         sharedPreferences = getActivity().getSharedPreferences("com.ghosttech.kptraffic", 0);
         editor = sharedPreferences.edit();
         strUserID = sharedPreferences.getString("user_id", "");
-        Log.d("zma complaint id",strUserID);//problem with id, it should be one, but sending 2
+        Log.d("zma user id",strUserID);//problem with id, it should be one, but sending 2
+
         getData(strUserID);
         list = new ArrayList<>();
         complaintsListAdapter = new MyComplaintsListAdapter(getActivity(), list);
@@ -179,7 +180,7 @@ public class MyComplaintsFragment extends Fragment {
                             helper.setStrVideo(complaintObject.getString("video"));
 
                             if (complaintObject.getString("video").contains("mp4")) {
-                                Log.d("zma image", "sho ba she");
+                                Log.d("zma video", complaintObject.getString("video"));
                             }
                             list.add(helper);
                         }
@@ -222,7 +223,7 @@ public class MyComplaintsFragment extends Fragment {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
-                params.put("user_id", strUserID);
+              //  params.put("user_id", strUserID);
                 return params;
             }
         };

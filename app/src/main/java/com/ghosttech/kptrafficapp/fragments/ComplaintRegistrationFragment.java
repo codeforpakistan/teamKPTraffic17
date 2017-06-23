@@ -32,6 +32,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
@@ -40,6 +41,7 @@ import com.ghosttech.kptrafficapp.utilities.CheckNetwork;
 import com.ghosttech.kptrafficapp.utilities.Configuration;
 import com.ghosttech.kptrafficapp.utilities.GeneralUtils;
 import com.ghosttech.kptrafficapp.utilities.HTTPMultiPartEntity;
+import com.github.javiersantos.materialstyleddialogs.MaterialStyledDialog;
 import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.orhanobut.dialogplus.DialogPlus;
 import com.orhanobut.dialogplus.OnClickListener;
@@ -140,7 +142,7 @@ public class ComplaintRegistrationFragment extends Fragment {
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         strFormattedDate = df.format(calendar.getTime());
         Log.d("zma date", strFormattedDate);
-        strUserID = sharedPreferences.getString("user_id","");
+        strUserID = sharedPreferences.getString("user_id", "");
         requestQueue = Volley.newRequestQueue(getActivity());
         Base.initialize(getActivity());
         ScrollView scrollView = (ScrollView) view.findViewById(R.id.sv_complaint);
@@ -171,18 +173,26 @@ public class ComplaintRegistrationFragment extends Fragment {
         pDialog = new SweetAlertDialog(getActivity(), SweetAlertDialog.PROGRESS_TYPE);
         pDialog.getProgressHelper().setBarColor(Color.parseColor("#179e99"));
         pDialog.setTitleText("Sending complaint");
+        spComlaintType.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
+            @Override
+            public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
+                Snackbar.make(view, "Clicked " + item, Snackbar.LENGTH_LONG).show();
+                spinnerID = String.valueOf(position);
+                Log.d("zma spinner id", spinnerID);
+            }
+        });
         customActionBar();
 
-            SmartLocation.with(getActivity()).location()
-                    .start(new OnLocationUpdatedListener() {
+        SmartLocation.with(getActivity()).location()
+                .start(new OnLocationUpdatedListener() {
 
-                        @Override
-                        public void onLocationUpdated(Location location) {
-                            dblLat = location.getLatitude();
-                            dblLon = location.getLongitude();
-                            Log.d("Location : ", "" + dblLat + " " + dblLon);
-                        }
-                    });
+                    @Override
+                    public void onLocationUpdated(Location location) {
+                        dblLat = location.getLatitude();
+                        dblLon = location.getLongitude();
+                        Log.d("Location : ", "" + dblLat + " " + dblLon);
+                    }
+                });
         onSendButton();
         footerButtons();
         return view;
@@ -221,14 +231,7 @@ public class ComplaintRegistrationFragment extends Fragment {
     public void inputValidation() {
         etDescription = (EditText) view.findViewById(R.id.et_description);
         strDesciption = etDescription.getText().toString();
-        spComlaintType.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
-            @Override
-            public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
-                Snackbar.make(view, "Clicked " + item, Snackbar.LENGTH_LONG).show();
-                spinnerID = String.valueOf(position);
-                Log.d("zma spinner id", spinnerID);
-            }
-        });
+
         if (spComlaintType.getText().equals("Complaint Type")) {
             spComlaintType.startAnimation(shake);
         } else if (strDesciption.length() < 10) {
@@ -238,7 +241,7 @@ public class ComplaintRegistrationFragment extends Fragment {
 
         } else {
             if (CheckNetwork.isInternetAvailable(getActivity())) {
-                pDialog.show();
+                // pDialog.show();
                 new UploadFileToServer().execute();
             } else {
                 new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
@@ -295,35 +298,46 @@ public class ComplaintRegistrationFragment extends Fragment {
                     File msourceFile = new File(sourceFile.getPath());
                     entity.addPart("image", new FileBody(msourceFile));
                     Looper.prepare();
-                    entity.addPart("complaint_type_id", new StringBody("2"));
+                    entity.addPart("complaint_type_id", new StringBody(spinnerID));
                     entity.addPart("signup_id", new StringBody(strUserID));
                     entity.addPart("latitude", new StringBody(String.valueOf(dblLat)));
                     entity.addPart("longitude", new StringBody(String.valueOf(dblLon)));
                     entity.addPart("description", new StringBody(strDesciption));
                     entity.addPart("complaints_status_id", new StringBody("2"));
                     entity.addPart("dated", new StringBody(strFormattedDate));
+                    Bundle args = new Bundle();
+                    fragment = new MainFragment();
+                    args.putBoolean("status",true);
+                    fragment.setArguments(args);
+                    getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
                     totalSize = entity.getContentLength();
                     httppost.setEntity(entity);
                     // Making server call
                     HttpResponse response = httpclient.execute(httppost);
                     HttpEntity r_entity = response.getEntity();
-                    pDialog.dismiss();
-
-
                     int statusCode = response.getStatusLine().getStatusCode();
                     responseString = EntityUtils.toString(r_entity);
-                    Log.d("zma response comp image",responseString);
+                    Log.d("zma response comp image", responseString);
                     Log.d("zma status code if", String.valueOf(statusCode));
+                    Toast.makeText(getActivity(), "Great Job", Toast.LENGTH_SHORT).show();
+                    if (statusCode == 200) {
+                        new MaterialStyledDialog.Builder(getActivity())
+                                .setTitle("Awesome!")
+                                .setDescription("What can we improve? Your feedback is always welcome.")
+                                .show();
+
+                    }
+                    pDialog.dismiss();
                 } catch (ClientProtocolException e) {
                     responseString = e.toString();
-                      pDialog.dismiss();
+                    pDialog.dismiss();
                     new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
                             .setTitleText("Oops...")
                             .setContentText("Something went wrong!")
                             .show();
                 } catch (IOException e) {
                     responseString = e.toString();
-                     pDialog.dismiss();
+                    pDialog.dismiss();
                     new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
                             .setTitleText("Oops...")
                             .setContentText("Something went wrong!")
@@ -352,7 +366,7 @@ public class ComplaintRegistrationFragment extends Fragment {
                     }
                     // Adding file data to http body
                     // Extra parameters if you want to pass to server
-                    entity.addPart("complaint_type_id", new StringBody("22"));
+                    entity.addPart("complaint_type_id", new StringBody(spinnerID));
                     entity.addPart("signup_id", new StringBody(strUserID));
                     entity.addPart("latitude", new StringBody(String.valueOf(dblLat)));
                     entity.addPart("longitude", new StringBody(String.valueOf(dblLon)));
@@ -364,12 +378,12 @@ public class ComplaintRegistrationFragment extends Fragment {
                     // Making server call
                     HttpResponse response = httpclient.execute(httppost);
                     HttpEntity r_entity = response.getEntity();
-                    Log.d("zma response comp video",String.valueOf(response));
+                    Log.d("zma response comp video", String.valueOf(response));
                     fragment = new MainFragment();
                     getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
                     int statusCode = response.getStatusLine().getStatusCode();
                     responseString = EntityUtils.toString(r_entity);
-                    Log.d("zma response comp image",responseString);
+                    Log.d("zma response comp image", responseString);
                     pDialog.dismiss();
 
                 } catch (ClientProtocolException e) {
