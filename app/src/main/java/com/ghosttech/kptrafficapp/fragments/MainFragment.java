@@ -249,7 +249,7 @@ public class MainFragment extends Fragment {
         btnTrafficEducation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                fragment = new MyComplaintsFragment();
+                fragment = new TrafficEducationFragment();
                 getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).
                         addToBackStack("tag").commit();
             }
@@ -275,8 +275,9 @@ public class MainFragment extends Fragment {
         LayoutInflater mInflater = LayoutInflater.from(getActivity());
         View mCustomView = mInflater.inflate(R.layout.custom_action_bar, null);
         mTitleTextView = (TextView) mCustomView.findViewById(R.id.title_text);
-        ImageView mBackArrow = (ImageView) mCustomView.findViewById(R.id.iv_back_arrow);
-        mBackArrow.setImageResource(R.drawable.map_pointer);
+      //  ImageView mBackArrow = (ImageView) mCustomView.findViewById(R.id.iv_back_arrow);
+        //mBackArrow.setImageResource(R.drawable.map_pointer);
+//        mBackArrow.setVisibility(View.GONE);
         mActionBar.setCustomView(mCustomView);
         mActionBar.setDisplayShowCustomEnabled(true);
     }

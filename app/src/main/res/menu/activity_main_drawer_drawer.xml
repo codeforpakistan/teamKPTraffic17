@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_my_complaints"
+            android:icon="@drawable/ic_menu_camera"
+            android:title="My Complaints" />
+        <item
+            android:id="@+id/nav_gallery"
+            android:icon="@drawable/footer_web_icon"
+            android:title="KP Traffic Police Website" />
+        <item
+            android:id="@+id/nav_slideshow"
+            android:icon="@drawable/footer_settings_icon"
+            android:title="Log Out" />
+    </group>
+
+</menu>

@@ -4,8 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#fff"
-    tools:context="com.ghosttech.kptrafficapp.fragments.ComplaintRegistrationFragment"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context="com.ghosttech.kptrafficapp.fragments.ComplaintRegistrationFragment">
 
     <ScrollView
         android:id="@+id/sv_complaint"
@@ -70,78 +70,95 @@
                         android:layout_height="1.7dp"
                         android:background="#EEEEEE" />
 
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <ImageView
+                                android:id="@+id/iv_take_picture"
+                                android:layout_width="80dp"
+                                android:layout_height="80dp"
+                                android:layout_gravity="center_horizontal"
+                                android:layout_weight="1"
+                                android:src="@drawable/complaint_camera_picture" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_horizontal"
+                                android:layout_marginTop="5dp"
+                                android:text="Take Picture" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <ImageView
+                                android:id="@+id/iv_record_video"
+                                android:layout_width="80dp"
+                                android:layout_height="80dp"
+                                android:layout_gravity="center_horizontal"
+                                android:layout_weight="1"
+                                android:src="@drawable/complaint_camera_video" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_horizontal"
+                                android:layout_marginTop="5dp"
+                                android:text="Record Video" />
+
+                        </LinearLayout>
+                    </LinearLayout>
+
                     <EditText
+                        android:layout_marginTop="10dp"
                         android:id="@+id/et_description"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
-                        android:backgroundTint="#fff"
+                        android:backgroundTint="#EEEEEE"
+                        android:textColor="#000"
                         android:drawableRight="@drawable/edit"
                         android:hint="Add Description"
                         android:paddingLeft="18dp"
                         android:textSize="15sp" />
                 </LinearLayout>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <ImageView
-                            android:id="@+id/iv_camera"
-                            android:layout_width="50dp"
-                            android:layout_height="50dp"
-                            android:layout_gravity="center_horizontal"
-                            android:src="@drawable/complaint_camera_icon" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_horizontal"
-                            android:layout_marginTop="5dp"
-                            android:text="Take Picture/Video" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <ImageView
-                            android:id="@+id/iv_send_button"
-                            android:layout_width="64dp"
-                            android:layout_height="64dp"
-                            android:layout_gravity="end"
-                            android:layout_marginRight="5dp"
-                            android:layout_marginTop="50dp"
-                            android:src="@drawable/send_complaint_icon" />
-                    </LinearLayout>
-                </LinearLayout>
-
-                <ImageView
-                    android:id="@+id/iv_image_preview"
-                    android:layout_width="match_parent"
-                    android:layout_height="200dp"
-                    android:layout_gravity="center_horizontal"
-                    />
+                <Button
+                    android:layout_marginTop="10dp"
+                    android:id="@+id/btn_send_complaint"
+                    android:layout_width="250dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/round_corner"
+                    android:text="Send"
+                    android:textColor="#fff"
+                    android:textStyle="bold" />
             </LinearLayout>
+
+
         </TableLayout>
     </ScrollView>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="80dp"
+        android:layout_weight="1"
         android:background="@color/colorPrimary"
-        android:orientation="horizontal"
-        android:layout_weight="1">
+        android:orientation="horizontal">
 
         <ImageView
             android:id="@+id/iv_website_link"

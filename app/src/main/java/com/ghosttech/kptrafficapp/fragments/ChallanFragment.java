@@ -127,14 +127,14 @@ public class ChallanFragment extends Fragment {
         TextView mTitleTextView = (TextView) mCustomView.findViewById(R.id.title_text);
         ImageView mBackArrow = (ImageView) mCustomView.findViewById(R.id.iv_back_arrow);
         mTitleTextView.setText("Your challan status");
-        mBackArrow.setImageResource(R.drawable.back_arrow);
-        mBackArrow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Fragment fragment = new MainFragment();
-                getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
-            }
-        });
+//        mBackArrow.setImageResource(R.drawable.back_arrow);
+//        mBackArrow.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Fragment fragment = new MainFragment();
+//                getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
+//            }
+//        });
         mActionBar.setCustomView(mCustomView);
         mActionBar.setDisplayShowCustomEnabled(true);
     }

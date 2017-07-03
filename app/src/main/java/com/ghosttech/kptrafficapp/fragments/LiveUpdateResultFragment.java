@@ -481,15 +481,15 @@ public class LiveUpdateResultFragment extends Fragment {
         ImageView mBackArrow = (ImageView) mCustomView.findViewById(R.id.iv_back_arrow);
         mActionBar.setCustomView(mCustomView);
         mActionBar.setDisplayShowCustomEnabled(true);
-        mBackArrow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                fragment = new LiveUpdateFragment();
-                getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
-
-
-            }
-        });
+//        mBackArrow.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                fragment = new LiveUpdateFragment();
+//                getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
+//
+//
+//            }
+//        });
 
     }
 

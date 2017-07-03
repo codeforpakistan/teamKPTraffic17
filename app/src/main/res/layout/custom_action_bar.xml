@@ -3,13 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimary">
-    <ImageView
-        android:id="@+id/iv_back_arrow"
-        android:layout_width="28dp"
-        android:layout_height="28dp"
-        android:layout_alignParentLeft="true"
-        android:layout_centerVertical="true"
-        android:src="@drawable/back_arrow" />
     <TextView
         android:id="@+id/title_text"
         android:layout_width="wrap_content"

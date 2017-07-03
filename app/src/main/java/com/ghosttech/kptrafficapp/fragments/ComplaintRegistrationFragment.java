@@ -27,6 +27,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -92,7 +93,8 @@ public class ComplaintRegistrationFragment extends Fragment {
     Fragment fragment;
     private static final int CAMERA_RECORD_VIDEO_REQUEST_CODE = 200;
     Animation shake;
-    ImageView ivStartCamera, ivSendComplaint, ivImagePreview, ivHomeButton, ivSettingButton, ivWebsiteButton;
+    Button btnSendComplaint;
+    ImageView ivTakePicture, ivImagePreview, ivHomeButton, ivSettingButton, ivWebsiteButton, ivRecordVideo;
     EditText etDescription;
     File sourceFile;
     final int CAMERA_CAPTURE = 1;
@@ -155,19 +157,26 @@ public class ComplaintRegistrationFragment extends Fragment {
             }
         });
         spComlaintType = (MaterialSpinner) view.findViewById(R.id.spinner);
-        ivSendComplaint = (ImageView) view.findViewById(R.id.iv_send_button);
-        ivImagePreview = (ImageView) view.findViewById(R.id.iv_image_preview);
+        btnSendComplaint = (Button) view.findViewById(R.id.btn_send_complaint);
+//        ivImagePreview = (ImageView) view.findViewById(R.id.iv_image_preview);
         spComlaintType.setItems("Complaint Type", "Traffic Jam", "Wardens Corruption", "Other");
         shake = AnimationUtils.loadAnimation(getActivity(), R.anim.shake);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
                     Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
         }
-        ivStartCamera = (ImageView) view.findViewById(R.id.iv_camera);
-        ivStartCamera.setOnClickListener(new View.OnClickListener() {
+        ivTakePicture = (ImageView) view.findViewById(R.id.iv_take_picture);
+        ivRecordVideo = (ImageView) view.findViewById(R.id.iv_record_video);
+        ivRecordVideo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                bottomCustomDialog();
+                cameraVIntent();
+            }
+        });
+        ivTakePicture.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                cameraIntent();
             }
         });
         pDialog = new SweetAlertDialog(getActivity(), SweetAlertDialog.PROGRESS_TYPE);
@@ -218,7 +227,7 @@ public class ComplaintRegistrationFragment extends Fragment {
 
     public void onSendButton() {
 
-        ivSendComplaint.setOnClickListener(new View.OnClickListener() {
+        btnSendComplaint.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 inputValidation();
@@ -237,7 +246,7 @@ public class ComplaintRegistrationFragment extends Fragment {
         } else if (strDesciption.length() < 10) {
             etDescription.startAnimation(shake);
         } else if (sourceFile == null) {
-            ivStartCamera.startAnimation(shake);
+            ivTakePicture.startAnimation(shake);
 
         } else {
             if (CheckNetwork.isInternetAvailable(getActivity())) {
@@ -307,7 +316,7 @@ public class ComplaintRegistrationFragment extends Fragment {
                     entity.addPart("dated", new StringBody(strFormattedDate));
                     Bundle args = new Bundle();
                     fragment = new MainFragment();
-                    args.putBoolean("status",true);
+                    args.putBoolean("status", true);
                     fragment.setArguments(args);
                     getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
                     totalSize = entity.getContentLength();
@@ -418,13 +427,13 @@ public class ComplaintRegistrationFragment extends Fragment {
         mTitleTextView.setText("Write a complaint here");
         mActionBar.setCustomView(mCustomView);
         mActionBar.setDisplayShowCustomEnabled(true);
-        mBackArrow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                fragment = new MainFragment();
-                getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
-            }
-        });
+//        mBackArrow.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                fragment = new MainFragment();
+//                getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
+//            }
+//        });
     }
 
     public void cameraIntent() {
@@ -479,45 +488,6 @@ public class ComplaintRegistrationFragment extends Fragment {
             Uri uri = data.getData();
             sourceFile = new File(GeneralUtils.getRealPathFromURI(getActivity(), uri));
         }
-    }
-
-    private void bottomCustomDialog() {
-        dialog = DialogPlus.newDialog(getActivity())
-                .setAdapter(new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, new String[]{""}))
-                .setContentHolder(new ViewHolder(R.layout.custom_bottom_option_menu))
-                .setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(DialogPlus dialog, View view) {
-                        final ImageView ivCameraPicture = (ImageView) dialog.findViewById(R.id.iv_camera_picture);
-                        ImageView ivCameraVideo = (ImageView) dialog.findViewById(R.id.iv_camera_video);
-                        ivCameraPicture.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                //  cameraIntent();
-                                Intent captureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                                startActivityForResult(captureIntent, CAMERA_CAPTURE);
-
-                            }
-                        });
-                        ivCameraVideo.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                Intent videoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-                                videoIntent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 10);
-                                startActivityForResult(videoIntent, CAMERA_VIDEO_CAPTURE);
-                                //   cameraVIntent();
-
-                            }
-                        });
-                    }
-                })
-
-                // This will enable the expand feature, (similar to android L share dialog)
-                .setInAnimation(R.anim.fade_in_center)
-                .setOutAnimation(R.anim.fade_out_center)
-                .create();
-        dialog.show();
-
     }
 
     public void footerButtons() {

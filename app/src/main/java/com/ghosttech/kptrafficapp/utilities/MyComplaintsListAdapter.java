@@ -35,8 +35,8 @@ public class MyComplaintsListAdapter extends RecyclerView.Adapter<MyComplaintsLi
 
         // each data item is just a string in this case
         CardView cv;
-        TextView tvComplaintsID, tvComplaintDescription, tvComplaintStatus;
-        ImageView  ivHelperIcon;
+        TextView tvComplaintsID, tvComplaintDescription, tvComplaintStatus, ivHelperIcon;
+        //ImageView  ivHelperIcon;
         LinearLayout lLCallNow;
         VideoView vvComplaints;
 
@@ -46,7 +46,7 @@ public class MyComplaintsListAdapter extends RecyclerView.Adapter<MyComplaintsLi
             tvComplaintsID = (TextView) itemView.findViewById(R.id.tv_complaint_id);
             tvComplaintStatus = (TextView) itemView.findViewById(R.id.tv_complaint_status);
             tvComplaintDescription = (TextView) itemView.findViewById(R.id.tv_complaint_description);
-            ivHelperIcon = (ImageView) itemView.findViewById(R.id.iv_complaint_image);
+            ivHelperIcon = (TextView) itemView.findViewById(R.id.iv_complaint_image);
 
 
         }
@@ -80,7 +80,8 @@ public class MyComplaintsListAdapter extends RecyclerView.Adapter<MyComplaintsLi
         holder.tvComplaintsID.setText(helper.getStrComplaintID());
         holder.tvComplaintStatus.setText(helper.getStrComplaintStatus());
         holder.tvComplaintDescription.setText(helper.getStrDescription());
-        Glide.with(context).load(Configuration.END_POINT_LIVE+"uploads/images").into(holder.ivHelperIcon);
+        holder.ivHelperIcon.setText(helper.getStrDate());
+       //Glide.with(context).load(Configuration.END_POINT_LIVE+"uploads/images").into(holder.ivHelperIcon);
 
         }
 
