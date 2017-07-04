@@ -64,6 +64,8 @@ dependencies {
     compile 'com.github.mancj:MaterialSearchBar:0.7'
     compile 'com.iceteck.silicompressorr:silicompressor:2.0'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    compile 'com.iceteck.silicompressorr:silicompressor:2.0'
     testCompile 'junit:junit:4.12'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.0.0-RC0'
+
 }

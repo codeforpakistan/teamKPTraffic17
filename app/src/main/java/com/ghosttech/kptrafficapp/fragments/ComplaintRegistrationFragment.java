@@ -3,6 +3,7 @@ package com.ghosttech.kptrafficapp.fragments;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.app.Fragment;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -14,6 +15,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Looper;
 import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
@@ -43,6 +45,7 @@ import com.ghosttech.kptrafficapp.utilities.Configuration;
 import com.ghosttech.kptrafficapp.utilities.GeneralUtils;
 import com.ghosttech.kptrafficapp.utilities.HTTPMultiPartEntity;
 import com.github.javiersantos.materialstyleddialogs.MaterialStyledDialog;
+import com.iceteck.silicompressorr.SiliCompressor;
 import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.orhanobut.dialogplus.DialogPlus;
 import com.orhanobut.dialogplus.OnClickListener;
@@ -62,6 +65,7 @@ import org.apache.http.util.EntityUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
@@ -101,6 +105,7 @@ public class ComplaintRegistrationFragment extends Fragment {
     final int RESULT_LOAD_IMAGE = 2;
     final int CAMERA_VIDEO_CAPTURE = 3;
     final int RESULT_LOAD_VIDEO = 4;
+    private String compressedVideoPath = null;
     SweetAlertDialog pDialog;
     RequestQueue requestQueue;
     boolean flag = false;
@@ -245,12 +250,12 @@ public class ComplaintRegistrationFragment extends Fragment {
             spComlaintType.startAnimation(shake);
         } else if (strDesciption.length() < 10) {
             etDescription.startAnimation(shake);
-        } else if (sourceFile == null) {
+        } else if (compressedVideoPath == null) {
             ivTakePicture.startAnimation(shake);
 
         } else {
             if (CheckNetwork.isInternetAvailable(getActivity())) {
-                // pDialog.show();
+                 pDialog.show();
                 new UploadFileToServer().execute();
             } else {
                 new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
@@ -314,6 +319,7 @@ public class ComplaintRegistrationFragment extends Fragment {
                     entity.addPart("description", new StringBody(strDesciption));
                     entity.addPart("complaints_status_id", new StringBody("2"));
                     entity.addPart("dated", new StringBody(strFormattedDate));
+                    pDialog.dismiss();
                     Bundle args = new Bundle();
                     fragment = new MainFragment();
                     args.putBoolean("status", true);
@@ -329,14 +335,7 @@ public class ComplaintRegistrationFragment extends Fragment {
                     Log.d("zma response comp image", responseString);
                     Log.d("zma status code if", String.valueOf(statusCode));
                     Toast.makeText(getActivity(), "Great Job", Toast.LENGTH_SHORT).show();
-                    if (statusCode == 200) {
-                        new MaterialStyledDialog.Builder(getActivity())
-                                .setTitle("Awesome!")
-                                .setDescription("What can we improve? Your feedback is always welcome.")
-                                .show();
 
-                    }
-                    pDialog.dismiss();
                 } catch (ClientProtocolException e) {
                     responseString = e.toString();
                     pDialog.dismiss();
@@ -368,7 +367,7 @@ public class ComplaintRegistrationFragment extends Fragment {
                                 }
                             });
                     try {
-                        File msourceFile = new File(sourceFile.getPath());
+                        File msourceFile = new File(compressedVideoPath);
                         entity.addPart("video", new FileBody(msourceFile));
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -397,14 +396,14 @@ public class ComplaintRegistrationFragment extends Fragment {
 
                 } catch (ClientProtocolException e) {
                     responseString = e.toString();
-                    // pDialog.dismiss();
+                     pDialog.dismiss();
                     new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
                             .setTitleText("Oops...")
                             .setContentText("Something went wrong!")
                             .show();
                 } catch (IOException e) {
                     responseString = e.toString();
-                    // pDialog.dismiss();
+                     pDialog.dismiss();
                     new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
                             .setTitleText("Oops...")
                             .setContentText("Something went wrong!")
@@ -483,7 +482,15 @@ public class ComplaintRegistrationFragment extends Fragment {
             }
         } else if (resultCode == RESULT_OK && requestCode == CAMERA_VIDEO_CAPTURE && data != null) {
             Uri picUri = data.getData();
-            sourceFile = new File(GeneralUtils.getRealPathFromURI(getActivity(), picUri));
+            if (data.getData() != null) {
+                //create destination directory
+                File f = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + getActivity().getPackageName() + "/media/videos");
+                if (f.mkdirs() || f.isDirectory())
+                    //compress and output new video specs
+                    new VideoCompressAsyncTask(getActivity()).execute(data.getData().toString(), f.getPath());
+
+            }
+           // sourceFile = new File(GeneralUtils.getRealPathFromURI(getActivity(), picUri));
         } else if (resultCode == RESULT_OK) {
             Uri uri = data.getData();
             sourceFile = new File(GeneralUtils.getRealPathFromURI(getActivity(), uri));
@@ -526,6 +533,39 @@ public class ComplaintRegistrationFragment extends Fragment {
         });
 
         alertDialog.show();
+    }
+    class VideoCompressAsyncTask extends AsyncTask<String, String, String>{
+
+        Context mContext;
+
+        public VideoCompressAsyncTask(Context context){
+            mContext = context;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            Log.e(TAG, "Compressing...." );
+        }
+
+        @Override
+        protected String doInBackground(String... paths) {
+            try {
+                compressedVideoPath = SiliCompressor.with(mContext).compressVideo(paths[0], paths[1]);
+
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
+            return  compressedVideoPath;
+
+        }
+
+
+        @Override
+        protected void onPostExecute(String compressedFilePath) {
+            super.onPostExecute(compressedFilePath);
+            Log.e(TAG, "Compressed Successflly! " );
+        }
     }
 
 }

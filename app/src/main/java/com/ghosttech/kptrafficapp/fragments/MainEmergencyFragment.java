@@ -109,6 +109,16 @@ public class MainEmergencyFragment extends Fragment {
         ivRescueEmergency = (ImageView) view.findViewById(R.id.iv_emergency_rescue_1122);
         bundle = new Bundle();
         onEmergencyButtonClick();
+        SmartLocation.with(getActivity()).location()
+                .start(new OnLocationUpdatedListener() {
+
+                    @Override
+                    public void onLocationUpdated(Location location) {
+                        dblLat = location.getLatitude();
+                        dblLon = location.getLongitude();
+                        Log.d("zma Location : ", "" + dblLat + " " + dblLon);
+                    }
+                });
         return view;
     }
 
@@ -142,15 +152,14 @@ public class MainEmergencyFragment extends Fragment {
     }
 
     public void onEmergencyButtonClick() {
+
         fragment = new EmergencyFragmentList();
-        final String strLat = String.valueOf(dblLat);
-        final String strLon = String.valueOf(dblLon);
         ivRescueEmergency.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 strRescue = "1";
                 bundle.putString("emergency_id",strRescue);
-                getData(strRescue,strLat,strLon);
+                getData(strRescue,String.valueOf(dblLat),String.valueOf(dblLon));
 
             }
         });
@@ -159,7 +168,7 @@ public class MainEmergencyFragment extends Fragment {
             public void onClick(View view) {
                 strHealth = "2";
                 bundle.putString("emergency_id",strHealth);
-                getData(strRescue,strLat,strLon);
+                getData(strHealth,String.valueOf(dblLat),String.valueOf(dblLon));
 
 
 
@@ -170,7 +179,7 @@ public class MainEmergencyFragment extends Fragment {
             public void onClick(View view) {
                 strMechanics = "3";
                 bundle.putString("emergency_id",strMechanics);
-                getData(strRescue,strLat,strLon);
+                getData(strMechanics,String.valueOf(dblLat),String.valueOf(dblLon));
 
             }
         });
@@ -179,39 +188,12 @@ public class MainEmergencyFragment extends Fragment {
             public void onClick(View view) {
                 strHighwayOfficers = "4";
                 bundle.putString("emergency_id",strHighwayOfficers);
-                getData(strRescue,strLat,strLon);
+                getData(strHighwayOfficers,String.valueOf(dblLat),String.valueOf(dblLon));
             }
         });
-        fragment.setArguments(bundle);
-    }
 
-//    public void footerButtons() {
-//        ivHomeButton = (ImageView) view.findViewById(R.id.iv_home_button);
-//        ivSettingButton = (ImageView) view.findViewById(R.id.iv_setting_menu);
-//        ivWebsiteButton = (ImageView) view.findViewById(R.id.iv_website_link);
-//        ivHomeButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                fragment = new MainFragment();
-//                getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
-//            }
-//        });
-//        ivWebsiteButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                new FinestWebView.Builder(getActivity())
-//                        .titleDefault("KP Traffic Police Official Website")
-//                        .titleFont("Roboto-Medium.ttf")
-//                        .disableIconForward(true)
-//                        .disableIconBack(true)
-//                        .show("http://www.ptpkp.gov.pk/");
-//                //startActivity(new Intent(getActivity(), FinestWebViewActivity.class));
-//            }
-//        });
-//    }
+    }
     public void getData(final String strCategoryID, final String latitude, final String longitude) {
-        Log.d("zma log", String.valueOf(latitude));
-        Log.d("zma lat", String.valueOf(longitude));
         final String url = Configuration.END_POINT_LIVE + "emergency_contacts/getEmergencyContact?category_id=" + strCategoryID + "&latitude=" + latitude + "&longitude=" + longitude;
         Log.d("zma url", url);
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, new Response.Listener<JSONObject>() {
@@ -219,13 +201,14 @@ public class MainEmergencyFragment extends Fragment {
             public void onResponse(JSONObject response) {
                 try {
 
-                    Log.d("zma url", url + "\n" + response.getBoolean("status") + "\n" + String.valueOf(response));
+                    Log.d("zma url emer main", url + "\n" + response.getBoolean("status") + "\n" + String.valueOf(response));
                    // list.clear();
 
                     if (response.getBoolean("status")) {
                        // pDialog.dismiss();
                         JSONArray data = response.getJSONArray("data");
                         getFragmentManager().beginTransaction().replace(R.id.fragment_container,fragment).addToBackStack("tag").commit();
+                        fragment.setArguments(bundle);
 //                        for (int i = 0; i < data.length(); i++) {
 //                            JSONObject shopObject = data.getJSONObject(i);
 //                            EmergencyHelper helper = new EmergencyHelper();
@@ -290,15 +273,6 @@ public class MainEmergencyFragment extends Fragment {
 
     }
     public void getMyLocation(){
-        SmartLocation.with(getActivity()).location()
-                .start(new OnLocationUpdatedListener() {
 
-                    @Override
-                    public void onLocationUpdated(Location location) {
-                        dblLat = location.getLatitude();
-                        dblLon = location.getLongitude();
-                        Log.d("Location : ", "" + dblLat + " " + dblLon);
-                    }
-                });
     }
 }

@@ -122,12 +122,11 @@ public class EmergencyFragmentList extends Fragment {
                     public void onLocationUpdated(Location location) {
                         dblLat = location.getLatitude();
                         dblLon = location.getLongitude();
-                        Log.d("Location : ", "" + dblLat + " " + dblLon);
+                        Log.d("zma Location list : ", "" + dblLat + " " + dblLon);
+                        getData(strEmergencyTypeID,String.valueOf(dblLat),String.valueOf(dblLon));
                     }
                 });
-        getData(strEmergencyTypeID,"34.124062","71.806503");
-       // getData(strEmergencyTypeID,String.valueOf(dblLat),String.valueOf(dblLon));
-        //getData(strEmergencyTypeID, String.valueOf(dblLat), String.valueOf(dblLat));
+
         list = new ArrayList<>();
         emergencyListAdapter = new EmergencyListAdapter(getActivity(), list);
         recyclerView.setAdapter(emergencyListAdapter);
@@ -164,16 +163,14 @@ public class EmergencyFragmentList extends Fragment {
     }
 
     public void getData(final String strCategoryID, final String latitude, final String longitude) {
-        Log.d("zma log", String.valueOf(latitude));
-        Log.d("zma lat", String.valueOf(longitude));
-        final String url = Configuration.END_POINT_LIVE + "emergency_contacts/getEmergencyContact?category_id=" + strCategoryID + "&latitude=" + latitude + "&longitude=" + longitude;
+        final String url = Configuration.END_POINT_LIVE + "emergency_contacts/getEmergencyContact?category_id=" + strCategoryID + "&latitude=" + String.valueOf(dblLat) + "&longitude=" + String.valueOf(dblLon);
         Log.d("zma url", url);
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 try {
 
-                    Log.d("zma url", url + "\n" + response.getBoolean("status") + "\n" + String.valueOf(response));
+                    Log.d("zma url emer list", url + "\n" + response.getBoolean("status") + "\n" + String.valueOf(response));
                     list.clear();
 
                     if (response.getBoolean("status")) {

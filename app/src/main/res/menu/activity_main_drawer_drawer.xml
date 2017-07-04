@@ -8,7 +8,7 @@
             android:title="Home" />
         <item
             android:id="@+id/nav_my_complaints"
-            android:icon="@drawable/ic_menu_camera"
+            android:icon="@drawable/my_complaints_icon"
             android:title="My Complaints" />
         <item
             android:id="@+id/nav_website"

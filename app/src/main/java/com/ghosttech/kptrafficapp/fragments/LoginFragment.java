@@ -202,6 +202,7 @@ public class LoginFragment extends Fragment {
                                 for (int i = 0; i < jsonArray.length(); i++) {
                                     JSONObject temp = jsonArray.getJSONObject(i);
                                     strUserID = temp.getString("user_id");
+                                    Log.d("zma user id login",strUserID);
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
