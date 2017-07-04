@@ -11,13 +11,16 @@ import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
@@ -31,6 +34,7 @@ import com.android.volley.toolbox.Volley;
 import com.ghosttech.kptrafficapp.R;
 import com.ghosttech.kptrafficapp.utilities.CheckNetwork;
 import com.ghosttech.kptrafficapp.utilities.Configuration;
+import com.thefinestartist.Base;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -40,6 +44,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
+
+import static com.thefinestartist.utils.service.ServiceUtil.getSystemService;
 
 public class LoginFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
@@ -91,6 +97,7 @@ public class LoginFragment extends Fragment {
         // Inflate the layout for this fragment
 
         view = inflater.inflate(R.layout.fragment_login, container, false);
+        Base.initialize(getActivity());
         sharedPreferences = getActivity().getSharedPreferences("com.ghosttech.kptraffic", 0);
         editor = sharedPreferences.edit();
         customActionBar();
@@ -112,6 +119,15 @@ public class LoginFragment extends Fragment {
             }
         });
         onButtonClick();
+        ScrollView scrollView = (ScrollView) view.findViewById(R.id.sv_login);
+        scrollView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                InputMethodManager imm = (InputMethodManager) getSystemService(getActivity().INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                return false;
+            }
+        });
         return view;
     }
 
@@ -246,7 +262,7 @@ public class LoginFragment extends Fragment {
         View mCustomView = mInflater.inflate(R.layout.custom_action_bar, null);
         TextView mTitleTextView = (TextView) mCustomView.findViewById(R.id.title_text);
         ImageView mBackArrow = (ImageView) mCustomView.findViewById(R.id.iv_back_arrow);
-        mBackArrow.setImageResource(R.mipmap.ic_launcher);
+//        mBackArrow.setImageResource(R.mipmap.ic_launcher);
         mTitleTextView.setText("Sign In");
         mActionBar.setCustomView(mCustomView);
         mActionBar.setDisplayShowCustomEnabled(true);

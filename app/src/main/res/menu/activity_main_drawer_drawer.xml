@@ -3,16 +3,20 @@
 
     <group android:checkableBehavior="single">
         <item
+            android:id="@+id/nav_home"
+            android:icon="@drawable/footer_home_icon"
+            android:title="Home" />
+        <item
             android:id="@+id/nav_my_complaints"
             android:icon="@drawable/ic_menu_camera"
             android:title="My Complaints" />
         <item
-            android:id="@+id/nav_gallery"
+            android:id="@+id/nav_website"
             android:icon="@drawable/footer_web_icon"
             android:title="KP Traffic Police Website" />
         <item
-            android:id="@+id/nav_slideshow"
-            android:icon="@drawable/footer_settings_icon"
+            android:id="@+id/nav_logout"
+            android:icon="@drawable/logout_icon"
             android:title="Log Out" />
     </group>
 

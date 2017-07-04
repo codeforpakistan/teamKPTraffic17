@@ -23,6 +23,11 @@
                 android:id="@+id/iv_complaint_image"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
+                android:textStyle="bold"
+                android:textSize="20dp"
+                android:text="03"
+                android:background="#eee"
+                android:gravity="center_vertical|center_horizontal"
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="15dp"
                 android:src="@drawable/emergency_health" />
@@ -44,14 +49,32 @@
             android:layout_marginTop="10dp"
             android:layout_weight="1"
             android:orientation="vertical">
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="5dp"
+    android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Complaint ID:"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textStyle="bold"
+                android:textColor="@color/app_background" />
 
             <TextView
                 android:id="@+id/tv_complaint_id"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Helper Name"
+                android:text="123"
+                android:gravity="end"
+                android:paddingLeft="10dp"
+                android:paddingRight="20dp"
+                android:textColor="@color/app_background"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                />
+</LinearLayout>
 
 
             <TextView

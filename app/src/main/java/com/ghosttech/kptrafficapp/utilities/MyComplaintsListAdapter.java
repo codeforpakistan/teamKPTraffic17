@@ -6,21 +6,16 @@ package com.ghosttech.kptrafficapp.utilities;
 
 
 import android.content.Context;
-import android.net.Uri;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.text.SpannableString;
-import android.text.style.UnderlineSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.MediaController;
 import android.widget.TextView;
 import android.widget.VideoView;
 
-import com.bumptech.glide.Glide;
 import com.ghosttech.kptrafficapp.R;
 
 import java.util.ArrayList;
@@ -35,8 +30,8 @@ public class MyComplaintsListAdapter extends RecyclerView.Adapter<MyComplaintsLi
 
         // each data item is just a string in this case
         CardView cv;
-        TextView tvComplaintsID, tvComplaintDescription, tvComplaintStatus, ivHelperIcon;
-        //ImageView  ivHelperIcon;
+        TextView tvComplaintsID, tvComplaintDescription, tvComplaintStatus, tvComplaintDate;
+        //ImageView  tvComplaintDate;
         LinearLayout lLCallNow;
         VideoView vvComplaints;
 
@@ -46,7 +41,7 @@ public class MyComplaintsListAdapter extends RecyclerView.Adapter<MyComplaintsLi
             tvComplaintsID = (TextView) itemView.findViewById(R.id.tv_complaint_id);
             tvComplaintStatus = (TextView) itemView.findViewById(R.id.tv_complaint_status);
             tvComplaintDescription = (TextView) itemView.findViewById(R.id.tv_complaint_description);
-            ivHelperIcon = (TextView) itemView.findViewById(R.id.iv_complaint_image);
+            tvComplaintDate = (TextView) itemView.findViewById(R.id.iv_complaint_image);
 
 
         }
@@ -80,8 +75,53 @@ public class MyComplaintsListAdapter extends RecyclerView.Adapter<MyComplaintsLi
         holder.tvComplaintsID.setText(helper.getStrComplaintID());
         holder.tvComplaintStatus.setText(helper.getStrComplaintStatus());
         holder.tvComplaintDescription.setText(helper.getStrDescription());
-        holder.ivHelperIcon.setText(helper.getStrDate());
-       //Glide.with(context).load(Configuration.END_POINT_LIVE+"uploads/images").into(holder.ivHelperIcon);
+        String strDate = helper.getStrDate();
+        strDate = strDate.substring(8,10);
+        String strMonth = helper.getStrDate();
+        strMonth = strMonth.substring(5,7);
+        switch (strMonth){
+            case "01":
+                strMonth = "Jan";
+                break;
+            case "02":
+                strMonth = "Feb";
+                break;
+            case "03":
+                strMonth = "Mar";
+                break;
+            case "04":
+                strMonth = "Apr";
+                break;
+            case "05":
+                strMonth = "May";
+                break;
+            case "06":
+                strMonth = "Jun";
+                break;
+            case "07":
+                strMonth = "Jul";
+                break;
+            case "08":
+                strMonth = "Aug";
+                break;
+            case "09":
+                strMonth = "Sep";
+                break;
+            case "10":
+                strMonth = "Oct";
+                break;
+            case "11":
+                strMonth = "Nov";
+                break;
+            case "12":
+                strMonth = "Dec";
+                break;
+
+
+        }
+        holder.tvComplaintDate.setText(strDate+"\n"+strMonth);
+//        strDate.substring(9,10);
+       //Glide.with(context).load(Configuration.END_POINT_LIVE+"uploads/images").into(holder.tvComplaintDate);
 
         }
 

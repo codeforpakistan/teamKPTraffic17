@@ -108,7 +108,6 @@ public class MainEmergencyFragment extends Fragment {
         ivMechanicsEmergency = (ImageView) view.findViewById(R.id.iv_emergency_mechanics);
         ivRescueEmergency = (ImageView) view.findViewById(R.id.iv_emergency_rescue_1122);
         bundle = new Bundle();
-        footerButtons();
         onEmergencyButtonClick();
         return view;
     }
@@ -186,30 +185,30 @@ public class MainEmergencyFragment extends Fragment {
         fragment.setArguments(bundle);
     }
 
-    public void footerButtons() {
-        ivHomeButton = (ImageView) view.findViewById(R.id.iv_home_button);
-        ivSettingButton = (ImageView) view.findViewById(R.id.iv_setting_menu);
-        ivWebsiteButton = (ImageView) view.findViewById(R.id.iv_website_link);
-        ivHomeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                fragment = new MainFragment();
-                getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
-            }
-        });
-        ivWebsiteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                new FinestWebView.Builder(getActivity())
-                        .titleDefault("KP Traffic Police Official Website")
-                        .titleFont("Roboto-Medium.ttf")
-                        .disableIconForward(true)
-                        .disableIconBack(true)
-                        .show("http://www.ptpkp.gov.pk/");
-                //startActivity(new Intent(getActivity(), FinestWebViewActivity.class));
-            }
-        });
-    }
+//    public void footerButtons() {
+//        ivHomeButton = (ImageView) view.findViewById(R.id.iv_home_button);
+//        ivSettingButton = (ImageView) view.findViewById(R.id.iv_setting_menu);
+//        ivWebsiteButton = (ImageView) view.findViewById(R.id.iv_website_link);
+//        ivHomeButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                fragment = new MainFragment();
+//                getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
+//            }
+//        });
+//        ivWebsiteButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                new FinestWebView.Builder(getActivity())
+//                        .titleDefault("KP Traffic Police Official Website")
+//                        .titleFont("Roboto-Medium.ttf")
+//                        .disableIconForward(true)
+//                        .disableIconBack(true)
+//                        .show("http://www.ptpkp.gov.pk/");
+//                //startActivity(new Intent(getActivity(), FinestWebViewActivity.class));
+//            }
+//        });
+//    }
     public void getData(final String strCategoryID, final String latitude, final String longitude) {
         Log.d("zma log", String.valueOf(latitude));
         Log.d("zma lat", String.valueOf(longitude));

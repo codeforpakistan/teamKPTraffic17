@@ -1,6 +1,7 @@
 package com.ghosttech.kptrafficapp.activities;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -20,12 +21,14 @@ import com.ghosttech.kptrafficapp.R;
 import com.ghosttech.kptrafficapp.fragments.LoginFragment;
 import com.ghosttech.kptrafficapp.fragments.MainFragment;
 import com.ghosttech.kptrafficapp.fragments.MyComplaintsFragment;
+import com.thefinestartist.finestwebview.FinestWebView;
 
 public class MainDrawerActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     Fragment fragment;
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
+    String prefCNIC;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +38,7 @@ public class MainDrawerActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         sharedPreferences = getSharedPreferences("com.ghosttech.kptraffic", 0);
         editor = sharedPreferences.edit();
-        String prefCNIC = sharedPreferences.getString("true", "");
+         prefCNIC = sharedPreferences.getString("true", "");
         if (prefCNIC.toString().length() > 0) {
             Log.d("zma shared pref", prefCNIC);
             fragment = new MainFragment();
@@ -91,10 +94,6 @@ public class MainDrawerActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -108,10 +107,19 @@ public class MainDrawerActivity extends AppCompatActivity
             fragment = new MyComplaintsFragment();
             getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).addToBackStack("tag").commit();
             // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
+        } else if (id == R.id.nav_website) {
+            new FinestWebView.Builder(MainDrawerActivity.this)
+                    .titleDefault("KP Traffic Police Official Website")
+                    .titleFont("Roboto-Medium.ttf")
+                    .disableIconForward(true)
+                    .disableIconBack(true)
+                    .show("http://www.ptpkp.gov.pk/");
+        } else if (id == R.id.nav_logout) {
+            editor.clear().commit();
+            startActivity(new Intent(MainDrawerActivity.this,MainDrawerActivity.class));
+        } else if (id == R.id.nav_home) {
+            fragment = new MainFragment();
+            getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

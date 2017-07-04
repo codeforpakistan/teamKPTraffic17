@@ -227,11 +227,11 @@
     </RelativeLayout>
 
     <ImageView
-        android:layout_width="96dp"
-        android:layout_height="96dp"
+        android:layout_width="156dp"
+        android:layout_height="156dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="30dp"
-        android:src="@drawable/main_layered_logo" />
+        android:src="@drawable/challan_tracking_icon" />
 
 
 </FrameLayout>

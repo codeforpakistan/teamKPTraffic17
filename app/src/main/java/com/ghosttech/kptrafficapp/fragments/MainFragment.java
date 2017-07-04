@@ -132,7 +132,6 @@ public class MainFragment extends Fragment {
         sharedPreferences = getActivity().getSharedPreferences("com.ghosttech.kptraffic", 0);
         editor = sharedPreferences.edit();
         tvUserName.setText(sharedPreferences.getString("user_name",null));
-        footerButtons();
         MultiDex.install(getActivity());
         shake = AnimationUtils.loadAnimation(getActivity(), R.anim.shake);
         mRequestQueue = Volley.newRequestQueue(getActivity());
@@ -490,18 +489,18 @@ public class MainFragment extends Fragment {
         mRequestQueue.add(jsonObjRequest);
     }
 
-    public void footerButtons() {
-        ivSettingButton = (ImageView) view.findViewById(R.id.iv_setting_menu);
-        ivWebsiteButton = (ImageView) view.findViewById(R.id.iv_website_link);
-        ivWebsiteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                new FinestWebView.Builder(getActivity())
-                        .titleDefault("KP Traffic Police Official Website")
-                        .titleFont("Roboto-Medium.ttf")
-                        .disableIconForward(true)
-                        .disableIconBack(true)
-                        .show("http://www.ptpkp.gov.pk/");            }
-        });
-    }
+//    public void footerButtons() {
+//        ivSettingButton = (ImageView) view.findViewById(R.id.iv_setting_menu);
+//        ivWebsiteButton = (ImageView) view.findViewById(R.id.iv_website_link);
+//        ivWebsiteButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                new FinestWebView.Builder(getActivity())
+//                        .titleDefault("KP Traffic Police Official Website")
+//                        .titleFont("Roboto-Medium.ttf")
+//                        .disableIconForward(true)
+//                        .disableIconBack(true)
+//                        .show("http://www.ptpkp.gov.pk/");            }
+//        });
+//    }
 }

@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/colorPrimary"
-    android:gravity="center"
+
     android:orientation="horizontal">
 
     <ImageView
@@ -13,11 +13,11 @@
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
         android:src="@drawable/back_arrow"
-        android:layout_weight="0.1" />
+        />
 
     <TextView
         android:id="@+id/title_text"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:layout_marginLeft="10dp"
@@ -27,12 +27,5 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="#fff"
         android:textSize="15sp"
-        android:textStyle="bold"
-        android:layout_weight="0.9" />
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:src="@drawable/send_complaint_icon"
-        android:layout_weight="0.1" />
+        android:textStyle="bold" />
 </LinearLayout>
