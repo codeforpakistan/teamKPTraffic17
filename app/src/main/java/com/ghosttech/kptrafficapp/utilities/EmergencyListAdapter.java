@@ -86,7 +86,8 @@ public class EmergencyListAdapter extends RecyclerView.Adapter<EmergencyListAdap
         // - replace the contents of the view with that element
         final EmergencyHelper helper = emergencyHelperList.get(position);
         holder.tvEmergencyHelperName.setText(helper.getStrHelperName());
-        holder.tvEmergencyDistance.setText(helper.getStrHelperDistance());
+        String strDistance = helper.getStrHelperDistance()+" KM";
+        holder.tvEmergencyDistance.setText(strDistance);
         holder.tvEmergencyLocation.setText(helper.getStrHelperLocation());
 
         holder.tvEmergencyPhone.setText(helper.getStrHelperPhoneNumber());

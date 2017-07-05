@@ -5,7 +5,8 @@
     <color name="colorPrimaryDark">#0d6064</color>
     <color name="colorAccent">#fff</color>
     <color name="button_color">#66b5bb</color>
-
-
+    <color name="status_completed">#019875</color>
+    <color name="status_in_Progress">#E9D460</color>
+    <color name="status_pending">#F22613</color>
     <color name="black_overlay">#66000000</color>
 </resources>

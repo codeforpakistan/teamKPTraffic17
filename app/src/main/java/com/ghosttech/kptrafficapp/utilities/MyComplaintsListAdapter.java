@@ -3,9 +3,8 @@ package com.ghosttech.kptrafficapp.utilities;
 /**
  * Created by Asus on 6/15/2017.
  */
-
-
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -73,7 +72,15 @@ public class MyComplaintsListAdapter extends RecyclerView.Adapter<MyComplaintsLi
         // - replace the contents of the view with that element
         final MyComplaintsHelper helper = complaintsHelperList.get(position);
         holder.tvComplaintsID.setText(helper.getStrComplaintID());
-        holder.tvComplaintStatus.setText(helper.getStrComplaintStatus());
+        String strComplaintStatus = helper.getStrComplaintStatus();
+        if (strComplaintStatus.equals("Pending")){
+            holder.tvComplaintStatus.setTextColor(Color.parseColor("#F22613"));
+        }else if (strComplaintStatus.equals("Completed")){
+            holder.tvComplaintStatus.setTextColor(Color.parseColor("#019875"));
+        }else if (strComplaintStatus.equals("In Progress")){
+            holder.tvComplaintStatus.setTextColor(Color.parseColor("#E9D460"));
+        }
+        holder.tvComplaintStatus.setText(strComplaintStatus);
         holder.tvComplaintDescription.setText(helper.getStrDescription());
         String strDate = helper.getStrDate();
         strDate = strDate.substring(8,10);

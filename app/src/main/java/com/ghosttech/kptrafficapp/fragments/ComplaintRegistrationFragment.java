@@ -32,6 +32,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -99,6 +100,7 @@ public class ComplaintRegistrationFragment extends Fragment {
     Animation shake;
     Button btnSendComplaint;
     ImageView ivTakePicture, ivImagePreview, ivHomeButton, ivSettingButton, ivWebsiteButton, ivRecordVideo;
+    LinearLayout linearLayout;
     EditText etDescription;
     File sourceFile;
     final int CAMERA_CAPTURE = 1;
@@ -161,6 +163,7 @@ public class ComplaintRegistrationFragment extends Fragment {
                 return false;
             }
         });
+        linearLayout = (LinearLayout) view.findViewById(R.id.llayout_camera);
         spComlaintType = (MaterialSpinner) view.findViewById(R.id.spinner);
         btnSendComplaint = (Button) view.findViewById(R.id.btn_send_complaint);
 //        ivImagePreview = (ImageView) view.findViewById(R.id.iv_image_preview);
@@ -208,7 +211,7 @@ public class ComplaintRegistrationFragment extends Fragment {
                     }
                 });
         onSendButton();
-       // footerButtons();
+        // footerButtons();
         return view;
     }
 
@@ -250,12 +253,12 @@ public class ComplaintRegistrationFragment extends Fragment {
             spComlaintType.startAnimation(shake);
         } else if (strDesciption.length() < 10) {
             etDescription.startAnimation(shake);
-        } else if (compressedVideoPath == null) {
+        } else if (sourceFile == null && compressedVideoPath == null) {
             ivTakePicture.startAnimation(shake);
 
         } else {
             if (CheckNetwork.isInternetAvailable(getActivity())) {
-                 pDialog.show();
+                pDialog.show();
                 new UploadFileToServer().execute();
             } else {
                 new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
@@ -396,14 +399,14 @@ public class ComplaintRegistrationFragment extends Fragment {
 
                 } catch (ClientProtocolException e) {
                     responseString = e.toString();
-                     pDialog.dismiss();
+                    pDialog.dismiss();
                     new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
                             .setTitleText("Oops...")
                             .setContentText("Something went wrong!")
                             .show();
                 } catch (IOException e) {
                     responseString = e.toString();
-                     pDialog.dismiss();
+                    pDialog.dismiss();
                     new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
                             .setTitleText("Oops...")
                             .setContentText("Something went wrong!")
@@ -490,36 +493,12 @@ public class ComplaintRegistrationFragment extends Fragment {
                     new VideoCompressAsyncTask(getActivity()).execute(data.getData().toString(), f.getPath());
 
             }
-           // sourceFile = new File(GeneralUtils.getRealPathFromURI(getActivity(), picUri));
+            // sourceFile = new File(GeneralUtils.getRealPathFromURI(getActivity(), picUri));
         } else if (resultCode == RESULT_OK) {
             Uri uri = data.getData();
             sourceFile = new File(GeneralUtils.getRealPathFromURI(getActivity(), uri));
         }
     }
-
-//    public void footerButtons() {
-//        ivHomeButton = (ImageView) view.findViewById(R.id.iv_home_button);
-//        ivSettingButton = (ImageView) view.findViewById(R.id.iv_setting_menu);
-//        ivWebsiteButton = (ImageView) view.findViewById(R.id.iv_website_link);
-//        ivHomeButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                fragment = new MainFragment();
-//                getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
-//            }
-//        });
-//        ivWebsiteButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                new FinestWebView.Builder(getActivity())
-//                        .titleDefault("KP Traffic Police Official Website")
-//                        .titleFont("Roboto-Medium.ttf")
-//                        .disableIconForward(true)
-//                        .disableIconBack(true)
-//                        .show("http://www.ptpkp.gov.pk/");
-//            }
-//        });
-//    }
 
     public void showAlertDialog() {
         final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
@@ -534,18 +513,19 @@ public class ComplaintRegistrationFragment extends Fragment {
 
         alertDialog.show();
     }
-    class VideoCompressAsyncTask extends AsyncTask<String, String, String>{
+
+    class VideoCompressAsyncTask extends AsyncTask<String, String, String> {
 
         Context mContext;
 
-        public VideoCompressAsyncTask(Context context){
+        public VideoCompressAsyncTask(Context context) {
             mContext = context;
         }
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            Log.e(TAG, "Compressing...." );
+            Log.e(TAG, "Compressing....");
         }
 
         @Override
@@ -556,7 +536,7 @@ public class ComplaintRegistrationFragment extends Fragment {
             } catch (URISyntaxException e) {
                 e.printStackTrace();
             }
-            return  compressedVideoPath;
+            return compressedVideoPath;
 
         }
 
@@ -564,7 +544,7 @@ public class ComplaintRegistrationFragment extends Fragment {
         @Override
         protected void onPostExecute(String compressedFilePath) {
             super.onPostExecute(compressedFilePath);
-            Log.e(TAG, "Compressed Successflly! " );
+            Log.e(TAG, "Compressed Successflly! ");
         }
     }
 

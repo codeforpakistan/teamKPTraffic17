@@ -3,6 +3,7 @@ package com.ghosttech.kptrafficapp.fragments;
 import android.content.Context;
 import android.location.Location;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.util.Log;
@@ -107,6 +108,9 @@ public class MainEmergencyFragment extends Fragment {
         ivHighOfficer = (ImageView) view.findViewById(R.id.iv_emergency_highway_officer);
         ivMechanicsEmergency = (ImageView) view.findViewById(R.id.iv_emergency_mechanics);
         ivRescueEmergency = (ImageView) view.findViewById(R.id.iv_emergency_rescue_1122);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            requestPermissions(new String[]{ android.Manifest.permission.CALL_PHONE}, 1);
+        }
         bundle = new Bundle();
         onEmergencyButtonClick();
         SmartLocation.with(getActivity()).location()

@@ -144,7 +144,7 @@ public class MainFragment extends Fragment {
         //((AppCompatActivity) getActivity()).getSupportActionBar().hide();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION,
-                    android.Manifest.permission.ACCESS_COARSE_LOCATION, android.Manifest.permission.CALL_PHONE}, 1);
+                    android.Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
         }
         SmartLocation.with(getActivity()).location()
                 .start(new OnLocationUpdatedListener() {
@@ -174,7 +174,7 @@ public class MainFragment extends Fragment {
                             }
 
                             strCityName = builder.toString(); //This is the complete address.
-                            mTitleTextView.setText(" " + strCityName);
+                            mTitleTextView.setText(strCityName);
                             Log.d("zma city", strCityName);
                             if (address.size() > 0) {
 
