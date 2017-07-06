@@ -10,28 +10,20 @@ import java.util.ArrayList;
 
 public class LiveUpdatesMapCoorindates {
     public static final LatLng CHARSADDA_ROAD_1 = new LatLng(34.032627, 71.576201);//initialize first point of the route like this
-    public static final ArrayList<LatLng> ARRAY_CHARSADDA_ROAD = new ArrayList<>();//define array name
     public static final LatLng KHYBER_ROAD_1 = new LatLng(34.014463, 71.567379);//initialize first point of the route like this
-    public static final ArrayList<LatLng> ARRAY_KHYBER_ROAD = new ArrayList<>();//define array name
-    public static final ArrayList<LatLng> ARRAY_UNIVERSITY_ROAD = new ArrayList<>();
+
     public static final LatLng UNIVERSITY_ROAD_1 = new LatLng(33.997592, 71.491419);
     public static final LatLng JAIL_ROAD_1 = new LatLng(34.009411, 71.565522);
-    public static final ArrayList<LatLng> ARRAY_JAIL_ROAD = new ArrayList<>();
     public static final LatLng BAGH_E_NARAN_ROAD_1 = new LatLng(33.977600, 71.446726);
-    public static final ArrayList<LatLng> ARRAY_BAGH_E_NARAN_ROAD = new ArrayList<>();
     public static final LatLng KOHAT_ROAD_1 = new LatLng(33.998861, 71.559799);
-    public static final ArrayList<LatLng> ARRAY_KOHAT_ROAD = new ArrayList<>();
     public static final LatLng SADDAR_ROAD_1 = new LatLng(34.014953, 71.568376);//initialize first
-    public static final ArrayList<LatLng> ARRAY_SADDAR_ROAD = new ArrayList<>();//define array name
     public static final LatLng GT_ROAD_1 = new LatLng(34.017106, 71.621971);
-    public static final ArrayList<LatLng> ARRAY_GT_ROAD = new ArrayList<>();//define array name
-    public static final ArrayList<LatLng> ARRAY_DALAZAK_ROAD = new ArrayList<>();//define array name
     public static final LatLng DALAZAK_ROAD_1 = new LatLng(34.018197, 71.580108);//initialize first point of the route like this
-    public static final ArrayList<LatLng> ARRAY_WARSAK_ROAD = new ArrayList<>();//define array name
     public static final LatLng WARSAK_ROAD = new LatLng(34.013902, 71.542008);//initialize first point of the route like this
 
 
     public static ArrayList<LatLng> getArrayWarsakRoad() {
+        final ArrayList<LatLng> ARRAY_WARSAK_ROAD = new ArrayList<>();//define array name
         ARRAY_WARSAK_ROAD.add(new LatLng(34.013985, 71.541996));//copy the coordinate of the starting point from above
         ARRAY_WARSAK_ROAD.add(new LatLng(34.014031, 71.541923));//define rest of the path one by one
         ARRAY_WARSAK_ROAD.add(new LatLng(34.014294, 71.541778));
@@ -71,6 +63,7 @@ public class LiveUpdatesMapCoorindates {
     }
 
     public static ArrayList<LatLng> getArrayDalazakRoad() {
+        final ArrayList<LatLng> ARRAY_DALAZAK_ROAD = new ArrayList<>();//define array name
         ARRAY_DALAZAK_ROAD.add(new LatLng(34.018197, 71.580108));//copy the coordinate of the starting point from above
         ARRAY_DALAZAK_ROAD.add(new LatLng(34.018199, 71.580594));//define rest of the path one by one
         ARRAY_DALAZAK_ROAD.add(new LatLng(34.018230, 71.581881));
@@ -116,6 +109,7 @@ public class LiveUpdatesMapCoorindates {
     }
 
     public static ArrayList<LatLng> getArrayGtRoad() {
+        final ArrayList<LatLng> ARRAY_GT_ROAD = new ArrayList<>();//define array name
         ARRAY_GT_ROAD.add(new LatLng(34.017106, 71.621971));//copy the coordinate of the starting point from above
         ARRAY_GT_ROAD.add(new LatLng(34.017070, 71.621169));//define rest of the path one by one
         ARRAY_GT_ROAD.add(new LatLng(34.017032, 71.620246));
@@ -166,6 +160,7 @@ public class LiveUpdatesMapCoorindates {
     }
 
     public static ArrayList<LatLng> getArraySaddarRoad() {
+        final ArrayList<LatLng> ARRAY_SADDAR_ROAD = new ArrayList<>();//define array name
         ARRAY_SADDAR_ROAD.add(new LatLng(34.014953, 71.568376));//copy the coordinate of the starting point from above
         ARRAY_SADDAR_ROAD.add(new LatLng(34.014728, 71.568135));//define rest of the path one by one
         ARRAY_SADDAR_ROAD.add(new LatLng(34.014386, 71.567698));
@@ -209,6 +204,7 @@ public class LiveUpdatesMapCoorindates {
 
 
     public static ArrayList<LatLng> getArrayKohatRoad() {
+        final ArrayList<LatLng> ARRAY_KOHAT_ROAD = new ArrayList<>();
         ARRAY_KOHAT_ROAD.add(new LatLng(33.998861, 71.559799));//copy the coordinate of the starting point from above
         ARRAY_KOHAT_ROAD.add(new LatLng(33.998665, 71.559774));//define rest of the path one by one
         ARRAY_KOHAT_ROAD.add(new LatLng(33.997771, 71.559565));
@@ -258,6 +254,7 @@ public class LiveUpdatesMapCoorindates {
     }
 
     public static ArrayList<LatLng> getArrayBaghENaranRoad() {
+        final ArrayList<LatLng> ARRAY_BAGH_E_NARAN_ROAD = new ArrayList<>();
         ARRAY_BAGH_E_NARAN_ROAD.add(new LatLng(33.977600, 71.446726));//copy the coordinate of the starting point from above
         ARRAY_BAGH_E_NARAN_ROAD.add(new LatLng(33.977638, 71.447112));//define rest of the path one by one
         ARRAY_BAGH_E_NARAN_ROAD.add(new LatLng(33.977424, 71.447622));
@@ -315,6 +312,7 @@ public class LiveUpdatesMapCoorindates {
     }
 
     public static ArrayList<LatLng> getArrayJailRoad() {
+        final ArrayList<LatLng> ARRAY_JAIL_ROAD = new ArrayList<>();
         ARRAY_JAIL_ROAD.add(new LatLng(34.009411, 71.565522));//copy the coordinate of the starting point from above
         ARRAY_JAIL_ROAD.add(new LatLng(34.009455, 71.565216));//define rest of the path one by one
         ARRAY_JAIL_ROAD.add(new LatLng(34.009371, 71.564722));
@@ -364,6 +362,7 @@ public class LiveUpdatesMapCoorindates {
     }
 
     public static ArrayList<LatLng> getArrayUniversityRoad() {
+        final ArrayList<LatLng> ARRAY_UNIVERSITY_ROAD = new ArrayList<>();
         ARRAY_UNIVERSITY_ROAD.add(new LatLng(33.997592, 71.490824));//define rest of the path one by one
         ARRAY_UNIVERSITY_ROAD.add(new LatLng(33.997604, 71.490243));
         ARRAY_UNIVERSITY_ROAD.add(new LatLng(33.997604, 71.489648));
@@ -418,6 +417,7 @@ public class LiveUpdatesMapCoorindates {
     }
 
     public static ArrayList<LatLng> getArrayCharsaddaRoad() {
+        final ArrayList<LatLng> ARRAY_CHARSADDA_ROAD = new ArrayList<>();//define array name
         ARRAY_CHARSADDA_ROAD.add(new LatLng(34.031714, 71.578076));
         ARRAY_CHARSADDA_ROAD.add(new LatLng(34.031562, 71.577945));
         ARRAY_CHARSADDA_ROAD.add(new LatLng(34.031411, 71.577780));
@@ -456,6 +456,7 @@ public class LiveUpdatesMapCoorindates {
     }
 
     public static ArrayList<LatLng> getArrayKhyberRoad() {
+        ArrayList<LatLng> ARRAY_KHYBER_ROAD = new ArrayList<>();//define array name
         ARRAY_KHYBER_ROAD.add(new LatLng(34.014463, 71.567379));//copy the coordinate of the starting point from above
         ARRAY_KHYBER_ROAD.add(new LatLng(34.014480, 71.566886));//define rest of the path one by one
         ARRAY_KHYBER_ROAD.add(new LatLng(34.014480, 71.566435));
