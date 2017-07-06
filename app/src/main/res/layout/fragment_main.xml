@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="#fff"
     android:orientation="vertical"
-    tools:context="com.ghosttech.kptrafficapp.fragments.MainFragment">
+    tools:context="com.kptrafficpolice.android.fragments.MainFragment">
 
     <LinearLayout
         android:layout_width="match_parent"

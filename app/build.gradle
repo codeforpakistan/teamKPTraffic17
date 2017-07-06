@@ -1,11 +1,26 @@
+buildscript {
+    repositories {
+        maven { url 'https://maven.fabric.io/public' }
+    }
+
+    dependencies {
+        classpath 'io.fabric.tools:gradle:1.+'
+    }
+}
 apply plugin: 'com.android.application'
+apply plugin: 'io.fabric'
+
+repositories {
+    maven { url 'https://maven.fabric.io/public' }
+}
+
 
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
     defaultConfig {
         applicationId "com.example.my.app"
-        applicationId "com.ghosttech.kptrafficapp"
+        applicationId "com.kptrafficpolice.android"
         minSdkVersion 16
         targetSdkVersion 25
         versionCode 1
@@ -15,6 +30,9 @@ android {
     }
     buildTypes {
         release {
+            lintOptions {
+                disable 'MissingTranslation'
+            }
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
@@ -42,6 +60,11 @@ dependencies {
     compile files('libs/httpclient-4.3.6.jar')
     compile files('libs/httpcore-4.3.3.jar')
     compile files('libs/httpmime-4.3.6.jar')
+    compile 'com.iceteck.silicompressorr:silicompressor:2.0'
+    compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
+        transitive = true;
+    }
+
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support:support-v4:25.3.1'
     compile 'io.nlopez.smartlocation:library:3.3.1'
@@ -64,8 +87,7 @@ dependencies {
     compile 'com.github.mancj:MaterialSearchBar:0.7'
     compile 'com.iceteck.silicompressorr:silicompressor:2.0'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile 'com.iceteck.silicompressorr:silicompressor:2.0'
+    compile 'com.google.android.gms:play-services-analytics:10.2.4'
     testCompile 'junit:junit:4.12'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.0.0-RC0'
-
 }

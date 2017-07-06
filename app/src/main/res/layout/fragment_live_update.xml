@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#f2f2f3"
-    tools:context="com.ghosttech.kptrafficapp.fragments.LiveUpdateFragment">
+    tools:context="com.kptrafficpolice.android.fragments.LiveUpdateFragment">
 
     <!-- TODO: Update blank fragment layout -->
 
@@ -14,7 +14,7 @@
         android:background="#d2d3d4"
         android:orientation="vertical"
         android:padding="16dp"
-        tools:context="com.ghosttech.eatableshere.LiveUpdatesDesign">
+        tools:context="com.kptrafficpolice.eatableshere.LiveUpdatesDesign">
 
 
         <android.support.v7.widget.RecyclerView
