@@ -119,8 +119,9 @@ public class MainFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_main, container, false);
-        MyApplication application = (MyApplication) getActivity().getApplication();
-        mTracker = application.getDefaultTracker();
+
+//        MyApplication application = (MyApplication) getActivity().getApplication();
+//        mTracker = application.getDefaultTracker();
 
         tvUserName = (TextView)view.findViewById(R.id.tv_user_name);
         pDialog = new SweetAlertDialog(getActivity(), SweetAlertDialog.PROGRESS_TYPE);

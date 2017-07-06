@@ -11,6 +11,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -28,7 +29,7 @@ public class MainDrawerActivity extends AppCompatActivity
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
     String prefCNIC;
-
+    DrawerLayout drawer;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,7 +52,7 @@ public class MainDrawerActivity extends AppCompatActivity
 
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
@@ -84,7 +85,14 @@ public class MainDrawerActivity extends AppCompatActivity
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
+        if (item != null && item.getItemId() == android.R.id.home) {
+            if (drawer.isDrawerOpen(Gravity.RIGHT)) {
+                drawer.closeDrawer(Gravity.RIGHT);
+            }
+            else {
+                drawer.openDrawer(Gravity.RIGHT);
+            }
+        }
         //noinspection SimplifiableIfStatement
         return super.onOptionsItemSelected(item);
     }
