@@ -15,8 +15,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.kptrafficpolice.android.R;
-import com.kptrafficpolice.android.utilities.LiveUpdatesMapCoorindates;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -24,6 +22,8 @@ import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.kptrafficpolice.android.R;
+import com.kptrafficpolice.android.utilities.LiveUpdatesMapCoorindates;
 
 import java.util.ArrayList;
 
@@ -54,7 +54,7 @@ public class LiveUpdateResultFragment extends Fragment {
     Fragment fragment;
     View view;
     TextView tvRoadStatus, tvUpdateTime;
-    ImageView  ivHomeButton, ivSettingButton, ivWebsiteButton;
+    ImageView ivHomeButton, ivSettingButton, ivWebsiteButton;
 
     private OnFragmentInteractionListener mListener;
 
@@ -465,9 +465,10 @@ public class LiveUpdateResultFragment extends Fragment {
             e.printStackTrace();
         }
 //Remove the same line from map
-
         googleMap.clear();
+        googleMap.addPolyline(new PolylineOptions());
         googleMap.addPolyline(polylineOptions);
+
     }
 
     public void customActionBar() {
