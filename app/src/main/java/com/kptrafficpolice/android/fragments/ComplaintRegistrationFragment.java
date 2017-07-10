@@ -162,24 +162,64 @@ public class ComplaintRegistrationFragment extends Fragment {
         spComlaintType = (MaterialSpinner) view.findViewById(R.id.spinner);
         btnSendComplaint = (Button) view.findViewById(R.id.btn_send_complaint);
 //        ivImagePreview = (ImageView) view.findViewById(R.id.iv_image_preview);
-        spComlaintType.setItems("Complaint Type", "Traffic Jam", "Wardens Corruption", "Other");
+        spComlaintType.setItems("Complaint Type", "Traffic Jam", "Complaint against Wardens", "Illegal Parking", "Other");
         shake = AnimationUtils.loadAnimation(getActivity(), R.anim.shake);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                    Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+                    Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, 1);
         }
         ivTakePicture = (ImageView) view.findViewById(R.id.iv_take_picture);
         ivRecordVideo = (ImageView) view.findViewById(R.id.iv_record_video);
         ivRecordVideo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                cameraVIntent();
+                AlertDialog.Builder pictureDialog = new AlertDialog.Builder(getActivity());
+                pictureDialog.setTitle("Choose video from");
+                String[] pictureDialogItems = {
+                        "\tGallery",
+                        "\tCamera"};
+                pictureDialog.setItems(pictureDialogItems,
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                switch (which) {
+                                    case 0:
+                                        galleryVIntent();
+                                        break;
+                                    case 1:
+                                        cameraVIntent();
+                                        break;
+                                }
+                            }
+                        });
+                pictureDialog.show();
+
             }
         });
         ivTakePicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                cameraIntent();
+                AlertDialog.Builder pictureDialog = new AlertDialog.Builder(getActivity());
+                pictureDialog.setTitle("Choose image from");
+                String[] pictureDialogItems = {
+                        "\tGallery",
+                        "\tCamera"};
+                pictureDialog.setItems(pictureDialogItems,
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                switch (which) {
+                                    case 0:
+                                        galleryIntent();
+                                        break;
+                                    case 1:
+                                        cameraIntent();
+                                        break;
+                                }
+                            }
+                        });
+                pictureDialog.show();
+
             }
         });
         pDialog = new SweetAlertDialog(getActivity(), SweetAlertDialog.PROGRESS_TYPE);
@@ -188,7 +228,7 @@ public class ComplaintRegistrationFragment extends Fragment {
         spComlaintType.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
             @Override
             public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
-                Snackbar.make(view, "Clicked " + item, Snackbar.LENGTH_LONG).show();
+                // Snackbar.make(view, "Clicked " + item, Snackbar.LENGTH_LONG).show();
                 spinnerID = String.valueOf(position);
                 Log.d("zma spinner id", spinnerID);
             }
@@ -458,7 +498,18 @@ public class ComplaintRegistrationFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RESULT_LOAD_IMAGE && null != data) {
+        if (requestCode == RESULT_LOAD_VIDEO && null != data) {
+            Uri selectedVideo = data.getData();
+            String[] filePathColumn = {String.valueOf(MediaStore.Video.Media.EXTERNAL_CONTENT_URI)};
+            Cursor cursor = getActivity().getContentResolver().query(selectedVideo,
+                    filePathColumn, null, null, null);
+            cursor.moveToFirst();
+            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+            String picturePath = cursor.getString(columnIndex);
+            sourceFile = new File(picturePath);
+            Log.d("zma path video gallery", picturePath.toString());
+            cursor.close();
+        } else if (requestCode == RESULT_LOAD_IMAGE && null != data) {
             Uri selectedImage = data.getData();
             String[] filePathColumn = {MediaStore.Images.Media.DATA};
             Cursor cursor = getActivity().getContentResolver().query(selectedImage,
@@ -467,7 +518,12 @@ public class ComplaintRegistrationFragment extends Fragment {
             int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
             String picturePath = cursor.getString(columnIndex);
             sourceFile = new File(picturePath);
-            Log.d("zma path", picturePath.toString());
+            Log.d("zma path load image", picturePath.toString());
+            if (sourceFile != null) {
+                flag = true;
+            } else {
+                flag = false;
+            }
             cursor.close();
         } else if (resultCode == RESULT_OK && requestCode == CAMERA_CAPTURE && data != null) {
             Bitmap photo = (Bitmap) data.getExtras().get("data");
