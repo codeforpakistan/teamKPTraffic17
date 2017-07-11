@@ -1,5 +1,6 @@
 package com.kptrafficpolice.android.fragments;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
@@ -32,6 +33,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.kptrafficpolice.android.R;
+import com.kptrafficpolice.android.activities.MainDrawerActivity;
 import com.kptrafficpolice.android.utilities.CheckNetwork;
 import com.kptrafficpolice.android.utilities.Configuration;
 import com.thefinestartist.Base;
@@ -114,7 +116,7 @@ public class LoginFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 fragment = new RegistrationFragment();
-                getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment)
+                getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).addToBackStack("tag")
                         .commit();
             }
         });
@@ -154,21 +156,7 @@ public class LoginFragment extends Fragment {
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (CheckNetwork.isInternetAvailable(getActivity())) {
                     formValidation();
-                } else {
-                    new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
-                            .setTitleText("Oops!")
-                            .setContentText("You don't have internet connection")
-                            .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                                @Override
-                                public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                    getActivity().finish();
-
-                                }
-                            })
-                            .show();
-                }
             }
         });
     }
@@ -182,7 +170,20 @@ public class LoginFragment extends Fragment {
             Snackbar.make(view, "Wrong CNIC ", Snackbar.LENGTH_LONG).show();
         } else {
             pDialog.show();
-            apiCall();
+            if (CheckNetwork.isInternetAvailable(getActivity())) {
+                apiCall();
+            } else {
+                new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
+                        .setTitleText("Oops")
+                        .setContentText("You don't have internet connection!")
+                        .setConfirmText("Refresh")
+                        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                getActivity().startActivity(new Intent(getActivity(),MainDrawerActivity.class));                            }
+                        })
+                        .show();
+            }
 
         }
     }
@@ -202,7 +203,7 @@ public class LoginFragment extends Fragment {
                                 for (int i = 0; i < jsonArray.length(); i++) {
                                     JSONObject temp = jsonArray.getJSONObject(i);
                                     strUserID = temp.getString("user_id");
-                                    Log.d("zma user id login",strUserID);
+                                    Log.d("zma user id login", strUserID);
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();

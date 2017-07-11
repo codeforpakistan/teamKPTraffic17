@@ -190,7 +190,7 @@ public class MyComplaintsFragment extends Fragment {
                                 .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                                     @Override
                                     public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                        Fragment fragment = new MainEmergencyFragment();
+                                        Fragment fragment = new MainFragment();
                                         getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
                                         sweetAlertDialog.dismiss();
 

@@ -169,7 +169,6 @@ public class RegistrationFragment extends Fragment {
         } else {
             Log.d("zma data", strName + "\n" + strEmail + "\n" + strPhoneNumber + "\n" + strCNIC);
             if (CheckNetwork.isInternetAvailable(getActivity())) {
-
                 apiCall();
             } else {
                 new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
@@ -270,14 +269,6 @@ public class RegistrationFragment extends Fragment {
         mTitleTextView.setText("Sign Up");
         mActionBar.setCustomView(mCustomView);
         mActionBar.setDisplayShowCustomEnabled(true);
-        mBackArrow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                fragment = new LoginFragment();
-                getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
-            }
-        });
-
     }
 
 

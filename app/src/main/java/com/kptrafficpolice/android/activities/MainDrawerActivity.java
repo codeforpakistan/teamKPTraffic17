@@ -14,13 +14,17 @@ import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.kptrafficpolice.android.R;
 import com.kptrafficpolice.android.fragments.LoginFragment;
 import com.kptrafficpolice.android.fragments.MainFragment;
 import com.kptrafficpolice.android.fragments.MyComplaintsFragment;
+import com.kptrafficpolice.android.utilities.CheckNetwork;
 import com.thefinestartist.finestwebview.FinestWebView;
+
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import io.fabric.sdk.android.Fabric;
 
 public class MainDrawerActivity extends AppCompatActivity
@@ -30,16 +34,40 @@ public class MainDrawerActivity extends AppCompatActivity
     SharedPreferences.Editor editor;
     String prefCNIC;
     DrawerLayout drawer;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Fabric.with(this, new Crashlytics());
         setContentView(R.layout.activity_main_drawer);
+        if (!CheckNetwork.isInternetAvailable(MainDrawerActivity.this)) {
+            new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
+                    .setTitleText("Oops")
+                    .setContentText("You don't have internet connection!")
+                    .setConfirmText("Refresh")
+                    .setCancelText("Close")
+                    .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sweetAlertDialog) {
+                            MainDrawerActivity.this.finish();
+
+                        }
+                    })
+                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sweetAlertDialog) {
+                            startActivity(new Intent(MainDrawerActivity.this, MainDrawerActivity.class));
+                            finish();
+                        }
+                    })
+                    .show();
+
+        }
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         sharedPreferences = getSharedPreferences("com.ghosttech.kptraffic", 0);
         editor = sharedPreferences.edit();
-         prefCNIC = sharedPreferences.getString("true", "");
+        prefCNIC = sharedPreferences.getString("true", "");
         if (prefCNIC.toString().length() > 0) {
             Log.d("zma shared pref", prefCNIC);
             fragment = new MainFragment();
@@ -52,7 +80,7 @@ public class MainDrawerActivity extends AppCompatActivity
 
         }
 
-         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
@@ -88,8 +116,7 @@ public class MainDrawerActivity extends AppCompatActivity
         if (item != null && item.getItemId() == android.R.id.home) {
             if (drawer.isDrawerOpen(Gravity.RIGHT)) {
                 drawer.closeDrawer(Gravity.RIGHT);
-            }
-            else {
+            } else {
                 drawer.openDrawer(Gravity.RIGHT);
             }
         }
@@ -104,8 +131,23 @@ public class MainDrawerActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_my_complaints) {
-            fragment = new MyComplaintsFragment();
-            getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).addToBackStack("tag").commit();
+            if (prefCNIC.equals("true")) {
+                fragment = new MyComplaintsFragment();
+                getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).addToBackStack("tag").commit();
+            } else {
+                new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
+                        .setTitleText("Oops")
+                        .setContentText("You need to login first")
+                        .setConfirmText("Login")
+                        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                startActivity(new Intent(MainDrawerActivity.this, MainDrawerActivity.class));
+                                finish();
+                            }
+                        })
+                        .show();
+            }
             // Handle the camera action
         } else if (id == R.id.nav_website) {
             new FinestWebView.Builder(MainDrawerActivity.this)
@@ -116,7 +158,7 @@ public class MainDrawerActivity extends AppCompatActivity
                     .show("http://www.ptpkp.gov.pk/");
         } else if (id == R.id.nav_logout) {
             editor.clear().commit();
-            startActivity(new Intent(MainDrawerActivity.this,MainDrawerActivity.class));
+            startActivity(new Intent(MainDrawerActivity.this, MainDrawerActivity.class));
         } else if (id == R.id.nav_home) {
             fragment = new MainFragment();
             getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
