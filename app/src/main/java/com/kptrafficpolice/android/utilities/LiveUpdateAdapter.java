@@ -191,7 +191,7 @@ public class LiveUpdateAdapter extends RecyclerView.Adapter<LiveUpdateAdapter.Vi
             public void onResponse(JSONObject response) {
                 try {
                     boolean status = response.getBoolean("status");
-
+                    Log.d("zma road status",String.valueOf(status));
                     if (status) {
                         pDialog.dismiss();
                         Log.d("zma status api wala", String.valueOf(status));

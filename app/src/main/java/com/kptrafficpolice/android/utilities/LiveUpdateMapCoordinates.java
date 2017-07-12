@@ -8,20 +8,27 @@ import java.util.ArrayList;
  * Created by Asus on 4/28/2017.
  */
 
-public class LiveUpdatesMapCoorindates {
+public class LiveUpdateMapCoordinates {
     public static final LatLng CHARSADDA_ROAD_1 = new LatLng(34.032627, 71.576201);//initialize first point of the route like this
+    public static final ArrayList<LatLng> ARRAY_CHARSADDA_ROAD = new ArrayList<>();//define array name
     public static final LatLng KHYBER_ROAD_1 = new LatLng(34.014463, 71.567379);//initialize first point of the route like this
-
+    public static final ArrayList<LatLng> ARRAY_KHYBER_ROAD = new ArrayList<>();//define array name
+    public static final ArrayList<LatLng> ARRAY_UNIVERSITY_ROAD = new ArrayList<>();
     public static final LatLng UNIVERSITY_ROAD_1 = new LatLng(33.997592, 71.491419);
     public static final LatLng JAIL_ROAD_1 = new LatLng(34.009411, 71.565522);
+    public static final ArrayList<LatLng> ARRAY_JAIL_ROAD = new ArrayList<>();
     public static final LatLng BAGH_E_NARAN_ROAD_1 = new LatLng(33.977600, 71.446726);
+    public static final ArrayList<LatLng> ARRAY_BAGH_E_NARAN_ROAD = new ArrayList<>();
     public static final LatLng KOHAT_ROAD_1 = new LatLng(33.998861, 71.559799);
+    public static final ArrayList<LatLng> ARRAY_KOHAT_ROAD = new ArrayList<>();
     public static final LatLng SADDAR_ROAD_1 = new LatLng(34.014953, 71.568376);//initialize first
+    public static final ArrayList<LatLng> ARRAY_SADDAR_ROAD = new ArrayList<>();//define array name
     public static final LatLng GT_ROAD_1 = new LatLng(34.017106, 71.621971);
+    public static final ArrayList<LatLng> ARRAY_GT_ROAD = new ArrayList<>();//define array name
+    public static final ArrayList<LatLng> ARRAY_DALAZAK_ROAD = new ArrayList<>();//define array name
     public static final LatLng DALAZAK_ROAD_1 = new LatLng(34.018197, 71.580108);//initialize first point of the route like this
+    public static final ArrayList<LatLng> ARRAY_WARSAK_ROAD = new ArrayList<>();//define array name
     public static final LatLng WARSAK_ROAD = new LatLng(34.013902, 71.542008);//initialize first point of the route like this
-
-
     public static ArrayList<LatLng> getArrayWarsakRoad() {
         final ArrayList<LatLng> ARRAY_WARSAK_ROAD = new ArrayList<>();//define array name
         ARRAY_WARSAK_ROAD.add(new LatLng(34.013985, 71.541996));//copy the coordinate of the starting point from above
@@ -538,15 +545,5 @@ public class LiveUpdatesMapCoorindates {
         ARRAY_KHYBER_ROAD.add(new LatLng(34.006365, 71.535489));
         ARRAY_KHYBER_ROAD.add(new LatLng(34.006022, 71.534928));
         return ARRAY_KHYBER_ROAD;
-    }
-
-    public static final ArrayList<String> spotName = new ArrayList<>();
-
-    public static ArrayList<String> getSpotName() {
-        spotName.add("Ring Road Flyover");
-        spotName.add("Charsadda Adda");
-        spotName.add("Tori Kabab House");
-        spotName.add("Faqir abad Police Station");
-        return spotName;
     }
 }

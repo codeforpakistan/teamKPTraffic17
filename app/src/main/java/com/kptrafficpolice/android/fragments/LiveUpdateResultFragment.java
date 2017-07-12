@@ -23,7 +23,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.kptrafficpolice.android.R;
-import com.kptrafficpolice.android.utilities.LiveUpdatesMapCoorindates;
+import com.kptrafficpolice.android.utilities.LiveUpdateMapCoordinates;
 
 import java.util.ArrayList;
 
@@ -107,43 +107,43 @@ public class LiveUpdateResultFragment extends Fragment {
         googleMap.clear();
         switch (strRoadName) {
             case "gt_road":
-                setPolylineOptions(LiveUpdatesMapCoorindates.getArrayGtRoad());
+                setPolylineOptions(LiveUpdateMapCoordinates.getArrayGtRoad());
                 break;
             case "khyber_road":
-                setPolylineOptions(LiveUpdatesMapCoorindates.getArrayKhyberRoad());
+                setPolylineOptions(LiveUpdateMapCoordinates.getArrayKhyberRoad());
                 break;
             case "charsadda_road":
-                setPolylineOptions(LiveUpdatesMapCoorindates.getArrayCharsaddaRoad());
+                setPolylineOptions(LiveUpdateMapCoordinates.getArrayCharsaddaRoad());
                 break;
             case "jail_road":
-                setPolylineOptions(LiveUpdatesMapCoorindates.getArrayJailRoad());
+                setPolylineOptions(LiveUpdateMapCoordinates.getArrayJailRoad());
                 break;
             case "university_road":
-                setPolylineOptions(LiveUpdatesMapCoorindates.getArrayUniversityRoad());
+                setPolylineOptions(LiveUpdateMapCoordinates.getArrayUniversityRoad());
                 break;
             case "dalazak_road":
-                setPolylineOptions(LiveUpdatesMapCoorindates.getArrayDalazakRoad());
+                setPolylineOptions(LiveUpdateMapCoordinates.getArrayDalazakRoad());
                 break;
             case "saddar_road":
-                setPolylineOptions(LiveUpdatesMapCoorindates.getArraySaddarRoad());
+                setPolylineOptions(LiveUpdateMapCoordinates.getArraySaddarRoad());
                 break;
             case "baghenaran_road":
-                setPolylineOptions(LiveUpdatesMapCoorindates.getArrayBaghENaranRoad());
+                setPolylineOptions(LiveUpdateMapCoordinates.getArrayBaghENaranRoad());
                 break;
             case "warsak_road":
-                setPolylineOptions(LiveUpdatesMapCoorindates.getArrayWarsakRoad());
+                setPolylineOptions(LiveUpdateMapCoordinates.getArrayWarsakRoad());
                 break;
             case "kohat_road":
-                setPolylineOptions(LiveUpdatesMapCoorindates.getArrayKohatRoad());
+                setPolylineOptions(LiveUpdateMapCoordinates.getArrayKohatRoad());
                 break;
         }
 
     }
 
-    private void setPolylineOptions(ArrayList<LatLng> roadCoorindates) {
+    private void setPolylineOptions(ArrayList<LatLng> roadCoordinates) {
         try {
             PolylineOptions options = new PolylineOptions();
-            options.addAll(roadCoorindates);
+            options.addAll(roadCoordinates);
             options.geodesic(true);
             options.width(10);
             if (strStatus.equals("Clear")) {
@@ -155,7 +155,7 @@ public class LiveUpdateResultFragment extends Fragment {
             }
             googleMap.addPolyline(options);
             setText();
-            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(roadCoorindates.get(0), 12));
+            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(roadCoordinates.get(0), 12));
         } catch (Exception e) {
             new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
                     .setTitleText("Oops...")
@@ -173,6 +173,7 @@ public class LiveUpdateResultFragment extends Fragment {
         LayoutInflater mInflater = LayoutInflater.from(getActivity());
         View mCustomView = mInflater.inflate(R.layout.custom_action_bar, null);
         TextView mTitleTextView = (TextView) mCustomView.findViewById(R.id.title_text);
+        mTitleTextView.setText("Road Status");
         ImageView mBackArrow = (ImageView) mCustomView.findViewById(R.id.iv_back_arrow);
         mActionBar.setCustomView(mCustomView);
         mActionBar.setDisplayShowCustomEnabled(true);

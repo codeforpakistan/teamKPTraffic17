@@ -160,8 +160,23 @@ public class MainDrawerActivity extends AppCompatActivity
             editor.clear().commit();
             startActivity(new Intent(MainDrawerActivity.this, MainDrawerActivity.class));
         } else if (id == R.id.nav_home) {
-            fragment = new MainFragment();
-            getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
+            if (prefCNIC.equals("true")) {
+                fragment = new MainFragment();
+                getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
+            }else{
+                new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
+                        .setTitleText("Oops")
+                        .setContentText("You need to login first")
+                        .setConfirmText("Login")
+                        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                startActivity(new Intent(MainDrawerActivity.this, MainDrawerActivity.class));
+                                finish();
+                            }
+                        })
+                        .show();
+            }
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
