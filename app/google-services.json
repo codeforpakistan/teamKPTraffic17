@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "566334319194",
+    "firebase_url": "https://kp-traffic-app.firebaseio.com",
+    "project_id": "kp-traffic-app",
+    "storage_bucket": "kp-traffic-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:566334319194:android:e905d9bac93d8334",
+        "android_client_info": {
+          "package_name": "com.kptrafficpolice.trafficapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "566334319194-sri5si48rt26egk4f9qd0vv4f91v4g8n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDhazwiu_fw9Np0ErHPKdhKHPuP1PCpl0M"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

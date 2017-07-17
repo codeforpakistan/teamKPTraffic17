@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="#fff"
     android:orientation="vertical"
-    tools:context="com.kptrafficpolice.android.fragments.ComplaintRegistrationFragment">
+    tools:context="com.kptrafficpolice.trafficapp.fragments.ComplaintRegistrationFragment">
 
     <ScrollView
         android:id="@+id/sv_complaint"

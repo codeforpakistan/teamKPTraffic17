@@ -1,3 +1,3 @@
 <resources>
-    <string name="ga_trackingId" translatable="false">${YOUR_TRACKING_ID}</string>
+    <string name="ga_trackingId" translatable="false">${UA-102677697-1}</string>
 </resources>

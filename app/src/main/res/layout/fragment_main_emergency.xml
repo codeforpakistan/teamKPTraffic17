@@ -5,7 +5,7 @@
     android:background="#fff"
     android:gravity="center"
     android:orientation="vertical"
-    tools:context="com.kptrafficpolice.android.fragments.MainEmergencyFragment">
+    tools:context="com.kptrafficpolice.trafficapp.fragments.MainEmergencyFragment">
 
     <FrameLayout
         android:layout_width="wrap_content"
