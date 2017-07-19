@@ -298,7 +298,7 @@ public class ComplaintRegistrationFragment extends Fragment {
             } else {
                 new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
                         .setTitleText("Oops")
-                        .setContentText("You don't have internet connection!")
+                        .setContentText("Please check your network connection")
                         .setConfirmText("Refresh")
                         .setCancelText("Exit App")
                         .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
