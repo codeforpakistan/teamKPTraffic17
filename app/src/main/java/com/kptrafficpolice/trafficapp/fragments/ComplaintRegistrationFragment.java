@@ -39,6 +39,7 @@ import android.widget.Toast;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.kptrafficpolice.trafficapp.R;
+import com.kptrafficpolice.trafficapp.activities.MainDrawerActivity;
 import com.kptrafficpolice.trafficapp.utilities.CheckNetwork;
 import com.kptrafficpolice.trafficapp.utilities.Configuration;
 import com.kptrafficpolice.trafficapp.utilities.GeneralUtils;
@@ -295,16 +296,26 @@ public class ComplaintRegistrationFragment extends Fragment {
                 pDialog.show();
                 new UploadFileToServer().execute();
             } else {
-                new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
-                        .setTitleText("Oops!")
-                        .setContentText("You don't have internet connection")
+                new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
+                        .setTitleText("Oops")
+                        .setContentText("You don't have internet connection!")
+                        .setConfirmText("Refresh")
+                        .setCancelText("Exit App")
                         .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
                             @Override
                             public void onClick(SweetAlertDialog sweetAlertDialog) {
                                 getActivity().finish();
+
+                            }
+                        })
+                        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                sweetAlertDialog.dismiss();
                             }
                         })
                         .show();
+
             }
         }
     }

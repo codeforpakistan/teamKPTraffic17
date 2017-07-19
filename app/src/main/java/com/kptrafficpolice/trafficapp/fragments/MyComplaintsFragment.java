@@ -1,5 +1,6 @@
 package com.kptrafficpolice.trafficapp.fragments;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
@@ -24,6 +25,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.kptrafficpolice.trafficapp.R;
+import com.kptrafficpolice.trafficapp.activities.MainDrawerActivity;
 import com.kptrafficpolice.trafficapp.utilities.Configuration;
 import com.kptrafficpolice.trafficapp.utilities.MyComplaintsHelper;
 import com.kptrafficpolice.trafficapp.utilities.MyComplaintsListAdapter;
@@ -185,8 +187,8 @@ public class MyComplaintsFragment extends Fragment {
                     } else {
                         pDialog.dismiss();
                         new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
-                                .setTitleText("Oops!")
-                                .setContentText("No data found around your location")
+                                .setTitleText("Oops")
+                                .setContentText("No complaints found")
                                 .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                                     @Override
                                     public void onClick(SweetAlertDialog sweetAlertDialog) {
@@ -207,7 +209,28 @@ public class MyComplaintsFragment extends Fragment {
             public void onErrorResponse(VolleyError error) {
                 pDialog.dismiss();
                 if (error instanceof TimeoutError || error instanceof NoConnectionError) {
-                    Toast.makeText(getActivity(), "Check your internet connection", Toast.LENGTH_SHORT).show();
+                    new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
+                            .setTitleText("Oops")
+                            .setContentText("Please Check your internet connection")
+                            .setConfirmText("Refresh")
+                            .setCancelText("Exit App")
+                            .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                @Override
+                                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                    getActivity().finish();
+
+                                }
+                            })
+                            .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                @Override
+                                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                    sweetAlertDialog.dismiss();
+                                    Fragment fragment = new MyComplaintsFragment();
+                                    getFragmentManager().beginTransaction().replace(R.id.fragment_container,fragment).commit();
+                                }
+                            })
+                            .show();
+                   // Toast.makeText(getActivity(), "Check your internet connection", Toast.LENGTH_SHORT).show();
                 }
 //                Toast.makeText(getActivity(), "Something went wrong, try later", Toast.LENGTH_SHORT).show();
             }

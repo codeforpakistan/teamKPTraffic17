@@ -130,8 +130,8 @@ public class MainFragment extends Fragment {
         mTracker = application.getDefaultTracker();
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
         Log.d("zma analytics", "Setting screen name: " + "Main Fragment");
-        mTracker.setScreenName("Image~" + "Main Fragment");
-        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
+//        mTracker.setScreenName("Image~" + "Main Fragment");
+       // mTracker.send(new HitBuilders.ScreenViewBuilder().build());
         tvUserName = (TextView)view.findViewById(R.id.tv_user_name);
         pDialog = new SweetAlertDialog(getActivity(), SweetAlertDialog.PROGRESS_TYPE);
         pDialog.getProgressHelper().setBarColor(Color.parseColor("#179e99"));
@@ -180,15 +180,15 @@ public class MainFragment extends Fragment {
                                 String postalCode = address.get(0).getPostalCode();
                                 String knownName = address.get(0).getFeatureName();
                                 String subadmin = address.get(0).getSubLocality();
-                                Log.d("zma city 2", "city " + city + "\nstate " + state + "\n country " +
-                                        country + "\n postal code " + postalCode + "\nknow name " + knownName + "get sub admin area" + subadmin);
+//                                Log.d("zma city 2", "city " + city + "\nstate " + state + "\n country " +
+//                                        country + "\n postal code " + postalCode + "\nknow name " + knownName + "get sub admin area" + subadmin);
                                 builder.append(addressStr);
                                 builder.append(" ");
                             }
 
                             strCityName = builder.toString(); //This is the complete address.
                             mTitleTextView.setText(strCityName);
-                            Log.d("zma city", strCityName);
+                           // Log.d("zma city", strCityName);
                             if (address.size() > 0) {
 
                                 System.out.println(address.get(0).getCountryName());
@@ -229,10 +229,10 @@ public class MainFragment extends Fragment {
         btnComplaintSystem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mTracker.send(new HitBuilders.EventBuilder()
-                        .setCategory("Complaint Module")
-                        .setAction("Opening Complaint")
-                        .build());
+//                mTracker.send(new HitBuilders.EventBuilder()
+//                        .setCategory("Complaint Module")
+//                        .setAction("Opening Complaint")
+//                        .build());
                 fragment = new ComplaintRegistrationFragment();
                 getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).
                         addToBackStack("tag").commit();
@@ -327,7 +327,7 @@ public class MainFragment extends Fragment {
                 strChallanTrackingID = etLicNumber.getText().toString();
                 if (strChallanTrackingID.toString().equals("")
                         || strChallanTrackingID.toString().length() > 10) {
-                    Log.d("zma else", strChallanTrackingID);
+                  //  Log.d("zma else", strChallanTrackingID);
                     etLicNumber.startAnimation(shake);
                 } else {
                     apiCallChallan(strChallanTrackingID);
@@ -345,10 +345,10 @@ public class MainFragment extends Fragment {
                 strLicenseNumber = etLicNumber.getText().toString();
                 if (strLicenseNumber.toString().equals("")
                         || strLicenseNumber.toString().length() < 12) {
-                    Log.d("zma else", strLicenseNumber);
+                  //  Log.d("zma else", strLicenseNumber);
                     etLicNumber.startAnimation(shake);
                 } else if (strLicenseNumber.toString().length() == 12) {
-                    Log.d("zma License", strLicenseNumber);
+                   // Log.d("zma License", strLicenseNumber);
                     apiCallLicense(strLicenseNumber);
                 } else if (strLicenseNumber.toString().length() == 13) {
                     strCNIC = strLicenseNumber;
@@ -372,7 +372,7 @@ public class MainFragment extends Fragment {
                         try {
                             JSONObject jsonResponseObject = new JSONObject(response);
                             boolean status = jsonResponseObject.getBoolean("status");
-                            Log.d("zma status", String.valueOf(status));
+                          //  Log.d("zma status", String.valueOf(status));
                             if (status) {
                                 pDialog.dismiss();
                                 dialog.dismiss();
@@ -399,6 +399,7 @@ public class MainFragment extends Fragment {
                                 fragment.setArguments(args);
                                 //TODO extract data from jsonarray data
                             } else {
+                                pDialog.dismiss();
                                 new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
                                         .setTitleText("Oops...")
                                         .setContentText("No Data found")
@@ -406,12 +407,19 @@ public class MainFragment extends Fragment {
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
+                            pDialog.dismiss();
+                            Log.d("zma status lic", String.valueOf(response));
+                            new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
+                                    .setTitleText("Oops...")
+                                    .setContentText("You are not a verified license holder")
+                                    .show();
                         }
                     }
                 }, new Response.ErrorListener() {
 
             @Override
             public void onErrorResponse(VolleyError error) {
+                pDialog.dismiss();
                 new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
                         .setTitleText("Oops...")
                         .setContentText("Server Error!")
@@ -474,9 +482,18 @@ public class MainFragment extends Fragment {
                                 fragment.setArguments(args);
 
                             } else {
-
+                                pDialog.dismiss();
+                                new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
+                                        .setTitleText("Oops...")
+                                        .setContentText("Challan number not found")
+                                        .show();
                             }
                         } catch (JSONException e) {
+                            pDialog.dismiss();
+                            new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
+                                    .setTitleText("Oops...")
+                                    .setContentText("Invalid Challan number")
+                                    .show();
                             e.printStackTrace();
                         }
                     }
@@ -487,6 +504,7 @@ public class MainFragment extends Fragment {
 
             @Override
             public void onErrorResponse(VolleyError error) {
+                pDialog.dismiss();
                 new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
                         .setTitleText("Oops...")
                         .setContentText("Server Error!")

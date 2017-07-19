@@ -44,7 +44,7 @@ public class MainDrawerActivity extends AppCompatActivity
                     .setTitleText("Oops")
                     .setContentText("You don't have internet connection!")
                     .setConfirmText("Refresh")
-                    .setCancelText("Close")
+                    .setCancelText("Exit App")
                     .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
                         @Override
                         public void onClick(SweetAlertDialog sweetAlertDialog) {
@@ -67,8 +67,9 @@ public class MainDrawerActivity extends AppCompatActivity
         sharedPreferences = getSharedPreferences("com.ghosttech.kptraffic", 0);
         editor = sharedPreferences.edit();
         prefCNIC = sharedPreferences.getString("true", "");
+        Log.d("zma shared pref drawer", prefCNIC);
         if (prefCNIC.toString().length() > 0) {
-            Log.d("zma shared pref", prefCNIC);
+            Log.d("zma shared if drawer", prefCNIC);
             fragment = new MainFragment();
             getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
         } else {
@@ -130,9 +131,10 @@ public class MainDrawerActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_my_complaints) {
-            if (prefCNIC.equals("true")) {
+            Log.d("zma pref complaint",prefCNIC);
+            if (prefCNIC.length()>0) {
                 fragment = new MyComplaintsFragment();
-                getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).addToBackStack("tag").commit();
+                getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
             } else {
                 new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
                         .setTitleText("Oops")
@@ -159,7 +161,7 @@ public class MainDrawerActivity extends AppCompatActivity
             editor.clear().commit();
             startActivity(new Intent(MainDrawerActivity.this, MainDrawerActivity.class));
         } else if (id == R.id.nav_home) {
-            if (prefCNIC.equals("true")) {
+            if (prefCNIC.length()>0) {
                 fragment = new MainFragment();
                 getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
             }else{

@@ -2,6 +2,7 @@ package com.kptrafficpolice.trafficapp.utilities;
 
 import android.app.Application;
 import android.content.Context;
+import android.support.multidex.MultiDex;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
@@ -20,18 +21,24 @@ public class MyApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        sAnalytics = GoogleAnalytics.getInstance(this);
+        MultiDex.install(this);
+        //sAnalytics = GoogleAnalytics.getInstance(this);
         // Required initialization logic here!
     }
     synchronized public Tracker getDefaultTracker() {
         // To enable debug logging use: adb shell setprop log.tag.GAv4 DEBUG
         if (sTracker == null) {
-            sTracker = sAnalytics.newTracker(R.xml.global_tracker);
+         //   sTracker = sAnalytics.newTracker(R.xml.global_tracker);
         }
 
         return sTracker;
     }
 
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
+    }
     // Called by the system when the device configuration changes while your component is running.
     // Overriding this method is totally optional!
 

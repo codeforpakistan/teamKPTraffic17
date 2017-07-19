@@ -1,5 +1,6 @@
 package com.kptrafficpolice.trafficapp.fragments;
 
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
@@ -86,7 +87,13 @@ public class ChallanFragment extends Fragment {
         tvChallanDistrict.setText(String.valueOf(args.get("district")));
         tvChallanAmount.setText(String.valueOf(args.get("amount")));
         tvDutyPoint.setText(String.valueOf(args.get("dutyPoint")));
-        tvChallanStatus.setText(String.valueOf(args.get("status")));
+        String strChallanStatus = String.valueOf(args.get("status"));
+        if (strChallanStatus.equals("Paid")) {
+            tvChallanStatus.setTextColor(Color.parseColor("#13988a"));
+            tvChallanStatus.setTextSize(25);
+            tvChallanStatus.setText(String.valueOf(args.get("status")));
+
+        }
         return view;
     }
 

@@ -9,12 +9,14 @@ import android.os.Build;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -121,6 +123,7 @@ public class MainEmergencyFragment extends Fragment {
                         Log.d("zma Location : ", "" + dblLat + " " + dblLon);
                     }
                 });
+        customActionBar();
         return view;
     }
 
@@ -292,5 +295,24 @@ public class MainEmergencyFragment extends Fragment {
     }
     public void getMyLocation(){
 
+    }
+    public void customActionBar() {
+        android.support.v7.app.ActionBar mActionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        mActionBar.setDisplayShowHomeEnabled(false);
+        mActionBar.setDisplayShowTitleEnabled(false);
+        LayoutInflater mInflater = LayoutInflater.from(getActivity());
+        View mCustomView = mInflater.inflate(R.layout.custom_action_bar, null);
+        TextView mTitleTextView = (TextView) mCustomView.findViewById(R.id.title_text);
+        ImageView mBackArrow = (ImageView) mCustomView.findViewById(R.id.iv_back_arrow);
+        mTitleTextView.setText("Emergency Contacts");
+        mActionBar.setCustomView(mCustomView);
+        mActionBar.setDisplayShowCustomEnabled(true);
+//        mBackArrow.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                fragment = new MainFragment();
+//                getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
+//            }
+//        });
     }
 }
