@@ -319,7 +319,6 @@ public class TrafficEducationFragment extends Fragment {
                 // specify an adapter (see also next example)
                 mAdapter = new TrafficEducationAdapter(getActivity(), newData);
                 mRecyclerView.setAdapter(mAdapter);
-
                 mAdapter.notifyDataSetChanged();
             }
             @Override

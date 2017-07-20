@@ -153,7 +153,7 @@ public class MainFragment extends Fragment {
         } else {
 
         }
-        customActionBar();
+        //customActionBar();
         //((AppCompatActivity) getActivity()).getSupportActionBar().hide();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION,

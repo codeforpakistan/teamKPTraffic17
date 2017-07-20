@@ -156,7 +156,7 @@ public class LoginFragment extends Fragment {
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                    formValidation();
+                formValidation();
             }
         });
     }
@@ -180,7 +180,8 @@ public class LoginFragment extends Fragment {
                         .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                             @Override
                             public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                getActivity().startActivity(new Intent(getActivity(),MainDrawerActivity.class));                            }
+                                getActivity().startActivity(new Intent(getActivity(), MainDrawerActivity.class));
+                            }
                         })
                         .show();
             }
@@ -210,9 +211,8 @@ public class LoginFragment extends Fragment {
                             }
                             editor.putString("user_id", strUserID).commit();
                             editor.putString("true", strCNIC).commit();
-                            fragment = new MainFragment();
-                            getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).
-                                    commit();
+                            startActivity(new Intent(getActivity(), MainDrawerActivity.class));
+                            getActivity().finish();
 
                             Log.d("Zma response", response + "\n" + strUserID);
 

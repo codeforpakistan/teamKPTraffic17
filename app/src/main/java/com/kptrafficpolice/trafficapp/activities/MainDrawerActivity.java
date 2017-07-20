@@ -12,8 +12,12 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
 import com.kptrafficpolice.trafficapp.R;
@@ -22,6 +26,8 @@ import com.kptrafficpolice.trafficapp.fragments.MainFragment;
 import com.kptrafficpolice.trafficapp.fragments.MyComplaintsFragment;
 import com.kptrafficpolice.trafficapp.utilities.CheckNetwork;
 import com.thefinestartist.finestwebview.FinestWebView;
+
+import java.util.MissingFormatArgumentException;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import io.fabric.sdk.android.Fabric;
@@ -39,6 +45,10 @@ public class MainDrawerActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         Fabric.with(this, new Crashlytics());
         setContentView(R.layout.activity_main_drawer);
+        sharedPreferences = getSharedPreferences("com.ghosttech.kptraffic", 0);
+        editor = sharedPreferences.edit();
+        fragment = new MainFragment();
+        getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
         if (!CheckNetwork.isInternetAvailable(MainDrawerActivity.this)) {
             new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
                     .setTitleText("Oops")
@@ -64,22 +74,6 @@ public class MainDrawerActivity extends AppCompatActivity
         }
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        sharedPreferences = getSharedPreferences("com.ghosttech.kptraffic", 0);
-        editor = sharedPreferences.edit();
-        prefCNIC = sharedPreferences.getString("true", "");
-        Log.d("zma shared pref drawer", prefCNIC);
-        if (prefCNIC.toString().length() > 0) {
-            Log.d("zma shared if drawer", prefCNIC);
-            fragment = new MainFragment();
-            getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
-        } else {
-            Log.d("zma shared pref else", prefCNIC);
-            fragment = new LoginFragment();
-            getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).
-                    commit();
-
-        }
-
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -131,24 +125,8 @@ public class MainDrawerActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_my_complaints) {
-            Log.d("zma pref complaint",prefCNIC);
-            if (prefCNIC.length()>0) {
-                fragment = new MyComplaintsFragment();
-                getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
-            } else {
-                new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
-                        .setTitleText("Oops")
-                        .setContentText("You need to login first")
-                        .setConfirmText("Login")
-                        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                            @Override
-                            public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                startActivity(new Intent(MainDrawerActivity.this, MainDrawerActivity.class));
-                                finish();
-                            }
-                        })
-                        .show();
-            }
+            fragment = new MyComplaintsFragment();
+            getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
             // Handle the camera action
         } else if (id == R.id.nav_website) {
             new FinestWebView.Builder(MainDrawerActivity.this)
@@ -159,29 +137,36 @@ public class MainDrawerActivity extends AppCompatActivity
                     .show("http://www.ptpkp.gov.pk/");
         } else if (id == R.id.nav_logout) {
             editor.clear().commit();
-            startActivity(new Intent(MainDrawerActivity.this, MainDrawerActivity.class));
+            startActivity(new Intent(MainDrawerActivity.this, MainActivity.class));
+            finish();
         } else if (id == R.id.nav_home) {
-            if (prefCNIC.length()>0) {
-                fragment = new MainFragment();
-                getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
-            }else{
-                new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
-                        .setTitleText("Oops")
-                        .setContentText("You need to login first")
-                        .setConfirmText("Login")
-                        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                            @Override
-                            public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                startActivity(new Intent(MainDrawerActivity.this, MainDrawerActivity.class));
-                                finish();
-                            }
-                        })
-                        .show();
-            }
+            startActivity(new Intent(MainDrawerActivity.this, MainDrawerActivity.class));
+            finish();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+    public void customActionBar() {
+        android.support.v7.app.ActionBar mActionBar = ((getSupportActionBar()));
+        mActionBar.setDisplayShowHomeEnabled(false);
+        mActionBar.setDisplayShowTitleEnabled(false);
+        LayoutInflater mInflater = LayoutInflater.from(MainDrawerActivity.this);
+        View mCustomView = mInflater.inflate(R.layout.custom_action_bar, null);
+        TextView mTitleTextView = (TextView) mCustomView.findViewById(R.id.title_text);
+        ImageView mBackArrow = (ImageView) mCustomView.findViewById(R.id.iv_back_arrow);
+        mTitleTextView.setText("Write a complaint here");
+        mActionBar.setCustomView(mCustomView);
+        mActionBar.setDisplayShowCustomEnabled(true);
+//        mBackArrow.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                fragment = new MainFragment();
+//                getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
+//            }
+//        });
+    }
+
 }
