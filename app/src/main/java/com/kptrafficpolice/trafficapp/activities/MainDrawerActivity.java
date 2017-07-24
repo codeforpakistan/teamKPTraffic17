@@ -47,33 +47,13 @@ public class MainDrawerActivity extends AppCompatActivity
         setContentView(R.layout.activity_main_drawer);
         sharedPreferences = getSharedPreferences("com.ghosttech.kptraffic", 0);
         editor = sharedPreferences.edit();
+
         fragment = new MainFragment();
         getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
-        if (!CheckNetwork.isInternetAvailable(MainDrawerActivity.this)) {
-            new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
-                    .setTitleText("Oops")
-                    .setContentText("You don't have internet connection!")
-                    .setConfirmText("Refresh")
-                    .setCancelText("Exit App")
-                    .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                        @Override
-                        public void onClick(SweetAlertDialog sweetAlertDialog) {
-                            MainDrawerActivity.this.finish();
 
-                        }
-                    })
-                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                        @Override
-                        public void onClick(SweetAlertDialog sweetAlertDialog) {
-                            startActivity(new Intent(MainDrawerActivity.this, MainDrawerActivity.class));
-                            finish();
-                        }
-                    })
-                    .show();
-
-        }
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+       // customActionBar();
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -150,9 +130,9 @@ public class MainDrawerActivity extends AppCompatActivity
     }
 
     public void customActionBar() {
-        android.support.v7.app.ActionBar mActionBar = ((getSupportActionBar()));
-        mActionBar.setDisplayShowHomeEnabled(false);
-        mActionBar.setDisplayShowTitleEnabled(false);
+        android.support.v7.app.ActionBar mActionBar = MainDrawerActivity.this.getSupportActionBar();
+        mActionBar.setDisplayShowHomeEnabled(true);
+        mActionBar.setDisplayShowTitleEnabled(true);
         LayoutInflater mInflater = LayoutInflater.from(MainDrawerActivity.this);
         View mCustomView = mInflater.inflate(R.layout.custom_action_bar, null);
         TextView mTitleTextView = (TextView) mCustomView.findViewById(R.id.title_text);
@@ -160,13 +140,6 @@ public class MainDrawerActivity extends AppCompatActivity
         mTitleTextView.setText("Write a complaint here");
         mActionBar.setCustomView(mCustomView);
         mActionBar.setDisplayShowCustomEnabled(true);
-//        mBackArrow.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                fragment = new MainFragment();
-//                getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
-//            }
-//        });
     }
 
 }

@@ -94,6 +94,11 @@ public class ChallanFragment extends Fragment {
             tvChallanStatus.setText(String.valueOf(args.get("status")));
 
         }
+        else{
+            tvChallanStatus.setTextColor(Color.parseColor("#13988a"));
+            tvChallanStatus.setTextSize(25);
+            tvChallanStatus.setText("Unpaid");
+        }
         return view;
     }
 

@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,7 +44,7 @@ public class LiveUpdateResultFragment extends Fragment {
     View view;
     TextView tvRoadStatus, tvUpdateTime;
     ImageView ivHomeButton, ivSettingButton, ivWebsiteButton;
-
+    CardView cardView;
 
     public LiveUpdateResultFragment() {
     }
@@ -63,12 +64,14 @@ public class LiveUpdateResultFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_live_update_result, container, false);
-        customActionBar();
+
         mMapView = (MapView) view.findViewById(R.id.mapView);
+        cardView = (CardView)view.findViewById(R.id.card_view_live_update);
         mMapView.onCreate(savedInstanceState);
         args = getArguments();
         strStatus = args.getString("status");
         strRoadName = args.getString("road_name");
+        customActionBar();
         Log.d("zma road and status", strRoadName + "\n" + strStatus);
         mMapView.onResume(); // needed to get the map to display immediately
 
@@ -147,11 +150,14 @@ public class LiveUpdateResultFragment extends Fragment {
             options.geodesic(true);
             options.width(10);
             if (strStatus.equals("Clear")) {
-                options.color(Color.GREEN);
+                options.color(R.color.app_background);
+                cardView.setBackgroundResource(R.drawable.border_green_clear_live_status);
             } else if (strStatus.equals("Busy")) {
-                options.color(Color.RED);
+                options.color(R.color.red_btn_bg_color);
+                cardView.setBackgroundResource(R.drawable.border_busy_red_live_status);
             } else if (strStatus.equals("Congested")) {
-                options.color(Color.YELLOW);
+                options.color(R.color.status_blue);
+                cardView.setBackgroundResource(R.drawable.border_congested_blue_live_status);
             }
             googleMap.addPolyline(options);
             setText();
@@ -173,7 +179,7 @@ public class LiveUpdateResultFragment extends Fragment {
         LayoutInflater mInflater = LayoutInflater.from(getActivity());
         View mCustomView = mInflater.inflate(R.layout.custom_action_bar, null);
         TextView mTitleTextView = (TextView) mCustomView.findViewById(R.id.title_text);
-        mTitleTextView.setText("Road Status");
+        mTitleTextView.setText(args.getString("clicked_road_name")+" Traffic Status");
         ImageView mBackArrow = (ImageView) mCustomView.findViewById(R.id.iv_back_arrow);
         mActionBar.setCustomView(mCustomView);
         mActionBar.setDisplayShowCustomEnabled(true);
@@ -196,28 +202,5 @@ public class LiveUpdateResultFragment extends Fragment {
         tvUpdateTime.setText(String.valueOf(args.get("response_time")));
         tvRoadStatus.setText(String.valueOf(args.get("status")));
     }
-//    public void footerButtons() {
-//        ivHomeButton = (ImageView) view.findViewById(R.id.iv_home_button);
-//        ivSettingButton = (ImageView) view.findViewById(R.id.iv_setting_menu);
-//        ivWebsiteButton = (ImageView) view.findViewById(R.id.iv_website_link);
-//        ivHomeButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                fragment = new MainFragment();
-//                getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
-//            }
-//        });
-//        ivWebsiteButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                new FinestWebView.Builder(getActivity())
-//                        .titleDefault("KP Traffic Police Official Website")
-//                        .titleFont("Roboto-Medium.ttf")
-//                        .disableIconForward(true)
-//                        .disableIconBack(true)
-//                        .show("http://www.ptpkp.gov.pk/");
-//            }
-//        });
-//    }
 
 }

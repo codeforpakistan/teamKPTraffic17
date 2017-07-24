@@ -2,6 +2,7 @@ package com.kptrafficpolice.trafficapp.fragments;
 
 import android.app.Dialog;
 import android.app.Fragment;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.location.Address;
@@ -10,6 +11,7 @@ import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.multidex.MultiDex;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -36,6 +38,7 @@ import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.kptrafficpolice.trafficapp.R;
+import com.kptrafficpolice.trafficapp.activities.MainDrawerActivity;
 import com.kptrafficpolice.trafficapp.utilities.CheckNetwork;
 import com.kptrafficpolice.trafficapp.utilities.Configuration;
 import com.kptrafficpolice.trafficapp.utilities.MyApplication;
@@ -94,6 +97,7 @@ public class MainFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
     private Tracker mTracker;
     private FirebaseAnalytics mFirebaseAnalytics;
+    public static boolean SUCCESS_DIALOG = false;
     public MainFragment() {
         // Required empty public constructor
     }
@@ -115,6 +119,7 @@ public class MainFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -122,10 +127,91 @@ public class MainFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_main, container, false);
-
+        getActivity().setTitle("Main Screen");
+        if (SUCCESS_DIALOG){
+            new SweetAlertDialog(getActivity(), SweetAlertDialog.SUCCESS_TYPE)
+                    .setTitleText("Complaint registered")
+                    .show();
+            SUCCESS_DIALOG = false;
+        }
+        setHasOptionsMenu(true);
 //        MyApplication application = (MyApplication) getActivity().getApplication();
 //        mTracker = application.getDefaultTracker();
+        if (!CheckNetwork.isInternetAvailable(getActivity())) {
+            new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
+                    .setTitleText("Oops")
+                    .setContentText("You don't have internet connection!")
+                    .setConfirmText("Refresh")
+                    .setCancelText("Exit App")
+                    .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sweetAlertDialog) {
+                            getActivity().finish();
 
+                        }
+                    })
+                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sweetAlertDialog) {
+                            startActivity(new Intent(getActivity(), MainDrawerActivity.class));
+                            getActivity().finish();
+                        }
+                    })
+                    .show();
+
+        }else {
+            SmartLocation.with(getActivity()).location()
+                    .start(new OnLocationUpdatedListener() {
+
+                        @Override
+                        public void onLocationUpdated(Location location) {
+                            dblLat = location.getLatitude();
+                            dblLon = location.getLongitude();
+                            Log.d("Location : ", "" + dblLat + " " + dblLon);
+                            Geocoder geoCoder = null;
+                            try {
+
+
+                                geoCoder = new Geocoder(getActivity(), Locale.getDefault());
+                            }catch (Exception e){
+                                e.printStackTrace();
+                            }
+                            StringBuilder builder = new StringBuilder();
+
+                            try {
+                                List<Address> address = geoCoder.getFromLocation(dblLat, dblLon, 1);
+                                int maxLines = address.get(0).getMaxAddressLineIndex();
+                                for (int i = 0; i < maxLines; i++) {
+                                    String addressStr = address.get(0).getAddressLine(i);
+                                    String city = address.get(0).getLocality();
+                                    String state = address.get(0).getAdminArea();
+                                    String country = address.get(0).getCountryName();
+                                    String postalCode = address.get(0).getPostalCode();
+                                    String knownName = address.get(0).getFeatureName();
+                                    String subadmin = address.get(0).getSubLocality();
+//                                Log.d("zma city 2", "city " + city + "\nstate " + state + "\n country " +
+//                                        country + "\n postal code " + postalCode + "\nknow name " + knownName + "get sub admin area" + subadmin);
+                                    builder.append(addressStr);
+                                    builder.append(" ");
+                                }
+
+                                strCityName = builder.toString(); //This is the complete address.
+                                mTitleTextView.setText(strCityName);
+                                // Log.d("zma city", strCityName);
+                                if (address.size() > 0) {
+
+                                    System.out.println(address.get(0).getCountryName());
+                                    System.out.println(address.get(0).getAdminArea());
+                                    System.out.println(address.get(0).getSubLocality());
+                                }
+                            } catch (IOException e) {
+                            } catch (NullPointerException e) {
+                            }
+
+                        }
+                    });
+
+        }
         MyApplication application = new MyApplication();
         mTracker = application.getDefaultTracker();
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
@@ -151,7 +237,28 @@ public class MainFragment extends Fragment {
         if (CheckNetwork.isInternetAvailable(getActivity())) {
             onButtonClick();
         } else {
+            new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
+                    .setTitleText("Oops")
+                    .setContentText("You don't have internet connection!")
+                    .setConfirmText("Refresh")
+                    .setCancelText("Exit App")
+                    .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sweetAlertDialog) {
+                            getActivity().finish();
 
+                        }
+                    })
+                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sweetAlertDialog) {
+                            startActivity(new Intent(getActivity(), MainDrawerActivity.class));
+                            sweetAlertDialog.dismiss();
+                            getActivity().finish();
+
+                        }
+                    })
+                    .show();
         }
         //customActionBar();
         //((AppCompatActivity) getActivity()).getSupportActionBar().hide();
@@ -159,48 +266,6 @@ public class MainFragment extends Fragment {
             requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION,
                     android.Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
         }
-        SmartLocation.with(getActivity()).location()
-                .start(new OnLocationUpdatedListener() {
-
-                    @Override
-                    public void onLocationUpdated(Location location) {
-                        dblLat = location.getLatitude();
-                        dblLon = location.getLongitude();
-                        Log.d("Location : ", "" + dblLat + " " + dblLon);
-                        Geocoder geoCoder = new Geocoder(getActivity(), Locale.getDefault());
-                        StringBuilder builder = new StringBuilder();
-                        try {
-                            List<Address> address = geoCoder.getFromLocation(dblLat, dblLon, 1);
-                            int maxLines = address.get(0).getMaxAddressLineIndex();
-                            for (int i = 0; i < maxLines; i++) {
-                                String addressStr = address.get(0).getAddressLine(i);
-                                String city = address.get(0).getLocality();
-                                String state = address.get(0).getAdminArea();
-                                String country = address.get(0).getCountryName();
-                                String postalCode = address.get(0).getPostalCode();
-                                String knownName = address.get(0).getFeatureName();
-                                String subadmin = address.get(0).getSubLocality();
-//                                Log.d("zma city 2", "city " + city + "\nstate " + state + "\n country " +
-//                                        country + "\n postal code " + postalCode + "\nknow name " + knownName + "get sub admin area" + subadmin);
-                                builder.append(addressStr);
-                                builder.append(" ");
-                            }
-
-                            strCityName = builder.toString(); //This is the complete address.
-                            mTitleTextView.setText(strCityName);
-                           // Log.d("zma city", strCityName);
-                            if (address.size() > 0) {
-
-                                System.out.println(address.get(0).getCountryName());
-                                System.out.println(address.get(0).getAdminArea());
-                                System.out.println(address.get(0).getSubLocality());
-                            }
-                        } catch (IOException e) {
-                        } catch (NullPointerException e) {
-                        }
-
-                    }
-                });
 
         return view;
     }
@@ -538,4 +603,11 @@ public class MainFragment extends Fragment {
 //                        .show("http://www.ptpkp.gov.pk/");            }
 //        });
 //    }
+
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
 }

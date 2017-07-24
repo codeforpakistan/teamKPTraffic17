@@ -85,7 +85,7 @@ public class LiveUpdateFragment extends Fragment {
         liveUpdateHelpers.add(new LiveUpdateHelper("Khyber Road", "Suri Pul - Aman Chowk"));
         liveUpdateHelpers.add(new LiveUpdateHelper("Charsadda Road", "Ring Road - Bacha Khan Chowk"));
         liveUpdateHelpers.add(new LiveUpdateHelper("Jail Road", "Khyber Bazar - FC Chowk"));
-        liveUpdateHelpers.add(new LiveUpdateHelper("University Road", "Sifat Ghayour - Phase-3"));
+        liveUpdateHelpers.add(new LiveUpdateHelper("University Road", "Sifat Ghayour - Phase 3"));
         liveUpdateHelpers.add(new LiveUpdateHelper("Dalazak Road", "Hashtnaghri flyover - Ring Road"));
         liveUpdateHelpers.add(new LiveUpdateHelper("Saddar Road", "Suri Pul - Cantt Area"));
         liveUpdateHelpers.add(new LiveUpdateHelper("Bagh e Naran Road", "Phase-3 Chowk  - Bagh e Naran Chowk"));

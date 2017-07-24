@@ -66,7 +66,7 @@ public class MainEmergencyFragment extends Fragment {
     double dblLat, dblLon;
     String strRescue, strHealth, strMechanics, strHighwayOfficers;
     LinearLayout lLCallView;
-     Bundle bundle;
+    Bundle bundle;
 
     public MainEmergencyFragment() {
         // Required empty public constructor
@@ -109,7 +109,7 @@ public class MainEmergencyFragment extends Fragment {
         ivMechanicsEmergency = (ImageView) view.findViewById(R.id.iv_emergency_mechanics);
         ivRescueEmergency = (ImageView) view.findViewById(R.id.iv_emergency_rescue_1122);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            requestPermissions(new String[]{ android.Manifest.permission.CALL_PHONE}, 1);
+            requestPermissions(new String[]{android.Manifest.permission.CALL_PHONE}, 1);
         }
         bundle = new Bundle();
         onEmergencyButtonClick();
@@ -188,9 +188,8 @@ public class MainEmergencyFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 strHealth = "2";
-                bundle.putString("emergency_id",strHealth);
-                getData(strHealth,String.valueOf(dblLat),String.valueOf(dblLon));
-
+                bundle.putString("emergency_id", strHealth);
+                getData(strHealth, String.valueOf(dblLat), String.valueOf(dblLon));
 
 
             }
@@ -199,8 +198,12 @@ public class MainEmergencyFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 strMechanics = "3";
-                bundle.putString("emergency_id",strMechanics);
-                getData(strMechanics,String.valueOf(dblLat),String.valueOf(dblLon));
+                bundle.putString("emergency_id", strMechanics);
+                if (String.valueOf(dblLat).length()==0 || String.valueOf(dblLon).length()==0) {
+                    getData(strMechanics, String.valueOf(dblLat), String.valueOf(dblLon));
+                }else {
+                    Toast.makeText(getActivity(), "Mechanics lat/Lon zero", Toast.LENGTH_SHORT).show();
+                }
 
             }
         });
@@ -208,12 +211,13 @@ public class MainEmergencyFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 strHighwayOfficers = "4";
-                bundle.putString("emergency_id",strHighwayOfficers);
-                getData(strHighwayOfficers,String.valueOf(dblLat),String.valueOf(dblLon));
+                bundle.putString("emergency_id", strHighwayOfficers);
+                getData(strHighwayOfficers, String.valueOf(dblLat), String.valueOf(dblLon));
             }
         });
 
     }
+
     public void getData(final String strCategoryID, final String latitude, final String longitude) {
         final String url = Configuration.END_POINT_LIVE + "emergency_contacts/getEmergencyContact?category_id=" + strCategoryID + "&latitude=" + latitude + "&longitude=" + longitude;
         Log.d("zma url", url);
@@ -223,12 +227,12 @@ public class MainEmergencyFragment extends Fragment {
                 try {
 
                     Log.d("zma url emer main", url + "\n" + response.getBoolean("status") + "\n" + String.valueOf(response));
-                   // list.clear();
+                    // list.clear();
 
                     if (response.getBoolean("status")) {
-                       // pDialog.dismiss();
+                        // pDialog.dismiss();
                         JSONArray data = response.getJSONArray("data");
-                        getFragmentManager().beginTransaction().replace(R.id.fragment_container,fragment).addToBackStack("tag").commit();
+                        getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).addToBackStack("tag").commit();
                         fragment.setArguments(bundle);
 //                        for (int i = 0; i < data.length(); i++) {
 //                            JSONObject shopObject = data.getJSONObject(i);
@@ -240,17 +244,17 @@ public class MainEmergencyFragment extends Fragment {
 //                            Log.d("zma phone number",shopObject.getString("contact_no"));
 //                            list.add(helper);
 //                        }
-                       // emergencyListAdapter.notifyDataSetChanged();
+                        // emergencyListAdapter.notifyDataSetChanged();
                     } else {
-                       // pDialog.dismiss();
-                        new SweetAlertDialog(getActivity(),SweetAlertDialog.WARNING_TYPE)
+                        // pDialog.dismiss();
+                        new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
                                 .setTitleText("Oops!")
                                 .setContentText("No data found around your location")
                                 .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                                     @Override
                                     public void onClick(SweetAlertDialog sweetAlertDialog) {
                                         Fragment fragment = new MainEmergencyFragment();
-                                        getFragmentManager().beginTransaction().replace(R.id.fragment_container,fragment).commit();
+                                        getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
                                         sweetAlertDialog.dismiss();
 
                                     }
@@ -264,7 +268,7 @@ public class MainEmergencyFragment extends Fragment {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-              //  pDialog.dismiss();
+                //  pDialog.dismiss();
                 if (error instanceof TimeoutError || error instanceof NoConnectionError) {
                     Toast.makeText(getActivity(), "Check your internet connection", Toast.LENGTH_SHORT).show();
                 }
@@ -293,9 +297,11 @@ public class MainEmergencyFragment extends Fragment {
         requestQueue.add(request);
 
     }
-    public void getMyLocation(){
+
+    public void getMyLocation() {
 
     }
+
     public void customActionBar() {
         android.support.v7.app.ActionBar mActionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         mActionBar.setDisplayShowHomeEnabled(false);

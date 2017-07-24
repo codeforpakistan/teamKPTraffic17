@@ -208,6 +208,7 @@ public class LiveUpdateAdapter extends RecyclerView.Adapter<LiveUpdateAdapter.Vi
                                     .replace(R.id.fragment_container, fragment).addToBackStack("tag").commit();
                             args.putString("status", responseRouteStatus.toString());
                             args.putString("response_time", responseTime.toString());
+                            args.putString("clicked_road_name",responseRouteName);
                             Log.d("zma response if wala", String.valueOf(responseRouteName + "\n" + responseTime));
                             fragment.setArguments(args);
 
@@ -216,6 +217,7 @@ public class LiveUpdateAdapter extends RecyclerView.Adapter<LiveUpdateAdapter.Vi
                                     .replace(R.id.fragment_container, fragment).addToBackStack("tag").commit();
                             args.putString("status", responseRouteStatus.toString());
                             args.putString("response_time", responseTime.toString());
+                            args.putString("clicked_road_name",responseRouteName);
                             Log.d("zma response if wala", String.valueOf(responseRouteName + "\n" + responseTime));
                             fragment.setArguments(args);
 
@@ -224,6 +226,7 @@ public class LiveUpdateAdapter extends RecyclerView.Adapter<LiveUpdateAdapter.Vi
                                     .replace(R.id.fragment_container, fragment).addToBackStack("tag").commit();
                             args.putString("status", responseRouteStatus.toString());
                             args.putString("response_time", responseTime.toString());
+                            args.putString("clicked_road_name",responseRouteName);
                             Log.d("zma response if wala", String.valueOf(responseRouteName + "\n" + responseTime));
                             fragment.setArguments(args);
 
@@ -234,16 +237,14 @@ public class LiveUpdateAdapter extends RecyclerView.Adapter<LiveUpdateAdapter.Vi
                     } else {
                         pDialog.dismiss();
                         new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
-                                .setTitleText("Oops...")
-                                .setContentText("Something went wrong   !")
+                                .setTitleText("Something went wrong")
                                 .show();
                         //main else
                     }
                 } catch (JSONException e) {
                     pDialog.dismiss();
                     new SweetAlertDialog(context, SweetAlertDialog.ERROR_TYPE)
-                            .setTitleText("Oops...")
-                            .setContentText("Server Error!")
+                            .setTitleText("Server Error!")
                             .show();
                     e.printStackTrace();
                 }

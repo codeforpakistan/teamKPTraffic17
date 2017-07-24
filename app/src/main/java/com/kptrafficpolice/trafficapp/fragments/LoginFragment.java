@@ -33,6 +33,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.kptrafficpolice.trafficapp.R;
+import com.kptrafficpolice.trafficapp.activities.MainActivity;
 import com.kptrafficpolice.trafficapp.activities.MainDrawerActivity;
 import com.kptrafficpolice.trafficapp.utilities.CheckNetwork;
 import com.kptrafficpolice.trafficapp.utilities.Configuration;
@@ -104,13 +105,13 @@ public class LoginFragment extends Fragment {
         editor = sharedPreferences.edit();
         customActionBar();
         tvSkip = (TextView) view.findViewById(R.id.tvSkip);
-        SpannableString contentRegister = new SpannableString("Register Here");
+        SpannableString contentRegister = new SpannableString("New user? Register Here");
         contentRegister.setSpan(new UnderlineSpan(), 0, contentRegister.length(), 0);
         tvSkip.setText(contentRegister);
         mRequestQueue = Volley.newRequestQueue(getActivity());
         pDialog = new SweetAlertDialog(getActivity(), SweetAlertDialog.PROGRESS_TYPE);
         pDialog.getProgressHelper().setBarColor(Color.parseColor("#179e99"));
-        pDialog.setTitleText("getting login");
+        pDialog.setTitleText("Getting Login");
         pDialog.setCancelable(false);
         tvSkip.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -180,7 +181,9 @@ public class LoginFragment extends Fragment {
                         .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                             @Override
                             public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                getActivity().startActivity(new Intent(getActivity(), MainDrawerActivity.class));
+                                sweetAlertDialog.dismiss();
+                                getActivity().startActivity(new Intent(getActivity(), MainActivity.class));
+                                getActivity().finish();
                             }
                         })
                         .show();

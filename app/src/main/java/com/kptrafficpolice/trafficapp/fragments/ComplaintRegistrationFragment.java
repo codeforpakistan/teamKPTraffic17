@@ -372,6 +372,7 @@ public class ComplaintRegistrationFragment extends Fragment {
                     fragment = new MainFragment();
                     args.putBoolean("status", true);
                     fragment.setArguments(args);
+                    MainFragment.SUCCESS_DIALOG = true;
                     getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
                     totalSize = entity.getContentLength();
                     httppost.setEntity(entity);
@@ -436,6 +437,7 @@ public class ComplaintRegistrationFragment extends Fragment {
                     HttpEntity r_entity = response.getEntity();
                     Log.d("zma response comp video", String.valueOf(response));
                     fragment = new MainFragment();
+                    MainFragment.SUCCESS_DIALOG = true;
                     getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
                     int statusCode = response.getStatusLine().getStatusCode();
                     responseString = EntityUtils.toString(r_entity);
@@ -451,6 +453,7 @@ public class ComplaintRegistrationFragment extends Fragment {
                             .show();
                 } catch (IOException e) {
                     responseString = e.toString();
+                    Looper.prepare();
                     pDialog.dismiss();
                     new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
                             .setTitleText("Oops...")
@@ -507,20 +510,31 @@ public class ComplaintRegistrationFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        flag = false;
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RESULT_LOAD_VIDEO && null != data) {
-            Uri selectedVideo = data.getData();
-            String[] filePathColumn = {String.valueOf(MediaStore.Video.Media.EXTERNAL_CONTENT_URI)};
-            Cursor cursor = getActivity().getContentResolver().query(selectedVideo,
-                    filePathColumn, null, null, null);
-            cursor.moveToFirst();
-            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-            String picturePath = cursor.getString(columnIndex);
-            sourceFile = new File(picturePath);
-            Log.d("zma path video gallery", picturePath.toString());
-            cursor.close();
+        if (resultCode == RESULT_OK && requestCode == RESULT_LOAD_VIDEO) {
+            Uri selectedVideo = Uri.parse(getVideoPath(data.getData()));
+            if (selectedVideo == null) {
+                Log.e("log", "selected video path = null!");
+                // flag = false;
+                // finish();
+            } else {
+                /**
+                 * try to do something there
+                 * selectedVideoPath is path to the selected video
+                 */
+
+                flag = false;
+                sourceFile = new File(String.valueOf(selectedVideo));
+                new VideoCompressAsyncTask(getActivity()).execute(data.getData().toString(),selectedVideo.getPath());
+                Toast.makeText(getActivity(), "Video path is: " + selectedVideo, Toast.LENGTH_SHORT).show();
+
+            }
+
         } else if (requestCode == RESULT_LOAD_IMAGE && null != data) {
             Uri selectedImage = data.getData();
+            Bitmap photo = (Bitmap) data.getExtras().get("data");
+            ivTakePicture.setImageBitmap(photo);
             String[] filePathColumn = {MediaStore.Images.Media.DATA};
             Cursor cursor = getActivity().getContentResolver().query(selectedImage,
                     filePathColumn, null, null, null);
@@ -537,6 +551,7 @@ public class ComplaintRegistrationFragment extends Fragment {
             cursor.close();
         } else if (resultCode == RESULT_OK && requestCode == CAMERA_CAPTURE && data != null) {
             Bitmap photo = (Bitmap) data.getExtras().get("data");
+            ivTakePicture.setImageBitmap(photo);
             Uri tempUri = GeneralUtils.getImageUri(getActivity(), photo);
             sourceFile = new File(GeneralUtils.getRealPathFromURI(getActivity(), tempUri));
             if (sourceFile != null) {
@@ -593,6 +608,7 @@ public class ComplaintRegistrationFragment extends Fragment {
         protected String doInBackground(String... paths) {
             try {
                 compressedVideoPath = SiliCompressor.with(mContext).compressVideo(paths[0], paths[1]);
+                Log.d("zma compressed path",compressedVideoPath.toString());
 
             } catch (URISyntaxException e) {
                 e.printStackTrace();
@@ -608,5 +624,15 @@ public class ComplaintRegistrationFragment extends Fragment {
             Log.e(TAG, "Compressed Successflly! ");
         }
     }
-
+    // New code for Method added for Gallery Video
+    public String getVideoPath(Uri uri) {
+        String[] projection = { MediaStore.Images.Media.DATA };
+        Cursor cursor = getActivity().managedQuery(uri, projection, null, null, null);
+        if(cursor!=null) {
+            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA);
+            cursor.moveToFirst();
+            return cursor.getString(column_index);
+        }
+        else return null;
+    }
 }
