@@ -83,15 +83,31 @@
                             android:layout_weight="1"
                             android:orientation="vertical">
 
-                            <ImageView
-                                android:id="@+id/iv_take_picture"
-                                android:layout_width="60dp"
-                                android:layout_height="60dp"
-                                android:layout_gravity="center_horizontal"
-                                android:layout_weight="1"
-                                android:src="@drawable/complaint_camera_picture" />
+                            <FrameLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center">
+
+                                <ImageView
+                                    android:id="@+id/iv_take_picture"
+                                    android:layout_width="60dp"
+                                    android:layout_height="60dp"
+                                    android:layout_gravity="center_horizontal"
+                                    android:layout_weight="1"
+                                    android:src="@drawable/complaint_camera_picture" />
+
+                                <ImageView
+                                    android:id="@+id/iv_cross_image"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="20dp"
+                                    android:layout_gravity="top|right"
+                                    android:layout_marginLeft="60dp"
+                                    android:background="#fff"
+                                    android:src="@drawable/cross_image" />
+                            </FrameLayout>
 
                             <TextView
+                                android:id="@+id/tv_take_pic"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_horizontal"
@@ -106,15 +122,32 @@
                             android:layout_weight="1"
                             android:orientation="vertical">
 
-                            <ImageView
-                                android:id="@+id/iv_record_video"
-                                android:layout_width="60dp"
-                                android:layout_height="60dp"
-                                android:layout_gravity="center_horizontal"
-                                android:layout_weight="1"
-                                android:src="@drawable/complaint_camera_video" />
+                            <FrameLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center">
+
+                                <ImageView
+                                    android:id="@+id/iv_cross_video"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="20dp"
+                                    android:layout_gravity="top|right"
+                                    android:layout_marginLeft="60dp"
+
+                                    android:background="#fff"
+                                    android:src="@drawable/cross_image" />
+
+                                <ImageView
+                                    android:id="@+id/iv_record_video"
+                                    android:layout_width="60dp"
+                                    android:layout_height="60dp"
+                                    android:layout_gravity="center_horizontal"
+                                    android:layout_weight="1"
+                                    android:src="@drawable/complaint_camera_video" />
+                            </FrameLayout>
 
                             <TextView
+                                android:id="@+id/tv_record_video"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_horizontal"

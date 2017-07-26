@@ -9,8 +9,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.location.Location;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -39,7 +41,6 @@ import android.widget.Toast;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.kptrafficpolice.trafficapp.R;
-import com.kptrafficpolice.trafficapp.activities.MainDrawerActivity;
 import com.kptrafficpolice.trafficapp.utilities.CheckNetwork;
 import com.kptrafficpolice.trafficapp.utilities.Configuration;
 import com.kptrafficpolice.trafficapp.utilities.GeneralUtils;
@@ -94,7 +95,8 @@ public class ComplaintRegistrationFragment extends Fragment {
     private static final int CAMERA_RECORD_VIDEO_REQUEST_CODE = 200;
     Animation shake;
     Button btnSendComplaint;
-    ImageView ivTakePicture, ivImagePreview, ivHomeButton, ivSettingButton, ivWebsiteButton, ivRecordVideo;
+    ImageView ivTakePicture, ivRecordVideo, ivCrossImage, ivCrossVideo;
+    TextView tvTakePic, tvRecordVideo;
     LinearLayout linearLayout;
     EditText etDescription;
     File sourceFile;
@@ -110,7 +112,9 @@ public class ComplaintRegistrationFragment extends Fragment {
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
     Calendar calendar = Calendar.getInstance();
-
+    boolean isImage = false;
+    boolean isVideo = false;
+    File videoCaptureSourceFile;
     public ComplaintRegistrationFragment() {
         // Required empty public constructor
     }
@@ -159,6 +163,12 @@ public class ComplaintRegistrationFragment extends Fragment {
             }
         });
         linearLayout = (LinearLayout) view.findViewById(R.id.llayout_camera);
+        tvTakePic = (TextView) view.findViewById(R.id.tv_take_pic);
+        ivCrossImage = (ImageView)view.findViewById(R.id.iv_cross_image);
+        ivCrossImage.setVisibility(View.GONE);
+        tvRecordVideo = (TextView) view.findViewById(R.id.tv_record_video);
+        ivCrossVideo = (ImageView)view.findViewById(R.id.iv_cross_video);
+        ivCrossVideo.setVisibility(View.GONE);
         spComlaintType = (MaterialSpinner) view.findViewById(R.id.spinner);
         btnSendComplaint = (Button) view.findViewById(R.id.btn_send_complaint);
 //        ivImagePreview = (ImageView) view.findViewById(R.id.iv_image_preview);
@@ -192,7 +202,19 @@ public class ComplaintRegistrationFragment extends Fragment {
                                 }
                             }
                         });
-                pictureDialog.show();
+                if (!isImage) {
+                    pictureDialog.show();
+                } else {
+                    new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
+                            .setTitleText("Image Found")
+                            .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                @Override
+                                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                    sweetAlertDialog.dismiss();
+                                }
+                            })
+                            .show();
+                }
 
             }
         });
@@ -200,6 +222,7 @@ public class ComplaintRegistrationFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 AlertDialog.Builder pictureDialog = new AlertDialog.Builder(getActivity());
+                pictureDialog.setCancelable(true);
                 pictureDialog.setTitle("Choose image from");
                 String[] pictureDialogItems = {
                         "\tGallery",
@@ -218,7 +241,19 @@ public class ComplaintRegistrationFragment extends Fragment {
                                 }
                             }
                         });
-                pictureDialog.show();
+                if (!isVideo) {
+                    pictureDialog.show();
+                } else {
+                    new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
+                            .setTitleText("Video Found")
+                            .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                @Override
+                                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                    sweetAlertDialog.dismiss();
+                                }
+                            })
+                            .show();
+                }
 
             }
         });
@@ -247,7 +282,32 @@ public class ComplaintRegistrationFragment extends Fragment {
                 });
         onSendButton();
         // footerButtons();
+        ivCrossImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                isImage = false;
+                sourceFile = new File("");
+                ivTakePicture.setImageResource(R.drawable.complaint_camera_picture);
+                ivCrossImage.setVisibility(View.GONE);
+                tvTakePic.setText("Take Picture");
+                tvTakePic.setTextColor(Color.BLACK);
+            }
+        });
+        ivCrossVideo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                isVideo = false;
+                videoCaptureSourceFile = new File("");
+                ivRecordVideo.setImageResource(R.drawable.complaint_camera_video);
+                ivCrossVideo.setVisibility(View.GONE);
+                tvRecordVideo.setText("Record Video");
+                tvRecordVideo.setTextColor(Color.BLACK);
+
+            }
+        });
+
         return view;
+
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -510,31 +570,31 @@ public class ComplaintRegistrationFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
         flag = false;
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && requestCode == RESULT_LOAD_VIDEO) {
-            Uri selectedVideo = Uri.parse(getVideoPath(data.getData()));
-            if (selectedVideo == null) {
-                Log.e("log", "selected video path = null!");
-                // flag = false;
-                // finish();
-            } else {
-                /**
-                 * try to do something there
-                 * selectedVideoPath is path to the selected video
-                 */
-
+            System.out.println("SELECT_VIDEO");
+            Uri selectedImageUri = data.getData();
+           String selectedPath = getVideoPath(selectedImageUri);
+            // System.out.println("SELECT_VIDEO Path : " + selectedPath);
+            sourceFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + getActivity().getPackageName() + "/media/videos");
+            // uploadVideo(selectedPath);
+            new VideoCompressAsyncTask(getActivity()).execute(data.getData().toString(),sourceFile.getPath());
                 flag = false;
-                sourceFile = new File(String.valueOf(selectedVideo));
-                new VideoCompressAsyncTask(getActivity()).execute(data.getData().toString(),selectedVideo.getPath());
-                Toast.makeText(getActivity(), "Video path is: " + selectedVideo, Toast.LENGTH_SHORT).show();
 
-            }
+             Bitmap bitmap = ThumbnailUtils.createVideoThumbnail(sourceFile.getAbsolutePath(), MediaStore.Video.Thumbnails.MINI_KIND);
+                ivRecordVideo.setImageBitmap(bitmap);
+                tvRecordVideo.setText("Record Another");
+                tvRecordVideo.setTextColor(Color.RED);
+                isVideo = true;
+                ivCrossVideo.setVisibility(View.VISIBLE);
+
+
 
         } else if (requestCode == RESULT_LOAD_IMAGE && null != data) {
             Uri selectedImage = data.getData();
             Bitmap photo = (Bitmap) data.getExtras().get("data");
-            ivTakePicture.setImageBitmap(photo);
             String[] filePathColumn = {MediaStore.Images.Media.DATA};
             Cursor cursor = getActivity().getContentResolver().query(selectedImage,
                     filePathColumn, null, null, null);
@@ -549,6 +609,15 @@ public class ComplaintRegistrationFragment extends Fragment {
                 flag = false;
             }
             cursor.close();
+            ivTakePicture.setImageBitmap(BitmapFactory.decodeFile(picturePath));
+            if (picturePath.equals("")) {
+                tvTakePic.setBackgroundResource(R.drawable.complaint_camera_icon);
+            }
+            tvTakePic.setText("Take Another");
+            tvTakePic.setTextColor(Color.RED);
+            isImage = true;
+            ivCrossImage.setVisibility(View.VISIBLE);
+
         } else if (resultCode == RESULT_OK && requestCode == CAMERA_CAPTURE && data != null) {
             Bitmap photo = (Bitmap) data.getExtras().get("data");
             ivTakePicture.setImageBitmap(photo);
@@ -559,14 +628,26 @@ public class ComplaintRegistrationFragment extends Fragment {
             } else {
                 flag = false;
             }
+            tvTakePic.setText("Take another");
+            tvTakePic.setTextColor(Color.RED);
+            isImage = true;
+            ivCrossImage.setVisibility(View.VISIBLE);
+
         } else if (resultCode == RESULT_OK && requestCode == CAMERA_VIDEO_CAPTURE && data != null) {
             Uri picUri = data.getData();
             if (data.getData() != null) {
                 //create destination directory
-                File f = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + getActivity().getPackageName() + "/media/videos");
-                if (f.mkdirs() || f.isDirectory())
+                videoCaptureSourceFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + getActivity().getPackageName() + "/media/videos");
+                if (videoCaptureSourceFile.mkdirs() || videoCaptureSourceFile.isDirectory())
                     //compress and output new video specs
-                    new VideoCompressAsyncTask(getActivity()).execute(data.getData().toString(), f.getPath());
+                    new VideoCompressAsyncTask(getActivity()).execute(data.getData().toString(), videoCaptureSourceFile.getPath());
+                Bitmap bitmap = ThumbnailUtils.createVideoThumbnail(videoCaptureSourceFile.getAbsolutePath(), MediaStore.Video.Thumbnails.MINI_KIND);
+                ivRecordVideo.setImageBitmap(bitmap);
+                tvRecordVideo.setText("Record Another");
+                tvRecordVideo.setTextColor(Color.RED);
+                isVideo = true;
+                ivCrossVideo.setVisibility(View.VISIBLE);
+
 
             }
             // sourceFile = new File(GeneralUtils.getRealPathFromURI(getActivity(), picUri));
@@ -576,19 +657,6 @@ public class ComplaintRegistrationFragment extends Fragment {
         }
     }
 
-    public void showAlertDialog() {
-        final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
-
-        alertDialog.setTitle("Great");
-        alertDialog.setMessage("Hey man");
-        alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                alertDialog.dismiss();
-            }
-        });
-
-        alertDialog.show();
-    }
 
     class VideoCompressAsyncTask extends AsyncTask<String, String, String> {
 
@@ -608,7 +676,7 @@ public class ComplaintRegistrationFragment extends Fragment {
         protected String doInBackground(String... paths) {
             try {
                 compressedVideoPath = SiliCompressor.with(mContext).compressVideo(paths[0], paths[1]);
-                Log.d("zma compressed path",compressedVideoPath.toString());
+                Log.d("zma compressed path", compressedVideoPath.toString());
 
             } catch (URISyntaxException e) {
                 e.printStackTrace();
@@ -624,15 +692,15 @@ public class ComplaintRegistrationFragment extends Fragment {
             Log.e(TAG, "Compressed Successflly! ");
         }
     }
+
     // New code for Method added for Gallery Video
     public String getVideoPath(Uri uri) {
-        String[] projection = { MediaStore.Images.Media.DATA };
+        String[] projection = {MediaStore.Video.Media.DATA};
         Cursor cursor = getActivity().managedQuery(uri, projection, null, null, null);
-        if(cursor!=null) {
+        if (cursor != null) {
             int column_index = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA);
             cursor.moveToFirst();
             return cursor.getString(column_index);
-        }
-        else return null;
+        } else return null;
     }
 }
