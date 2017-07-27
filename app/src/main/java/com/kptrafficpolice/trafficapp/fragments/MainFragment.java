@@ -8,9 +8,11 @@ import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.multidex.MultiDex;
 import android.support.v7.app.AppCompatActivity;
@@ -56,6 +58,8 @@ import java.util.Map;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import io.nlopez.smartlocation.OnLocationUpdatedListener;
 import io.nlopez.smartlocation.SmartLocation;
+
+import static com.thefinestartist.utils.content.ContextUtil.getContentResolver;
 
 
 /**
@@ -160,6 +164,33 @@ public class MainFragment extends Fragment {
                     .show();
 
         }else {
+            final LocationManager manager = (LocationManager) getActivity().getSystemService( getActivity().LOCATION_SERVICE );
+
+            if ( !manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
+                Log.d("zma GPS status","nde on");
+                new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
+                        .setTitleText("Turn on your GPS")
+                        .setConfirmText("OK")
+                        .setCancelText("NO")
+                        .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                getActivity().finish();
+
+                            }
+                        })
+                        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                Intent settingsIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                                getActivity().startActivity(settingsIntent);
+                                sweetAlertDialog.dismiss();
+
+                            }
+                        })
+                        .show();
+                // Call your Alert message
+            }
             SmartLocation.with(getActivity()).location()
                     .start(new OnLocationUpdatedListener() {
 
@@ -189,14 +220,17 @@ public class MainFragment extends Fragment {
                                     String postalCode = address.get(0).getPostalCode();
                                     String knownName = address.get(0).getFeatureName();
                                     String subadmin = address.get(0).getSubLocality();
-//                                Log.d("zma city 2", "city " + city + "\nstate " + state + "\n country " +
-//                                        country + "\n postal code " + postalCode + "\nknow name " + knownName + "get sub admin area" + subadmin);
+                                Log.d("zma city 2", "city " + city + "\nstate " + state + "\n country " +
+                                        country + "\n postal code " + postalCode + "\nknow name " + knownName + "get sub admin area" + subadmin);
                                     builder.append(addressStr);
                                     builder.append(" ");
                                 }
 
                                 strCityName = builder.toString(); //This is the complete address.
                                 mTitleTextView.setText(strCityName);
+                                if (strCityName.equals("")){
+                                    mTitleTextView.setText("Our Services");
+                                }
                                 // Log.d("zma city", strCityName);
                                 if (address.size() > 0) {
 
@@ -230,7 +264,9 @@ public class MainFragment extends Fragment {
 //        }
         sharedPreferences = getActivity().getSharedPreferences("com.ghosttech.kptraffic", 0);
         editor = sharedPreferences.edit();
-        tvUserName.setText(sharedPreferences.getString("user_name",null));
+        String user_name_from_reg = sharedPreferences.getString("user_name",null);
+       // Log.d("zma reg name", user_name_from_reg);
+        tvUserName.setText(user_name_from_reg);
         MultiDex.install(getActivity());
         shake = AnimationUtils.loadAnimation(getActivity(), R.anim.shake);
         mRequestQueue = Volley.newRequestQueue(getActivity());
@@ -260,7 +296,7 @@ public class MainFragment extends Fragment {
                     })
                     .show();
         }
-        //customActionBar();
+        customActionBar();
         //((AppCompatActivity) getActivity()).getSupportActionBar().hide();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION,
@@ -356,6 +392,7 @@ public class MainFragment extends Fragment {
         LayoutInflater mInflater = LayoutInflater.from(getActivity());
         View mCustomView = mInflater.inflate(R.layout.custom_action_bar, null);
         mTitleTextView = (TextView) mCustomView.findViewById(R.id.title_text);
+        mTitleTextView.setText("Our Services");
       //  ImageView mBackArrow = (ImageView) mCustomView.findViewById(R.id.iv_back_arrow);
         //mBackArrow.setImageResource(R.drawable.map_pointer);
 //        mBackArrow.setVisibility(View.GONE);
@@ -610,4 +647,5 @@ public class MainFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         setHasOptionsMenu(true);
     }
+
 }

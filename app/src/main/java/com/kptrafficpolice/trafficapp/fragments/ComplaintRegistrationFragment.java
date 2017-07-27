@@ -40,6 +40,7 @@ import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
 import com.kptrafficpolice.trafficapp.R;
 import com.kptrafficpolice.trafficapp.utilities.CheckNetwork;
 import com.kptrafficpolice.trafficapp.utilities.Configuration;
@@ -115,6 +116,7 @@ public class ComplaintRegistrationFragment extends Fragment {
     boolean isImage = false;
     boolean isVideo = false;
     File videoCaptureSourceFile;
+
     public ComplaintRegistrationFragment() {
         // Required empty public constructor
     }
@@ -164,10 +166,10 @@ public class ComplaintRegistrationFragment extends Fragment {
         });
         linearLayout = (LinearLayout) view.findViewById(R.id.llayout_camera);
         tvTakePic = (TextView) view.findViewById(R.id.tv_take_pic);
-        ivCrossImage = (ImageView)view.findViewById(R.id.iv_cross_image);
+        ivCrossImage = (ImageView) view.findViewById(R.id.iv_cross_image);
         ivCrossImage.setVisibility(View.GONE);
         tvRecordVideo = (TextView) view.findViewById(R.id.tv_record_video);
-        ivCrossVideo = (ImageView)view.findViewById(R.id.iv_cross_video);
+        ivCrossVideo = (ImageView) view.findViewById(R.id.iv_cross_video);
         ivCrossVideo.setVisibility(View.GONE);
         spComlaintType = (MaterialSpinner) view.findViewById(R.id.spinner);
         btnSendComplaint = (Button) view.findViewById(R.id.btn_send_complaint);
@@ -576,20 +578,21 @@ public class ComplaintRegistrationFragment extends Fragment {
         if (resultCode == RESULT_OK && requestCode == RESULT_LOAD_VIDEO) {
             System.out.println("SELECT_VIDEO");
             Uri selectedImageUri = data.getData();
-           String selectedPath = getVideoPath(selectedImageUri);
+            String selectedPath = getVideoPath(selectedImageUri);
             // System.out.println("SELECT_VIDEO Path : " + selectedPath);
             sourceFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + getActivity().getPackageName() + "/media/videos");
             // uploadVideo(selectedPath);
-            new VideoCompressAsyncTask(getActivity()).execute(data.getData().toString(),sourceFile.getPath());
-                flag = false;
-
-             Bitmap bitmap = ThumbnailUtils.createVideoThumbnail(sourceFile.getAbsolutePath(), MediaStore.Video.Thumbnails.MINI_KIND);
-                ivRecordVideo.setImageBitmap(bitmap);
-                tvRecordVideo.setText("Record Another");
-                tvRecordVideo.setTextColor(Color.RED);
-                isVideo = true;
-                ivCrossVideo.setVisibility(View.VISIBLE);
-
+            new VideoCompressAsyncTask(getActivity()).execute(data.getData().toString(), sourceFile.getPath());
+            flag = false;
+            Glide.with(getActivity())
+                    .load(selectedImageUri)
+                    .into(ivRecordVideo);
+//            Bitmap bitmap = ThumbnailUtils.createVideoThumbnail(sourceFile.getAbsolutePath().toString(), MediaStore.Video.Thumbnails.MINI_KIND);
+//            ivRecordVideo.setImageBitmap(bitmap);
+            tvRecordVideo.setText("Replace Video");
+            tvRecordVideo.setTextColor(Color.RED);
+            isVideo = true;
+            ivCrossVideo.setVisibility(View.VISIBLE);
 
 
         } else if (requestCode == RESULT_LOAD_IMAGE && null != data) {
@@ -641,8 +644,11 @@ public class ComplaintRegistrationFragment extends Fragment {
                 if (videoCaptureSourceFile.mkdirs() || videoCaptureSourceFile.isDirectory())
                     //compress and output new video specs
                     new VideoCompressAsyncTask(getActivity()).execute(data.getData().toString(), videoCaptureSourceFile.getPath());
-                Bitmap bitmap = ThumbnailUtils.createVideoThumbnail(videoCaptureSourceFile.getAbsolutePath(), MediaStore.Video.Thumbnails.MINI_KIND);
-                ivRecordVideo.setImageBitmap(bitmap);
+                Glide.with(getActivity())
+                        .load(picUri)
+                        .into(ivRecordVideo);
+//                Bitmap bitmap = ThumbnailUtils.createVideoThumbnail(videoCaptureSourceFile.getAbsolutePath(), MediaStore.Video.Thumbnails.MINI_KIND);
+//                ivRecordVideo.setImageBitmap(bitmap);
                 tvRecordVideo.setText("Record Another");
                 tvRecordVideo.setTextColor(Color.RED);
                 isVideo = true;

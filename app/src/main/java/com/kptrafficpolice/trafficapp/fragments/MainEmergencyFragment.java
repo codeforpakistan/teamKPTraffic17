@@ -3,6 +3,7 @@ package com.kptrafficpolice.trafficapp.fragments;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
@@ -67,7 +68,7 @@ public class MainEmergencyFragment extends Fragment {
     String strRescue, strHealth, strMechanics, strHighwayOfficers;
     LinearLayout lLCallView;
     Bundle bundle;
-
+    SweetAlertDialog pDialog;
     public MainEmergencyFragment() {
         // Required empty public constructor
     }
@@ -108,6 +109,9 @@ public class MainEmergencyFragment extends Fragment {
         ivHighOfficer = (ImageView) view.findViewById(R.id.iv_emergency_highway_officer);
         ivMechanicsEmergency = (ImageView) view.findViewById(R.id.iv_emergency_mechanics);
         ivRescueEmergency = (ImageView) view.findViewById(R.id.iv_emergency_rescue_1122);
+        pDialog = new SweetAlertDialog(getActivity(), SweetAlertDialog.PROGRESS_TYPE);
+        pDialog.getProgressHelper().setBarColor(Color.parseColor("#179e99"));
+        pDialog.setTitleText("Sending complaint");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             requestPermissions(new String[]{android.Manifest.permission.CALL_PHONE}, 1);
         }
@@ -187,6 +191,7 @@ public class MainEmergencyFragment extends Fragment {
         ivHealthEmergency.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                pDialog.show();
                 strHealth = "2";
                 bundle.putString("emergency_id", strHealth);
                 getData(strHealth, String.valueOf(dblLat), String.valueOf(dblLon));
@@ -198,10 +203,11 @@ public class MainEmergencyFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 strMechanics = "3";
+                pDialog.show();
                 bundle.putString("emergency_id", strMechanics);
-                if (String.valueOf(dblLat).length()==0 || String.valueOf(dblLon).length()==0) {
+                if (String.valueOf(dblLat).length() == 0 || String.valueOf(dblLon).length() == 0) {
                     getData(strMechanics, String.valueOf(dblLat), String.valueOf(dblLon));
-                }else {
+                } else {
                     Toast.makeText(getActivity(), "Mechanics lat/Lon zero", Toast.LENGTH_SHORT).show();
                 }
 
@@ -230,23 +236,13 @@ public class MainEmergencyFragment extends Fragment {
                     // list.clear();
 
                     if (response.getBoolean("status")) {
-                        // pDialog.dismiss();
+                        pDialog.dismiss();
                         JSONArray data = response.getJSONArray("data");
+                        Log.d("zma response emer true",String.valueOf(data));
                         getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).addToBackStack("tag").commit();
                         fragment.setArguments(bundle);
-//                        for (int i = 0; i < data.length(); i++) {
-//                            JSONObject shopObject = data.getJSONObject(i);
-//                            EmergencyHelper helper = new EmergencyHelper();
-//                            helper.setStrHelperDistance(shopObject.getString("distance"));
-//                            helper.setStrHelperLocation(shopObject.getString("district_name"));
-//                            helper.setStrHelperName(shopObject.getString("name"));
-//                            helper.setStrHelperPhoneNumber(shopObject.getString("contact_no"));
-//                            Log.d("zma phone number",shopObject.getString("contact_no"));
-//                            list.add(helper);
-//                        }
-                        // emergencyListAdapter.notifyDataSetChanged();
                     } else {
-                        // pDialog.dismiss();
+                         pDialog.dismiss();
                         new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
                                 .setTitleText("Oops!")
                                 .setContentText("No data found around your location")

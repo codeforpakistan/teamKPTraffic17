@@ -106,7 +106,7 @@ public class MainDrawerActivity extends AppCompatActivity
 
         if (id == R.id.nav_my_complaints) {
             fragment = new MyComplaintsFragment();
-            getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
+            getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).addToBackStack("tag").commit();
             // Handle the camera action
         } else if (id == R.id.nav_website) {
             new FinestWebView.Builder(MainDrawerActivity.this)

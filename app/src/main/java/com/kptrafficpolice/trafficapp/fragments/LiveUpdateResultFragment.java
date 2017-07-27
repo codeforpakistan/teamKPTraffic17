@@ -150,13 +150,13 @@ public class LiveUpdateResultFragment extends Fragment {
             options.geodesic(true);
             options.width(10);
             if (strStatus.equals("Clear")) {
-                options.color(R.color.app_background);
                 cardView.setBackgroundResource(R.drawable.border_green_clear_live_status);
+                options.color(Color.parseColor("#019875"));
             } else if (strStatus.equals("Busy")) {
-                options.color(R.color.red_btn_bg_color);
+                options.color(Color.RED);
                 cardView.setBackgroundResource(R.drawable.border_busy_red_live_status);
             } else if (strStatus.equals("Congested")) {
-                options.color(R.color.status_blue);
+                options.color(Color.parseColor("#22A7F0"));
                 cardView.setBackgroundResource(R.drawable.border_congested_blue_live_status);
             }
             googleMap.addPolyline(options);
@@ -179,7 +179,7 @@ public class LiveUpdateResultFragment extends Fragment {
         LayoutInflater mInflater = LayoutInflater.from(getActivity());
         View mCustomView = mInflater.inflate(R.layout.custom_action_bar, null);
         TextView mTitleTextView = (TextView) mCustomView.findViewById(R.id.title_text);
-        mTitleTextView.setText(args.getString("clicked_road_name")+" Traffic Status");
+        mTitleTextView.setText(args.getString("clicked_road_name")+" Status");
         ImageView mBackArrow = (ImageView) mCustomView.findViewById(R.id.iv_back_arrow);
         mActionBar.setCustomView(mCustomView);
         mActionBar.setDisplayShowCustomEnabled(true);

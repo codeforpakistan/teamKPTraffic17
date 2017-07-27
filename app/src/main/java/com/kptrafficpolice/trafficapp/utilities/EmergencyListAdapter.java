@@ -35,7 +35,7 @@ public class EmergencyListAdapter extends RecyclerView.Adapter<EmergencyListAdap
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         // each data item is just a string in this case
-        CardView cv;
+        CardView cvEmergencyItem;
         TextView tvEmergencyHelperName, tvEmergencyPhone, tvEmergencyLocation, tvEmergencyDistance, tvCallNow;
         ImageView ivCallNow, ivHelperIcon;
         LinearLayout lLCallNow;
@@ -51,6 +51,7 @@ public class EmergencyListAdapter extends RecyclerView.Adapter<EmergencyListAdap
             ivHelperIcon = (ImageView) itemView.findViewById(R.id.iv_emergency_icon);
             lLCallNow = (LinearLayout) itemView.findViewById(R.id.ll_call_now);
             tvCallNow = (TextView) itemView.findViewById(R.id.tvCallNow);
+            cvEmergencyItem = (CardView)itemView.findViewById(R.id.cv_item_view);
             SpannableString content = new SpannableString("Call Now");
             content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
             tvCallNow.setText(content);
@@ -85,8 +86,15 @@ public class EmergencyListAdapter extends RecyclerView.Adapter<EmergencyListAdap
         // - replace the contents of the view with that element
         final EmergencyHelper helper = emergencyHelperList.get(position);
         holder.tvEmergencyHelperName.setText(helper.getStrHelperName());
-        String strDistance = helper.getStrHelperDistance()+" KM";
-        holder.tvEmergencyDistance.setText(strDistance);
+        String strDistance = helper.getStrHelperDistance();
+        strDistance = Double.parseDouble(strDistance)*1000+"";
+        if (Double.parseDouble(strDistance)>1000){
+            strDistance = strDistance.substring(0,3);
+            holder.tvEmergencyDistance.setText(strDistance+" km");
+        }else {
+            strDistance = strDistance.substring(0, 3);
+            holder.tvEmergencyDistance.setText(strDistance + " m");
+        }
         holder.tvEmergencyLocation.setText(helper.getStrHelperLocation());
 
         holder.tvEmergencyPhone.setText(helper.getStrHelperPhoneNumber());
@@ -109,6 +117,25 @@ public class EmergencyListAdapter extends RecyclerView.Adapter<EmergencyListAdap
                 context.startActivity(callIntent);
                 }
             });
+        holder.cvEmergencyItem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent callIntent = new Intent(Intent.ACTION_CALL);
+                callIntent.setData(Uri.parse("tel:" + helper.getStrHelperPhoneNumber()));
+                callIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                if (ActivityCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                    // TODO: Consider calling
+                    //    ActivityCompat#requestPermissions
+                    // here to request the missing permissions, and then overriding
+                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                    //                                          int[] grantResults)
+                    // to handle the case where the user grants the permission. See the documentation
+                    // for ActivityCompat#requestPermissions for more details.
+                    return;
+                }
+                context.startActivity(callIntent);
+            }
+        });
 
 
         }

@@ -6,12 +6,14 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -65,6 +67,7 @@ public class MyComplaintsFragment extends Fragment {
     private String mParam1;
     private String mParam2;
     View view;
+    TextView mTitleTextView;
 
     private OnFragmentInteractionListener mListener;
 
@@ -116,7 +119,7 @@ public class MyComplaintsFragment extends Fragment {
         editor = sharedPreferences.edit();
         strUserID = sharedPreferences.getString("user_id", "");
         Log.d("zma user id",strUserID);//problem with id, it should be one, but sending 2
-
+        customActionBar();
         getData(strUserID);
         list = new ArrayList<>();
         complaintsListAdapter = new MyComplaintsListAdapter(getActivity(), list);
@@ -254,5 +257,19 @@ public class MyComplaintsFragment extends Fragment {
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
         requestQueue.add(request);
 
+    }
+    public void customActionBar() {
+        android.support.v7.app.ActionBar mActionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        mActionBar.setDisplayShowHomeEnabled(false);
+        mActionBar.setDisplayShowTitleEnabled(false);
+        LayoutInflater mInflater = LayoutInflater.from(getActivity());
+        View mCustomView = mInflater.inflate(R.layout.custom_action_bar, null);
+        mTitleTextView = (TextView) mCustomView.findViewById(R.id.title_text);
+        mTitleTextView.setText("Complaints List");
+        //  ImageView mBackArrow = (ImageView) mCustomView.findViewById(R.id.iv_back_arrow);
+        //mBackArrow.setImageResource(R.drawable.map_pointer);
+//        mBackArrow.setVisibility(View.GONE);
+        mActionBar.setCustomView(mCustomView);
+        mActionBar.setDisplayShowCustomEnabled(true);
     }
 }

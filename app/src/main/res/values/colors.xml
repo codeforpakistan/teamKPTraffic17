@@ -10,4 +10,6 @@
     <color name="status_pending">#F22613</color>
     <color name="black_overlay">#66000000</color>
     <color name="status_blue">#22A7F0</color>
+
+    <color name="blue_btn_bg_color">#22A7F0</color>
 </resources>
