@@ -5,7 +5,8 @@ package com.kptrafficpolice.trafficapp.utilities;
  */
 
 public class MyComplaintsHelper {
-    String strComplaintID,strLatitude,strLongitude,strDescription,strComplaintType, strComplaintStatus, strDate, strImage, strVideo;
+    String strComplaintID, strLatitude, strLongitude, strDescription,
+            strComplaintType, strComplaintStatus, strDate, strImage, strVideo;
 
     public String getStrVideo() {
         return strVideo;

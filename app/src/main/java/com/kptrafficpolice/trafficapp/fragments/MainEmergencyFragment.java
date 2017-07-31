@@ -69,6 +69,7 @@ public class MainEmergencyFragment extends Fragment {
     LinearLayout lLCallView;
     Bundle bundle;
     SweetAlertDialog pDialog;
+
     public MainEmergencyFragment() {
         // Required empty public constructor
     }
@@ -191,10 +192,12 @@ public class MainEmergencyFragment extends Fragment {
         ivHealthEmergency.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                pDialog.show();
+                //pDialog.show();
                 strHealth = "2";
                 bundle.putString("emergency_id", strHealth);
-                getData(strHealth, String.valueOf(dblLat), String.valueOf(dblLon));
+                getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).addToBackStack("tag").commit();
+                fragment.setArguments(bundle);
+                // getData(strHealth, String.valueOf(dblLat), String.valueOf(dblLon));
 
 
             }
@@ -203,13 +206,15 @@ public class MainEmergencyFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 strMechanics = "3";
-                pDialog.show();
+               // pDialog.show();
                 bundle.putString("emergency_id", strMechanics);
-                if (String.valueOf(dblLat).length() == 0 || String.valueOf(dblLon).length() == 0) {
-                    getData(strMechanics, String.valueOf(dblLat), String.valueOf(dblLon));
-                } else {
-                    Toast.makeText(getActivity(), "Mechanics lat/Lon zero", Toast.LENGTH_SHORT).show();
-                }
+                getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).addToBackStack("tag").commit();
+                fragment.setArguments(bundle);
+//                if (String.valueOf(dblLat).length() == 0 || String.valueOf(dblLon).length() == 0) {
+//                    getData(strMechanics, String.valueOf(dblLat), String.valueOf(dblLon));
+//                } else {
+//                    Toast.makeText(getActivity(), "Mechanics lat/Lon zero", Toast.LENGTH_SHORT).show();
+//                }
 
             }
         });
@@ -218,7 +223,9 @@ public class MainEmergencyFragment extends Fragment {
             public void onClick(View view) {
                 strHighwayOfficers = "4";
                 bundle.putString("emergency_id", strHighwayOfficers);
-                getData(strHighwayOfficers, String.valueOf(dblLat), String.valueOf(dblLon));
+                //getData(strHighwayOfficers, String.valueOf(dblLat), String.valueOf(dblLon));
+                getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).addToBackStack("tag").commit();
+                fragment.setArguments(bundle);
             }
         });
 
@@ -238,11 +245,11 @@ public class MainEmergencyFragment extends Fragment {
                     if (response.getBoolean("status")) {
                         pDialog.dismiss();
                         JSONArray data = response.getJSONArray("data");
-                        Log.d("zma response emer true",String.valueOf(data));
+                        Log.d("zma response emer true", String.valueOf(data));
                         getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).addToBackStack("tag").commit();
                         fragment.setArguments(bundle);
                     } else {
-                         pDialog.dismiss();
+                        pDialog.dismiss();
                         new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
                                 .setTitleText("Oops!")
                                 .setContentText("No data found around your location")

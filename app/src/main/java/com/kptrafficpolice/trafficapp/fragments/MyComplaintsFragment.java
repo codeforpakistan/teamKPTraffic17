@@ -177,10 +177,13 @@ public class MyComplaintsFragment extends Fragment {
                             helper.setStrComplaintID(complaintObject.getString("complaint_id"));
                             helper.setStrComplaintStatus(complaintObject.getString("status"));
                             helper.setStrDescription(complaintObject.getString("description"));
+                            helper.setStrComplaintType(complaintObject.getString("complaint_type"));
+                            helper.setStrLatitude(complaintObject.getString("latitude"));
+                            helper.setStrLongitude(complaintObject.getString("longitude"));
                             helper.setStrDate(complaintObject.getString("dated"));
                             helper.setStrImage(complaintObject.getString("image"));
-                            helper.setStrVideo(complaintObject.getString("video"));
 
+                            helper.setStrVideo(complaintObject.getString("video"));
                             if (complaintObject.getString("video").contains("mp4")) {
                                 Log.d("zma video", complaintObject.getString("video"));
                             }
