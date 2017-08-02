@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
         Log.d("zma shared pref drawer", prefCNIC);
         if (prefCNIC.toString().length() > 0) {
             Log.d("zma shared if drawer", prefCNIC);
-            startActivity(new Intent(MainActivity.this, AppIntroActivity.class));
+            startActivity(new Intent(MainActivity.this, MainDrawerActivity.class));
             finish();
         } else {
             Log.d("zma shared pref else", prefCNIC);

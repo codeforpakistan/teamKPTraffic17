@@ -1,53 +1,38 @@
 package com.kptrafficpolice.trafficapp.activities;
 
+import android.Manifest;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 
 import com.github.paolorotolo.appintro.AppIntro;
-import com.github.paolorotolo.appintro.AppIntroFragment;
-import com.kptrafficpolice.trafficapp.Manifest;
 import com.kptrafficpolice.trafficapp.R;
-import com.kptrafficpolice.trafficapp.introSlider.FirstSlider;
+import com.kptrafficpolice.trafficapp.introSlider.SliderFragment;
 
 public class AppIntroActivity extends AppIntro {
+    SharedPreferences sharedPreferences;
+    SharedPreferences.Editor editor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        addSlide(FirstSlider.newInstance(0));
-        addSlide(FirstSlider.newInstance(1));
-        addSlide(FirstSlider.newInstance(2));
-        Log.d("zma appintro","show sho");
-
-        // Instead of fragments, you can also use our default slide
-        // Just set a title, description, background and image. AppIntro will do the rest
-//        addSlide(AppIntroFragment.newInstance("Complaint Registration", "Register a complaint regarding traffic violations",
-//                R.drawable.intro_complaint_icon,Color.parseColor("#32c1d6")));
-//
-//        addSlide(AppIntroFragment.newInstance("Traffic Status", "Find out about the latest traffic situation",
-//                R.drawable.intro_traffic_status_icon,Color.BLACK));
-//
-//        addSlide(AppIntroFragment.newInstance("Emergency Contacts", "Contact the nearest help provider",
-//                R.drawable.intro_emergency_icon,Color.BLACK));
-
-        // OPTIONAL METHODS
-
-        // Override bar/separator color
-        String colorCode[] = {"#32c1d6","#1f9b8c","#f79668"};
-        for (int i = 0; i<colorCode.length;i++) {
-            setBarColor(Color.parseColor(colorCode[i]));
+        sharedPreferences = getSharedPreferences("com.kptraficpolice.trafficapp",0);
+        editor = sharedPreferences.edit();
+        addSlide(SliderFragment.newInstance(0));
+        addSlide(SliderFragment.newInstance(1));
+        addSlide(SliderFragment.newInstance(2));
+        if (sharedPreferences.getBoolean("verfied",false)){
+            startActivity(new Intent(AppIntroActivity.this, MainActivity.class));
+            finish();
         }
-        setSeparatorColor(Color.parseColor("#2196F3"));
 
+        setSeparatorColor(Color.parseColor("#ffffff"));
         // SHOW or HIDE the statusbar
         showStatusBar(true);
-
-        // Edit the color of the nav bar on Lollipop+ devices
-       // setNavBarColor(Color.parseColor("#3F51B5"));
-
         // Hide Skip/Done button
         showSkipButton(true);
         showDoneButton(true);
@@ -63,30 +48,35 @@ public class AppIntroActivity extends AppIntro {
         setFlowAnimation(); // OR
         setSlideOverAnimation(); // OR
         setDepthAnimation(); // OR
-       // setCustomTransformer(yourCustomTransformer);
+        // setCustomTransformer(yourCustomTransformer);
 
         // Permissions -- takes a permission and slide number
-        //askForPermissions(new String[]{Manifest.permission.CAMERA}, 3);
+        askForPermissions(new String[]{Manifest.permission.VIBRATE}, 3);
     }
 
     @Override
-    public void onSkipPressed() {
-        // Do something when users tap on Skip button.
-    }
-
-    @Override
-    public void onNextPressed() {
-        // Do something when users tap on Next button.
-    }
-
-    @Override
-    public void onDonePressed() {
-        // Do something when users tap on Done button.
+    public void onSkipPressed(Fragment currentFragment) {
+        super.onSkipPressed(currentFragment);
+        Intent intent = new Intent(AppIntroActivity.this, MainActivity.class);
+        editor.putBoolean("verfied",true).commit();
+        startActivity(intent);
         finish();
+
     }
 
     @Override
-    public void onSlideChanged() {
-        // Do something when slide is changed
+    public void onSlideChanged(@Nullable Fragment oldFragment, @Nullable Fragment newFragment) {
+        super.onSlideChanged(oldFragment, newFragment);
+
+    }
+
+    @Override
+    public void onDonePressed(Fragment currentFragment) {
+        super.onDonePressed(currentFragment);
+        Intent intent = new Intent(AppIntroActivity.this, MainActivity.class);
+        editor.putBoolean("verfied",true).commit();
+        startActivity(intent);
+        finish();
+
     }
 }

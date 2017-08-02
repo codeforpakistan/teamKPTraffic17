@@ -1,26 +1,26 @@
 package com.kptrafficpolice.trafficapp.introSlider;
 
-import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.ColorInt;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.github.paolorotolo.appintro.ISlideBackgroundColorHolder;
 import com.kptrafficpolice.trafficapp.R;
-import com.kptrafficpolice.trafficapp.activities.MainActivity;
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link FirstSlider.OnFragmentInteractionListener} interface
+ * {@link SliderFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link FirstSlider#newInstance} factory method to
+ * Use the {@link SliderFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class FirstSlider extends Fragment {
+public class SliderFragment extends Fragment implements ISlideBackgroundColorHolder {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -31,19 +31,20 @@ public class FirstSlider extends Fragment {
     private String mParam2;
     private int position;
     private OnFragmentInteractionListener mListener;
-    int[] images = {R.layout.fragment_first_slider, R.layout.fragment_first_slider,R.layout.fragment_first_slider};
+    int[] images = {R.layout.first_slider_layout, R.layout.second_slider_layout,R.layout.third_slider_layout};
 
-    public FirstSlider() {
+    public SliderFragment() {
         // Required empty public constructor
     }
 
 
     // TODO: Rename and change types and number of parameters
-    public static FirstSlider newInstance(int position) {
-        FirstSlider fragment = new FirstSlider();
+    public static SliderFragment newInstance(int position) {
+        SliderFragment fragment = new SliderFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_PARAM1, position);
         fragment.setArguments(args);
+
         return fragment;
     }
 
@@ -75,6 +76,17 @@ public class FirstSlider extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public int getDefaultBackgroundColor() {
+
+        return 0;
+    }
+
+    @Override
+    public void setBackgroundColor(@ColorInt int backgroundColor) {
+
     }
 
     /**

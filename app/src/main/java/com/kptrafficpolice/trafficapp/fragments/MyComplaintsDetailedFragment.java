@@ -2,15 +2,20 @@ package com.kptrafficpolice.trafficapp.fragments;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.MediaController;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
@@ -21,6 +26,8 @@ import com.squareup.picasso.Picasso;
 
 import java.net.URI;
 import java.util.Locale;
+
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -42,8 +49,7 @@ public class MyComplaintsDetailedFragment extends Fragment {
     ImageView ivComplaintImage, ivMapPointer;
     VideoView vvMyComplaints;
     TextView tvComplaintType, tvComplaintDescription, tvComplaintDate, tvComplaintStatus;
-
-
+    SweetAlertDialog pDialog;
     private OnFragmentInteractionListener mListener;
 
     public MyComplaintsDetailedFragment() {
@@ -91,6 +97,14 @@ public class MyComplaintsDetailedFragment extends Fragment {
         ivComplaintImage = (ImageView) view.findViewById(R.id.iv_detail_title_image);
         ivMapPointer = (ImageView) view.findViewById(R.id.iv_detail_marker);
         vvMyComplaints = (VideoView) view.findViewById(R.id.vv_my_complaints);
+
+
+        pDialog = new SweetAlertDialog(getActivity(), SweetAlertDialog.PROGRESS_TYPE);
+        pDialog.getProgressHelper().setBarColor(Color.parseColor("#179e99"));
+        pDialog.setTitleText("Loading Video");
+        WindowManager.LayoutParams dialogPosition = pDialog.getWindow().getAttributes();
+        dialogPosition.gravity = Gravity.TOP | Gravity.CENTER;
+        dialogPosition.y = 120;   //y position
         tvComplaintType.setText(args.getString("complaint_type"));
         tvComplaintDescription.setText(args.getString("description"));
         tvComplaintStatus.setText(args.getString("status"));
@@ -100,14 +114,47 @@ public class MyComplaintsDetailedFragment extends Fragment {
         ivComplaintImage.setVisibility(View.GONE);
         if (!args.getString("video").equals("") || !args.getString("image").equals("")) {
             if (!args.getString("video").equals("")) {
+                pDialog.show();
                 vvMyComplaints.setVisibility(View.VISIBLE);
-                vvMyComplaints.setVideoURI(Uri.parse("http://103.240.220.76/kptraffic/complaints/video/" + args.getString("video")));
-                vvMyComplaints.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        vvMyComplaints.start();
+                try {
+                    // Start the MediaController
+                    MediaController mediacontroller = new MediaController(
+                            getActivity());
+                    mediacontroller.setAnchorView(vvMyComplaints);
+                    // Get the URL from String VideoURL
+                    Uri video = Uri.parse("http://103.240.220.76/kptraffic/uploads/videos/" + args.getString("video"));
+                    Log.d("zma video uri",String.valueOf(video));
+                    vvMyComplaints.setMediaController(mediacontroller);
+                    vvMyComplaints.setVideoURI(video);
+
+                } catch (Exception e) {
+                    Log.e("Error", e.getMessage());
+                    e.printStackTrace();
+                }
+
+                vvMyComplaints.requestFocus();
+                vvMyComplaints.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                    // Close the progress bar and play the video
+                    public void onPrepared(MediaPlayer mp) {
+                         pDialog.dismiss();
                     }
                 });
+
+
+
+
+
+
+
+
+
+//                vvMyComplaints.setVideoURI(Uri.parse("http://103.240.220.76/kptraffic/complaints/video/" + args.getString("video")));
+//                vvMyComplaints.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View view) {
+//                        vvMyComplaints.start();
+//                    }
+//                });
 
 
             } else if (!args.getString("image").equals("")) {
