@@ -1,9 +1,9 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#EEEEEE"
-    tools:context="com.kptrafficpolice.trafficapp.activities.MainActivity">
+    tools:context="com.kptrafficpolice.trafficapp.fragments.TrafficEducationDetailFragment">
+
 
     <ScrollView
         android:layout_width="match_parent"
@@ -15,42 +15,26 @@
 
             <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="200dp">
+                android:layout_height="wrap_content">
 
                 <ImageView
-                    android:id="@+id/iv_detail_title_image"
+                    android:id="@+id/iv_traffic_education"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:adjustViewBounds="true"
                     android:src="@drawable/test_image_pc_hotel" />
-                <VideoView
-                    android:id="@+id/vv_my_complaints"
-                    android:layout_width="match_parent"
-                    android:layout_height="200dp"
-                   />
 
                 <TextView
-                    android:id="@+id/tv_complaint_type"
+                    android:id="@+id/tv_traffic_education_detail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
                     android:background="#AA000000"
                     android:padding="12dip"
-                    android:text="Complaint Type"
+                    android:text="Image Title"
                     android:textColor="#ffffffff"
                     android:textStyle="bold" />
-                <ImageView
-                    android:id="@+id/iv_detail_marker"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_gravity="bottom|right"
-                    android:layout_marginRight="10dp"
-                    android:layout_marginBottom="5dp"
-                    android:background="@drawable/detail_map_marker"
-                    android:padding="12dip"
-                    android:text="Complaint Type"
-                    android:textColor="#ffffffff"
-                    android:textStyle="bold" />
+
             </FrameLayout>
 
             <LinearLayout
@@ -64,12 +48,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="5dp"
-                    android:text="Description"
+                    android:text="Description in English"
                     android:textColor="#1E824C"
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/tv_complaint_description"
+                    android:id="@+id/tv_english_description"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="5dp"
@@ -87,42 +71,18 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="5dp"
-                    android:text="Status"
+                    android:text="Description in Urdu"
                     android:textColor="#1E824C"
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/tv_complaint_status"
+                    android:id="@+id/tv_urdu_description"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="5dp"
-                    android:text="status" />
+                    android:text="Descritpion" />
             </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:background="@drawable/layout_border_gray_white_bg"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="5dp"
-                    android:text="Complaint Date"
-                    android:textColor="#1E824C"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/tv_complaint_date"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="5dp"
-                    android:text="Date" />
-            </LinearLayout>
-
-
         </TableLayout>
     </ScrollView>
-</LinearLayout>
+
+</FrameLayout>

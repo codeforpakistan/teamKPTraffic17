@@ -14,10 +14,12 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -89,9 +91,11 @@ public class EmergencyListAdapter extends RecyclerView.Adapter<EmergencyListAdap
         String strDistance = helper.getStrHelperDistance();
         strDistance = Double.parseDouble(strDistance)*1000+"";
         if (Double.parseDouble(strDistance)>1000){
+            Log.d("zma distance in KM",strDistance);
             strDistance = strDistance.substring(0,3);
             holder.tvEmergencyDistance.setText(strDistance+" km");
         }else {
+            Log.d("zma distance in M",strDistance);
             strDistance = strDistance.substring(0, 3);
             holder.tvEmergencyDistance.setText(strDistance + " m");
         }
@@ -149,5 +153,6 @@ public class EmergencyListAdapter extends RecyclerView.Adapter<EmergencyListAdap
         public void onAttachedToRecyclerView(RecyclerView recyclerView) {
             super.onAttachedToRecyclerView(recyclerView);
         }
+
     }
 

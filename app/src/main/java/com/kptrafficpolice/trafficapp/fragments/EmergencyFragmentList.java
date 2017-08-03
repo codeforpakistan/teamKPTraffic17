@@ -5,12 +5,15 @@ import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -63,6 +66,7 @@ public class EmergencyFragmentList extends Fragment {
     private String strEmergencyTypeID;
     double dblLat, dblLon;
     SweetAlertDialog pDialog;
+    public static String CATEGORY_NAME = "";
 
     private OnFragmentInteractionListener mListener;
 
@@ -110,6 +114,16 @@ public class EmergencyFragmentList extends Fragment {
         pDialog.setCancelable(false);
         pDialog.show();
         strEmergencyTypeID = args.getString("emergency_id");
+        if (strEmergencyTypeID.equals("2")) {
+            CATEGORY_NAME = "Medical Assistance Contacts";
+        }else if (strEmergencyTypeID.equals("3")){
+            CATEGORY_NAME = "Mechanics Contacts";
+        }else if (strEmergencyTypeID.equals("4")){
+            CATEGORY_NAME = "Highway Officer Contacts";
+        }else{
+            CATEGORY_NAME = "Rescue Contacts";
+        }
+        customActionBar();
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(mLayoutManager);
@@ -236,6 +250,18 @@ public class EmergencyFragmentList extends Fragment {
 
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
         requestQueue.add(request);
+
+    }
+    public void customActionBar() {
+        android.support.v7.app.ActionBar mActionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        mActionBar.setDisplayShowHomeEnabled(false);
+        mActionBar.setDisplayShowTitleEnabled(false);
+        LayoutInflater mInflater = LayoutInflater.from(getActivity());
+        View mCustomView = mInflater.inflate(R.layout.custom_action_bar, null);
+        TextView mTitleTextView = (TextView) mCustomView.findViewById(R.id.title_text);
+        mTitleTextView.setText(CATEGORY_NAME);
+        mActionBar.setCustomView(mCustomView);
+        mActionBar.setDisplayShowCustomEnabled(true);
 
     }
 }

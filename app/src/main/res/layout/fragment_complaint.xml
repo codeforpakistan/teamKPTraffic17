@@ -59,16 +59,6 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                    <com.jaredrummler.materialspinner.MaterialSpinner
-                        android:id="@+id/spinner"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="kuch bhi" />
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1.7dp"
-                        android:background="#EEEEEE" />
 
                     <LinearLayout
                         android:id="@+id/llayout_camera"
@@ -162,13 +152,25 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
-                        android:layout_marginTop="20dp"
-                        android:backgroundTint="#EEEEEE"
+                        android:layout_marginTop="40dp"
                         android:drawableRight="@drawable/edit"
                         android:hint="Add Description"
+                        android:textColorHint="#000"
                         android:paddingLeft="18dp"
                         android:textColor="#000"
                         android:textSize="15sp" />
+
+                    <com.jaredrummler.materialspinner.MaterialSpinner
+                        android:id="@+id/spinner"
+                        android:layout_marginTop="30dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="kuch bhi" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1.7dp"
+                        android:background="#EEEEEE" />
                 </LinearLayout>
 
                 <Button

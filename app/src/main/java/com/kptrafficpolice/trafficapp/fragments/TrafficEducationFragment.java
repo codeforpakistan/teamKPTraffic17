@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -124,7 +125,7 @@ public class TrafficEducationFragment extends Fragment {
                 return false;
             }
         });
-        //final SwipeRefreshLayout swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
+//        final SwipeRefreshLayout swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
 //        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
 //            @Override
 //            public void onRefresh() {
@@ -144,7 +145,7 @@ public class TrafficEducationFragment extends Fragment {
 
         pDialog = new SweetAlertDialog(getActivity(), SweetAlertDialog.PROGRESS_TYPE);
         pDialog.getProgressHelper().setBarColor(Color.parseColor("#179e99"));
-        pDialog.setTitleText("Wait a while");
+        pDialog.setTitleText("Loading data");
         pDialog.setCancelable(false);
         apiCall();
         searchEducationList();
@@ -204,10 +205,8 @@ public class TrafficEducationFragment extends Fragment {
             public void onErrorResponse(VolleyError error) {
                 pDialog.dismiss();
                 new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
-                        .setTitleText("Oops...")
-                        .setContentText("Server Error!")
+                        .setTitleText("Server Error")
                         .show();
-                Log.d("zma error registration", String.valueOf(error));
             }
         }) {
             @Override
@@ -225,7 +224,7 @@ public class TrafficEducationFragment extends Fragment {
             }
 
         };
-        jsonObjRequest.setRetryPolicy(new DefaultRetryPolicy(200000,
+        jsonObjRequest.setRetryPolicy(new DefaultRetryPolicy(20000,
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());

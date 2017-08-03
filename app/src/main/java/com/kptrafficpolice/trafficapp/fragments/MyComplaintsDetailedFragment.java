@@ -2,8 +2,10 @@ package com.kptrafficpolice.trafficapp.fragments;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.media.MediaPlayer;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
@@ -139,23 +141,6 @@ public class MyComplaintsDetailedFragment extends Fragment {
                          pDialog.dismiss();
                     }
                 });
-
-
-
-
-
-
-
-
-
-//                vvMyComplaints.setVideoURI(Uri.parse("http://103.240.220.76/kptraffic/complaints/video/" + args.getString("video")));
-//                vvMyComplaints.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View view) {
-//                        vvMyComplaints.start();
-//                    }
-//                });
-
 
             } else if (!args.getString("image").equals("")) {
                 ivComplaintImage.setVisibility(View.VISIBLE);

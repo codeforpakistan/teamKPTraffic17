@@ -208,7 +208,7 @@ public class ComplaintRegistrationFragment extends Fragment {
                     pictureDialog.show();
                 } else {
                     new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
-                            .setTitleText("Image Found")
+                            .setTitleText("Image captured already")
                             .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                                 @Override
                                 public void onClick(SweetAlertDialog sweetAlertDialog) {
@@ -247,7 +247,7 @@ public class ComplaintRegistrationFragment extends Fragment {
                     pictureDialog.show();
                 } else {
                     new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
-                            .setTitleText("Video Found")
+                            .setTitleText("Video recorded already")
                             .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                                 @Override
                                 public void onClick(SweetAlertDialog sweetAlertDialog) {
@@ -291,7 +291,7 @@ public class ComplaintRegistrationFragment extends Fragment {
                 sourceFile = new File("");
                 ivTakePicture.setImageResource(R.drawable.complaint_camera_picture);
                 ivCrossImage.setVisibility(View.GONE);
-                tvTakePic.setText("Take Picture");
+                tvTakePic.setText("Replace Picture");
                 tvTakePic.setTextColor(Color.BLACK);
             }
         });
@@ -302,7 +302,7 @@ public class ComplaintRegistrationFragment extends Fragment {
                 videoCaptureSourceFile = new File("");
                 ivRecordVideo.setImageResource(R.drawable.complaint_camera_video);
                 ivCrossVideo.setVisibility(View.GONE);
-                tvRecordVideo.setText("Record Video");
+                tvRecordVideo.setText("Replace Video");
                 tvRecordVideo.setTextColor(Color.BLACK);
 
             }
@@ -616,7 +616,7 @@ public class ComplaintRegistrationFragment extends Fragment {
             if (picturePath.equals("")) {
                 tvTakePic.setBackgroundResource(R.drawable.complaint_camera_icon);
             }
-            tvTakePic.setText("Take Another");
+            tvTakePic.setText("Replace Picture");
             tvTakePic.setTextColor(Color.RED);
             isImage = true;
             ivCrossImage.setVisibility(View.VISIBLE);
@@ -631,7 +631,7 @@ public class ComplaintRegistrationFragment extends Fragment {
             } else {
                 flag = false;
             }
-            tvTakePic.setText("Take another");
+            tvTakePic.setText("Replace Picture");
             tvTakePic.setTextColor(Color.RED);
             isImage = true;
             ivCrossImage.setVisibility(View.VISIBLE);
@@ -649,7 +649,7 @@ public class ComplaintRegistrationFragment extends Fragment {
                         .into(ivRecordVideo);
 //                Bitmap bitmap = ThumbnailUtils.createVideoThumbnail(videoCaptureSourceFile.getAbsolutePath(), MediaStore.Video.Thumbnails.MINI_KIND);
 //                ivRecordVideo.setImageBitmap(bitmap);
-                tvRecordVideo.setText("Record Another");
+                tvRecordVideo.setText("Replace Video");
                 tvRecordVideo.setTextColor(Color.RED);
                 isVideo = true;
                 ivCrossVideo.setVisibility(View.VISIBLE);

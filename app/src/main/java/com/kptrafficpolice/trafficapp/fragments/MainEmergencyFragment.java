@@ -301,10 +301,6 @@ public class MainEmergencyFragment extends Fragment {
 
     }
 
-    public void getMyLocation() {
-
-    }
-
     public void customActionBar() {
         android.support.v7.app.ActionBar mActionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         mActionBar.setDisplayShowHomeEnabled(false);
@@ -316,12 +312,6 @@ public class MainEmergencyFragment extends Fragment {
         mTitleTextView.setText("Emergency Contacts");
         mActionBar.setCustomView(mCustomView);
         mActionBar.setDisplayShowCustomEnabled(true);
-//        mBackArrow.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                fragment = new MainFragment();
-//                getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
-//            }
-//        });
+
     }
 }
