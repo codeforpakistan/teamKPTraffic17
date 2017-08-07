@@ -86,10 +86,10 @@ public class TrafficEducationAdapter extends RecyclerView.Adapter<TrafficEducati
         SpannableString content = new SpannableString("Login");
         content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
        // tvSkip.setText(content);
-        descUrdu =descUrdu.substring(0,10);
+//        descUrdu =descUrdu.substring(0,10);
         holder.imageTitle.setText(educationHelper.strImageTitle);
-        holder.descriptionEnglish.setText(educationHelper.strDescriptionEnglish+", "+" see more...");
-        holder.descriptionUrdu.setText(descUrdu+", "+" مزید دیکھیں...");
+        holder.descriptionEnglish.setText(educationHelper.strDescriptionEnglish);
+        holder.descriptionUrdu.setText(educationHelper.strDescriptionUrdu);
         Glide.with(context).load("http://103.240.220.76/kptraffic/uploads/traffic-education/" + educationHelper.strImage)
                 .into(holder.ivTrafficEducationImage);
 

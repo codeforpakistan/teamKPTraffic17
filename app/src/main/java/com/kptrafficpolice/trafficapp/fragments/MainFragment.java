@@ -102,6 +102,7 @@ public class MainFragment extends Fragment {
     private Tracker mTracker;
     private FirebaseAnalytics mFirebaseAnalytics;
     public static boolean SUCCESS_DIALOG = false;
+
     public MainFragment() {
         // Required empty public constructor
     }
@@ -132,65 +133,14 @@ public class MainFragment extends Fragment {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_main, container, false);
         getActivity().setTitle("Main Screen");
-        if (SUCCESS_DIALOG){
+        if (SUCCESS_DIALOG) {
             new SweetAlertDialog(getActivity(), SweetAlertDialog.SUCCESS_TYPE)
                     .setTitleText("Complaint registered")
                     .show();
             SUCCESS_DIALOG = false;
         }
         setHasOptionsMenu(true);
-//        MyApplication application = (MyApplication) getActivity().getApplication();
-//        mTracker = application.getDefaultTracker();
-        if (!CheckNetwork.isInternetAvailable(getActivity())) {
-            new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
-                    .setTitleText("Oops")
-                    .setContentText("You don't have internet connection!")
-                    .setConfirmText("Refresh")
-                    .setCancelText("Exit App")
-                    .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                        @Override
-                        public void onClick(SweetAlertDialog sweetAlertDialog) {
-                            getActivity().finish();
-
-                        }
-                    })
-                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                        @Override
-                        public void onClick(SweetAlertDialog sweetAlertDialog) {
-                            startActivity(new Intent(getActivity(), MainDrawerActivity.class));
-                            getActivity().finish();
-                        }
-                    })
-                    .show();
-
-        }else {
-            final LocationManager manager = (LocationManager) getActivity().getSystemService( getActivity().LOCATION_SERVICE );
-
-            if ( !manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
-                Log.d("zma GPS status","nde on");
-                new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
-                        .setTitleText("Turn on your GPS")
-                        .setConfirmText("OK")
-                        .setCancelText("NO")
-                        .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                            @Override
-                            public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                getActivity().finish();
-
-                            }
-                        })
-                        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                            @Override
-                            public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                Intent settingsIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                                getActivity().startActivity(settingsIntent);
-                                sweetAlertDialog.dismiss();
-
-                            }
-                        })
-                        .show();
-                // Call your Alert message
-            }
+        {
             SmartLocation.with(getActivity()).location()
                     .start(new OnLocationUpdatedListener() {
 
@@ -204,7 +154,7 @@ public class MainFragment extends Fragment {
 
 
                                 geoCoder = new Geocoder(getActivity(), Locale.getDefault());
-                            }catch (Exception e){
+                            } catch (Exception e) {
                                 e.printStackTrace();
                             }
                             StringBuilder builder = new StringBuilder();
@@ -220,15 +170,15 @@ public class MainFragment extends Fragment {
                                     String postalCode = address.get(0).getPostalCode();
                                     String knownName = address.get(0).getFeatureName();
                                     String subadmin = address.get(0).getSubLocality();
-                                Log.d("zma city 2", "city " + city + "\nstate " + state + "\n country " +
-                                        country + "\n postal code " + postalCode + "\nknow name " + knownName + "get sub admin area" + subadmin);
+                                    Log.d("zma city 2", "city " + city + "\nstate " + state + "\n country " +
+                                            country + "\n postal code " + postalCode + "\nknow name " + knownName + "get sub admin area" + subadmin);
                                     builder.append(addressStr);
                                     builder.append(" ");
                                 }
 
                                 strCityName = builder.toString(); //This is the complete address.
                                 mTitleTextView.setText(strCityName);
-                                if (strCityName.equals("")){
+                                if (strCityName.equals("")) {
                                     mTitleTextView.setText("Our Services");
                                 }
                                 // Log.d("zma city", strCityName);
@@ -250,9 +200,7 @@ public class MainFragment extends Fragment {
         mTracker = application.getDefaultTracker();
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
         Log.d("zma analytics", "Setting screen name: " + "Main Fragment");
-//        mTracker.setScreenName("Image~" + "Main Fragment");
-       // mTracker.send(new HitBuilders.ScreenViewBuilder().build());
-        tvUserName = (TextView)view.findViewById(R.id.tv_user_name);
+        tvUserName = (TextView) view.findViewById(R.id.tv_user_name);
         pDialog = new SweetAlertDialog(getActivity(), SweetAlertDialog.PROGRESS_TYPE);
         pDialog.getProgressHelper().setBarColor(Color.parseColor("#179e99"));
         pDialog.setCancelable(false);
@@ -264,8 +212,8 @@ public class MainFragment extends Fragment {
 //        }
         sharedPreferences = getActivity().getSharedPreferences("com.ghosttech.kptraffic", 0);
         editor = sharedPreferences.edit();
-        String user_name_from_reg = sharedPreferences.getString("user_name",null);
-       // Log.d("zma reg name", user_name_from_reg);
+        String user_name_from_reg = sharedPreferences.getString("user_name", null);
+        // Log.d("zma reg name", user_name_from_reg);
         tvUserName.setText(user_name_from_reg);
         MultiDex.install(getActivity());
         shake = AnimationUtils.loadAnimation(getActivity(), R.anim.shake);
@@ -274,14 +222,13 @@ public class MainFragment extends Fragment {
             onButtonClick();
         } else {
             new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
-                    .setTitleText("Oops")
-                    .setContentText("You don't have internet connection!")
+                    .setTitleText("No Internet Connection")
                     .setConfirmText("Refresh")
                     .setCancelText("Exit App")
                     .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
                         @Override
                         public void onClick(SweetAlertDialog sweetAlertDialog) {
-                            getActivity().finish();
+                            sweetAlertDialog.dismiss();
 
                         }
                     })
@@ -385,6 +332,37 @@ public class MainFragment extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        final LocationManager manager = (LocationManager) getActivity().getSystemService(getActivity().LOCATION_SERVICE);
+
+        if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
+                    .setTitleText("Turn on your GPS")
+                    .setConfirmText("OK")
+                    .setCancelText("NO")
+                    .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sweetAlertDialog) {
+                            sweetAlertDialog.dismiss();
+
+                        }
+                    })
+                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sweetAlertDialog) {
+                            Intent settingsIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                            getActivity().startActivity(settingsIntent);
+                            sweetAlertDialog.dismiss();
+
+                        }
+                    })
+                    .show();
+            // Call your Alert message
+        }
+    }
+
     public void customActionBar() {
         android.support.v7.app.ActionBar mActionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         mActionBar.setDisplayShowHomeEnabled(false);
@@ -393,7 +371,7 @@ public class MainFragment extends Fragment {
         View mCustomView = mInflater.inflate(R.layout.custom_action_bar, null);
         mTitleTextView = (TextView) mCustomView.findViewById(R.id.title_text);
         mTitleTextView.setText("Our Services");
-      //  ImageView mBackArrow = (ImageView) mCustomView.findViewById(R.id.iv_back_arrow);
+        //  ImageView mBackArrow = (ImageView) mCustomView.findViewById(R.id.iv_back_arrow);
         //mBackArrow.setImageResource(R.drawable.map_pointer);
 //        mBackArrow.setVisibility(View.GONE);
         mActionBar.setCustomView(mCustomView);
@@ -429,7 +407,7 @@ public class MainFragment extends Fragment {
                 strChallanTrackingID = etLicNumber.getText().toString();
                 if (strChallanTrackingID.toString().equals("")
                         || strChallanTrackingID.toString().length() > 10) {
-                  //  Log.d("zma else", strChallanTrackingID);
+                    //  Log.d("zma else", strChallanTrackingID);
                     etLicNumber.startAnimation(shake);
                 } else {
                     apiCallChallan(strChallanTrackingID);
@@ -447,10 +425,10 @@ public class MainFragment extends Fragment {
                 strLicenseNumber = etLicNumber.getText().toString();
                 if (strLicenseNumber.toString().equals("")
                         || strLicenseNumber.toString().length() < 12) {
-                  //  Log.d("zma else", strLicenseNumber);
+                    //  Log.d("zma else", strLicenseNumber);
                     etLicNumber.startAnimation(shake);
                 } else if (strLicenseNumber.toString().length() == 12) {
-                   // Log.d("zma License", strLicenseNumber);
+                    // Log.d("zma License", strLicenseNumber);
                     apiCallLicense(strLicenseNumber);
                 } else if (strLicenseNumber.toString().length() == 13) {
                     strCNIC = strLicenseNumber;
@@ -474,7 +452,7 @@ public class MainFragment extends Fragment {
                         try {
                             JSONObject jsonResponseObject = new JSONObject(response);
                             boolean status = jsonResponseObject.getBoolean("status");
-                          //  Log.d("zma status", String.valueOf(status));
+                            //  Log.d("zma status", String.valueOf(status));
                             if (status) {
                                 pDialog.dismiss();
                                 dialog.dismiss();
@@ -512,8 +490,8 @@ public class MainFragment extends Fragment {
                             pDialog.dismiss();
                             Log.d("zma status lic", String.valueOf(response));
                             new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
-                                    .setTitleText("Oops...")
-                                    .setContentText("You are not a verified license holder")
+                                    .setTitleText("Please enter correct CNIC.")
+                                    .setContentText("")
                                     .show();
                         }
                     }
@@ -523,8 +501,7 @@ public class MainFragment extends Fragment {
             public void onErrorResponse(VolleyError error) {
                 pDialog.dismiss();
                 new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
-                        .setTitleText("Oops...")
-                        .setContentText("Server Error!")
+                        .setTitleText("Server Error")
                         .show();
                 Log.d("zma error registration", String.valueOf(error));
             }
@@ -608,8 +585,7 @@ public class MainFragment extends Fragment {
             public void onErrorResponse(VolleyError error) {
                 pDialog.dismiss();
                 new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
-                        .setTitleText("Oops...")
-                        .setContentText("Server Error!")
+                        .setTitleText("Server Error")
                         .show();
                 Log.d("zma error registration", String.valueOf(error));
             }

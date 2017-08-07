@@ -1,4 +1,4 @@
-package com.kptrafficpolice.trafficapp.introSlider;
+package com.kptrafficpolice.trafficapp.fragments;
 
 import android.net.Uri;
 import android.os.Bundle;

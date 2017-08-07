@@ -111,8 +111,9 @@ public class TrafficEducationFragment extends Fragment {
         customActionBar();
         Base.initialize(getActivity());
         searchBar = (MaterialSearchBar) view.findViewById(R.id.searchBar);
-        searchBar.setHint("Custom hint");
+        searchBar.setHint("Search");
         searchBar.setSpeechMode(false);
+        data.clear();
         mRecyclerView = (RecyclerView) view.findViewById(R.id.rv);
         mRecyclerView.setOnTouchListener(new View.OnTouchListener() {
 
@@ -253,6 +254,7 @@ public class TrafficEducationFragment extends Fragment {
                 data.add(trafficEducationHelper);
             }
 
+
             mLayoutManager = new LinearLayoutManager(getActivity());
             mRecyclerView.setLayoutManager(mLayoutManager);
 
@@ -263,10 +265,9 @@ public class TrafficEducationFragment extends Fragment {
             // specify an adapter (see also next example)
             mAdapter = new TrafficEducationAdapter(getActivity(), data);
             mRecyclerView.setAdapter(mAdapter);
-
-            mAdapter.notifyDataSetChanged();
-
         }
+
+        mAdapter.notifyDataSetChanged();
 
     }
     public void customActionBar() {
@@ -277,7 +278,7 @@ public class TrafficEducationFragment extends Fragment {
         View mCustomView = mInflater.inflate(R.layout.custom_action_bar, null);
         TextView mTitleTextView = (TextView) mCustomView.findViewById(R.id.title_text);
         ImageView mBackArrow = (ImageView) mCustomView.findViewById(R.id.iv_back_arrow);
-        mTitleTextView.setText("Educate yourself and drive safe");
+        mTitleTextView.setText("Traffic Education");
 //        mBackArrow.setImageResource(R.drawable.back_arrow);
 //        mBackArrow.setOnClickListener(new View.OnClickListener() {
 //            @Override

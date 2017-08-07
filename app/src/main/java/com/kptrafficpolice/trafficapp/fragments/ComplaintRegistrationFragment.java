@@ -1,16 +1,19 @@
 package com.kptrafficpolice.trafficapp.fragments;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.hardware.Camera;
 import android.location.Location;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
@@ -164,6 +167,7 @@ public class ComplaintRegistrationFragment extends Fragment {
                 return false;
             }
         });
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED);
         linearLayout = (LinearLayout) view.findViewById(R.id.llayout_camera);
         tvTakePic = (TextView) view.findViewById(R.id.tv_take_pic);
         ivCrossImage = (ImageView) view.findViewById(R.id.iv_cross_image);
@@ -283,7 +287,6 @@ public class ComplaintRegistrationFragment extends Fragment {
                     }
                 });
         onSendButton();
-        // footerButtons();
         ivCrossImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -81,7 +81,7 @@
                     android:hint="03xx1234567"
                     android:inputType="number"
                     android:backgroundTint="#fff"
-                    android:maxLength="13"
+                    android:maxLength="11"
                     android:textColorHint="#fff"
                     android:textColor="#fff"/>
 

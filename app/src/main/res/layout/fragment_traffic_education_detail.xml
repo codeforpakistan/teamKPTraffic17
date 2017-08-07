@@ -20,7 +20,7 @@
                 <ImageView
                     android:id="@+id/iv_traffic_education"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:adjustViewBounds="true"
                     android:src="@drawable/test_image_pc_hotel" />
 
@@ -70,8 +70,9 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="right"
                     android:padding="5dp"
-                    android:text="Description in Urdu"
+                    android:text="اردو میں وضاحت"
                     android:textColor="#1E824C"
                     android:textStyle="bold" />
 
@@ -79,6 +80,7 @@
                     android:id="@+id/tv_urdu_description"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="right"
                     android:padding="5dp"
                     android:text="Descritpion" />
             </LinearLayout>

@@ -148,7 +148,7 @@
                                 android:gravity="left"
                                 android:text="Lal Khan"
                                 android:textColor="#bebdbe"
-                                android:textSize="18sp" />
+                                android:textSize="15sp" />
                         </LinearLayout>
 
                         <View

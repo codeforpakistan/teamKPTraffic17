@@ -16,6 +16,7 @@
             android:id="@+id/traffic_education_image"
             android:layout_width="match_parent"
             android:layout_height="217dp"
+            android:scaleType="fitXY"
             android:src="@drawable/test_image_traffic_edu" />
 
         <TextView
@@ -39,7 +40,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/tv_image_title"
             android:layout_marginLeft="10dp"
-
+            android:visibility="gone"
             android:layout_marginRight="10dp"
             android:text="English Description English Description here here"
             android:textAppearance="?android:attr/textAppearanceLarge"
@@ -53,6 +54,7 @@
             android:layout_below="@+id/description_english"
             android:layout_marginRight="10dp"
             android:gravity="right"
+            android:visibility="gone"
             android:text="Urdu Description Urdu Description Urdu Description Urdu Description"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="#ababaa"

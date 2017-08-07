@@ -90,14 +90,15 @@ public class ChallanFragment extends Fragment {
         String strChallanStatus = String.valueOf(args.get("status"));
         if (strChallanStatus.equals("Paid")) {
             tvChallanStatus.setTextColor(Color.parseColor("#13988a"));
-            tvChallanStatus.setTextSize(25);
+            tvChallanStatus.setTextSize(20);
             tvChallanStatus.setText(String.valueOf(args.get("status")));
 
         }
         else{
             tvChallanStatus.setTextColor(Color.parseColor("#13988a"));
-            tvChallanStatus.setTextSize(25);
+            tvChallanStatus.setTextSize(20);
             tvChallanStatus.setText("Unpaid");
+            tvChallanStatus.setTextColor(Color.RED);
         }
         return view;
     }

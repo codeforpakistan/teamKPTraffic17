@@ -7,11 +7,9 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 
 import com.github.paolorotolo.appintro.AppIntro;
-import com.kptrafficpolice.trafficapp.R;
-import com.kptrafficpolice.trafficapp.introSlider.SliderFragment;
+import com.kptrafficpolice.trafficapp.fragments.SliderFragment;
 
 public class AppIntroActivity extends AppIntro {
     SharedPreferences sharedPreferences;
