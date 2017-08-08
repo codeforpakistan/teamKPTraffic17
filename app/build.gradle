@@ -88,6 +88,7 @@ dependencies {
     compile 'com.thefinestartist:finestwebview:1.2.7'
     compile 'com.github.mancj:MaterialSearchBar:0.7.1'
     compile 'com.github.apl-devs:appintro:v4.2.2'
+    compile 'com.commit451:PhotoView:1.2.4'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     testCompile 'junit:junit:4.12'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.0.0-RC0'

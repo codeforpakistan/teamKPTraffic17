@@ -27,6 +27,8 @@ import com.kptrafficpolice.trafficapp.fragments.TrafficEducationDetailFragment;
 import java.util.Collections;
 import java.util.List;
 
+import uk.co.senab.photoview.PhotoViewAttacher;
+
 /**
  * Created by Fazal Mola on 5/15/2017.
  */
@@ -39,7 +41,7 @@ public class TrafficEducationAdapter extends RecyclerView.Adapter<TrafficEducati
     public class ViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
         CardView cvTrafficEducation;
-        TextView descriptionEnglish, descriptionUrdu,imageTitle;
+        TextView descriptionEnglish, descriptionUrdu, imageTitle;
         ImageView ivTrafficEducationImage;
 
 
@@ -85,7 +87,7 @@ public class TrafficEducationAdapter extends RecyclerView.Adapter<TrafficEducati
         String descUrdu = String.valueOf(educationHelper.strDescriptionUrdu);
         SpannableString content = new SpannableString("Login");
         content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
-       // tvSkip.setText(content);
+        // tvSkip.setText(content);
 //        descUrdu =descUrdu.substring(0,10);
         holder.imageTitle.setText(educationHelper.strImageTitle);
         holder.descriptionEnglish.setText(educationHelper.strDescriptionEnglish);
@@ -98,10 +100,10 @@ public class TrafficEducationAdapter extends RecyclerView.Adapter<TrafficEducati
             public void onClick(View view) {
                 Fragment fragment = new TrafficEducationDetailFragment();
                 Bundle args = new Bundle();
-                args.putString("title",String.valueOf(educationHelper.strImageTitle));
-                args.putString("englishDescription",String.valueOf(educationHelper.strDescriptionEnglish));
-                args.putString("urduDescription",String.valueOf(educationHelper.strDescriptionUrdu));
-                args.putString("image",String.valueOf(educationHelper.strImage));
+                args.putString("title", String.valueOf(educationHelper.strImageTitle));
+                args.putString("englishDescription", String.valueOf(educationHelper.strDescriptionEnglish));
+                args.putString("urduDescription", String.valueOf(educationHelper.strDescriptionUrdu));
+                args.putString("image", String.valueOf(educationHelper.strImage));
                 fragment.setArguments(args);
                 ((AppCompatActivity) context).getFragmentManager().beginTransaction()
                         .replace(R.id.fragment_container, fragment).addToBackStack("tag").commit();

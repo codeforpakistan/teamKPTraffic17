@@ -6,6 +6,7 @@ package com.kptrafficpolice.trafficapp.utilities;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -26,6 +27,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.kptrafficpolice.trafficapp.R;
+import com.kptrafficpolice.trafficapp.activities.MainDrawerActivity;
 import com.kptrafficpolice.trafficapp.fragments.LiveUpdateResultFragment;
 
 import org.json.JSONArray;
@@ -38,6 +40,8 @@ import java.util.List;
 import java.util.Map;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
+
+import static com.thefinestartist.utils.content.ContextUtil.startActivity;
 
 public class LiveUpdateAdapter extends RecyclerView.Adapter<LiveUpdateAdapter.ViewHolder> {
     private ArrayList<String> mDataset;
@@ -100,63 +104,86 @@ public class LiveUpdateAdapter extends RecyclerView.Adapter<LiveUpdateAdapter.Vi
         holder.cvItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                fragment = new LiveUpdateResultFragment();
+                if (CheckNetwork.isInternetAvailable(context)) {
+                    fragment = new LiveUpdateResultFragment();
 
-                switch (itemPosition) {
-                    case 0:
-                        strRoadName = "gt_road";
-                        args.putString("road_name", strRoadName);
-                        Log.d("zma strRoadName", strRoadName);
-                        apiCall(strRoadName);
-                        break;
-                    case 1:
-                        strRoadName = "khyber_road";
-                        args.putString("road_name", strRoadName);
-                        apiCall(strRoadName);
-                        break;
-                    case 2:
-                        strRoadName = "charsadda_road";
-                        args.putString("road_name", strRoadName);
-                        apiCall(strRoadName);
-                        break;
-                    case 3:
-                        strRoadName = "jail_road";
-                        args.putString("road_name", strRoadName);
-                        apiCall(strRoadName);
-                        break;
-                    case 4:
-                        strRoadName = "university_road";
-                        args.putString("road_name", strRoadName);
-                        apiCall(strRoadName);
-                        break;
-                    case 5:
-                        strRoadName = "dalazak_road";
-                        args.putString("road_name", strRoadName);
-                        apiCall(strRoadName);
-                        break;
-                    case 6:
-                        strRoadName = "saddar_road";
-                        args.putString("road_name", strRoadName);
-                        apiCall(strRoadName);
-                        break;
-                    case 7:
-                        strRoadName = "baghenaran_road";
-                        args.putString("road_name", strRoadName);
-                        apiCall(strRoadName);
-                        break;
-                    case 8:
-                        strRoadName = "warsak_road";
-                        args.putString("road_name", strRoadName);
-                        apiCall(strRoadName);
-                        break;
-                    case 9:
-                        strRoadName = "kohat_road";
-                        args.putString("road_name", strRoadName);
-                        apiCall(strRoadName);
-                        break;
+                    switch (itemPosition) {
+                        case 0:
+                            strRoadName = "gt_road";
+                            args.putString("road_name", strRoadName);
+                            Log.d("zma strRoadName", strRoadName);
+                            apiCall(strRoadName);
+                            break;
+                        case 1:
+                            strRoadName = "khyber_road";
+                            args.putString("road_name", strRoadName);
+                            apiCall(strRoadName);
+                            break;
+                        case 2:
+                            strRoadName = "charsadda_road";
+                            args.putString("road_name", strRoadName);
+                            apiCall(strRoadName);
+                            break;
+                        case 3:
+                            strRoadName = "jail_road";
+                            args.putString("road_name", strRoadName);
+                            apiCall(strRoadName);
+                            break;
+                        case 4:
+                            strRoadName = "university_road";
+                            args.putString("road_name", strRoadName);
+                            apiCall(strRoadName);
+                            break;
+                        case 5:
+                            strRoadName = "dalazak_road";
+                            args.putString("road_name", strRoadName);
+                            apiCall(strRoadName);
+                            break;
+                        case 6:
+                            strRoadName = "saddar_road";
+                            args.putString("road_name", strRoadName);
+                            apiCall(strRoadName);
+                            break;
+                        case 7:
+                            strRoadName = "baghenaran_road";
+                            args.putString("road_name", strRoadName);
+                            apiCall(strRoadName);
+                            break;
+                        case 8:
+                            strRoadName = "warsak_road";
+                            args.putString("road_name", strRoadName);
+                            apiCall(strRoadName);
+                            break;
+                        case 9:
+                            strRoadName = "kohat_road";
+                            args.putString("road_name", strRoadName);
+                            apiCall(strRoadName);
+                            break;
+                    }
+                    fragment.setArguments(args);
+                    Log.d("zma id", String.valueOf(position));
+                }else  {
+                    new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
+                            .setTitleText("No Internet Connection")
+                            .setConfirmText("Refresh")
+                            .setCancelText("Cancel")
+                            .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                @Override
+                                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                    sweetAlertDialog.dismiss();
+
+                                }
+                            })
+                            .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                @Override
+                                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                    startActivity(new Intent(context, MainDrawerActivity.class));
+                                    sweetAlertDialog.dismiss();
+
+                                }
+                            })
+                            .show();
                 }
-                fragment.setArguments(args);
-                Log.d("zma id", String.valueOf(position));
             }
         });
 

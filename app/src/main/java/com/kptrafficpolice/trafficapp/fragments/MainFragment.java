@@ -20,6 +20,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
@@ -141,59 +142,63 @@ public class MainFragment extends Fragment {
         }
         setHasOptionsMenu(true);
         {
-            SmartLocation.with(getActivity()).location()
-                    .start(new OnLocationUpdatedListener() {
+            try {
+                SmartLocation.with(getActivity()).location()
+                        .start(new OnLocationUpdatedListener() {
 
-                        @Override
-                        public void onLocationUpdated(Location location) {
-                            dblLat = location.getLatitude();
-                            dblLon = location.getLongitude();
-                            Log.d("Location : ", "" + dblLat + " " + dblLon);
-                            Geocoder geoCoder = null;
-                            try {
+                            @Override
+                            public void onLocationUpdated(Location location) {
+                                dblLat = location.getLatitude();
+                                dblLon = location.getLongitude();
+                                Log.d("Location : ", "" + dblLat + " " + dblLon);
+                                Geocoder geoCoder = null;
+                                try {
 
 
-                                geoCoder = new Geocoder(getActivity(), Locale.getDefault());
-                            } catch (Exception e) {
-                                e.printStackTrace();
+                                    geoCoder = new Geocoder(getActivity(), Locale.getDefault());
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                                StringBuilder builder = new StringBuilder();
+
+                                try {
+                                    List<Address> address = geoCoder.getFromLocation(dblLat, dblLon, 1);
+                                    int maxLines = address.get(0).getMaxAddressLineIndex();
+                                    for (int i = 0; i < maxLines; i++) {
+                                        String addressStr = address.get(0).getAddressLine(i);
+                                        String city = address.get(0).getLocality();
+                                        String state = address.get(0).getAdminArea();
+                                        String country = address.get(0).getCountryName();
+                                        String postalCode = address.get(0).getPostalCode();
+                                        String knownName = address.get(0).getFeatureName();
+                                        String subadmin = address.get(0).getSubLocality();
+                                        Log.d("zma city 2", "city " + city + "\nstate " + state + "\n country " +
+                                                country + "\n postal code " + postalCode + "\nknow name " + knownName + "get sub admin area" + subadmin);
+                                        builder.append(addressStr);
+                                        builder.append(" ");
+                                    }
+
+                                    strCityName = builder.toString(); //This is the complete address.
+                                    mTitleTextView.setText(strCityName);
+                                    if (strCityName.equals("")) {
+                                        mTitleTextView.setText("Our Services");
+                                    }
+                                    // Log.d("zma city", strCityName);
+                                    if (address.size() > 0) {
+
+                                        System.out.println(address.get(0).getCountryName());
+                                        System.out.println(address.get(0).getAdminArea());
+                                        System.out.println(address.get(0).getSubLocality());
+                                    }
+                                } catch (IOException e) {
+                                } catch (NullPointerException e) {
+                                }
+
                             }
-                            StringBuilder builder = new StringBuilder();
-
-                            try {
-                                List<Address> address = geoCoder.getFromLocation(dblLat, dblLon, 1);
-                                int maxLines = address.get(0).getMaxAddressLineIndex();
-                                for (int i = 0; i < maxLines; i++) {
-                                    String addressStr = address.get(0).getAddressLine(i);
-                                    String city = address.get(0).getLocality();
-                                    String state = address.get(0).getAdminArea();
-                                    String country = address.get(0).getCountryName();
-                                    String postalCode = address.get(0).getPostalCode();
-                                    String knownName = address.get(0).getFeatureName();
-                                    String subadmin = address.get(0).getSubLocality();
-                                    Log.d("zma city 2", "city " + city + "\nstate " + state + "\n country " +
-                                            country + "\n postal code " + postalCode + "\nknow name " + knownName + "get sub admin area" + subadmin);
-                                    builder.append(addressStr);
-                                    builder.append(" ");
-                                }
-
-                                strCityName = builder.toString(); //This is the complete address.
-                                mTitleTextView.setText(strCityName);
-                                if (strCityName.equals("")) {
-                                    mTitleTextView.setText("Our Services");
-                                }
-                                // Log.d("zma city", strCityName);
-                                if (address.size() > 0) {
-
-                                    System.out.println(address.get(0).getCountryName());
-                                    System.out.println(address.get(0).getAdminArea());
-                                    System.out.println(address.get(0).getSubLocality());
-                                }
-                            } catch (IOException e) {
-                            } catch (NullPointerException e) {
-                            }
-
-                        }
-                    });
+                        });
+            }catch (Exception e){
+                e.printStackTrace();
+            }
 
         }
         MyApplication application = new MyApplication();
@@ -212,7 +217,7 @@ public class MainFragment extends Fragment {
 //        }
         sharedPreferences = getActivity().getSharedPreferences("com.ghosttech.kptraffic", 0);
         editor = sharedPreferences.edit();
-        String user_name_from_reg = sharedPreferences.getString("user_name", null);
+        String user_name_from_reg = sharedPreferences.getString("user_name", "");
         // Log.d("zma reg name", user_name_from_reg);
         tvUserName.setText(user_name_from_reg);
         MultiDex.install(getActivity());
@@ -224,7 +229,7 @@ public class MainFragment extends Fragment {
             new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
                     .setTitleText("No Internet Connection")
                     .setConfirmText("Refresh")
-                    .setCancelText("Exit App")
+                    .setCancelText("Cancel")
                     .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
                         @Override
                         public void onClick(SweetAlertDialog sweetAlertDialog) {
@@ -313,9 +318,33 @@ public class MainFragment extends Fragment {
         btnTrafficEducation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                fragment = new TrafficEducationFragment();
-                getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).
-                        addToBackStack("tag").commit();
+                if (CheckNetwork.isInternetAvailable(getActivity())) {
+                    fragment = new TrafficEducationFragment();
+                    getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).
+                            addToBackStack("tag").commit();
+                }else {
+                    new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
+                            .setTitleText("No Internet Connection")
+                            .setConfirmText("Refresh")
+                            .setCancelText("Cancel")
+                            .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                @Override
+                                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                    sweetAlertDialog.dismiss();
+
+                                }
+                            })
+                            .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                @Override
+                                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                    startActivity(new Intent(getActivity(), MainDrawerActivity.class));
+                                    sweetAlertDialog.dismiss();
+                                    getActivity().finish();
+
+                                }
+                            })
+                            .show();
+                }
             }
         });
         btnChallanTracking.setOnClickListener(new View.OnClickListener() {
@@ -381,22 +410,26 @@ public class MainFragment extends Fragment {
 
     public void customDialogLicenseVerification() {
         dialog = new Dialog(getActivity());
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.custom_input_dialog);
         dialog.setCancelable(true);
         etLicNumber = (EditText) dialog.findViewById(R.id.et_verify_license);
         btnShowRecord = (Button) dialog.findViewById(R.id.btn_search_license_record);
         dialog.show();
+        dialog.getWindow().getDecorView().setBackgroundResource(android.R.color.transparent);
         inputValidationLicense();
     }
 
     public void customDialogChallanStatus() {
         dialog = new Dialog(getActivity());
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.custom_input_dialog);
         dialog.setCancelable(true);
         etLicNumber = (EditText) dialog.findViewById(R.id.et_verify_license);
         etLicNumber.setHint("Enter Challan Number");
         btnShowRecord = (Button) dialog.findViewById(R.id.btn_search_license_record);
         dialog.show();
+        dialog.getWindow().getDecorView().setBackgroundResource(android.R.color.transparent);
         inputValidationChallan();
     }
 
@@ -410,8 +443,33 @@ public class MainFragment extends Fragment {
                     //  Log.d("zma else", strChallanTrackingID);
                     etLicNumber.startAnimation(shake);
                 } else {
-                    apiCallChallan(strChallanTrackingID);
-                    dialog.dismiss();
+                    if (CheckNetwork.isInternetAvailable(getActivity())) {
+                        apiCallChallan(strChallanTrackingID);
+                        dialog.dismiss();
+                    }else{
+                        dialog.dismiss();
+                        new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
+                                .setTitleText("No Internet Connection")
+                                .setConfirmText("Refresh")
+                                .setCancelText("Cancel")
+                                .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                    @Override
+                                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                        sweetAlertDialog.dismiss();
+
+                                    }
+                                })
+                                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                    @Override
+                                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                        startActivity(new Intent(getActivity(), MainDrawerActivity.class));
+                                        sweetAlertDialog.dismiss();
+                                        getActivity().finish();
+
+                                    }
+                                })
+                                .show();
+                    }
                 }
 
             }
@@ -427,12 +485,35 @@ public class MainFragment extends Fragment {
                         || strLicenseNumber.toString().length() < 12) {
                     //  Log.d("zma else", strLicenseNumber);
                     etLicNumber.startAnimation(shake);
-                } else if (strLicenseNumber.toString().length() == 12) {
-                    // Log.d("zma License", strLicenseNumber);
-                    apiCallLicense(strLicenseNumber);
                 } else if (strLicenseNumber.toString().length() == 13) {
                     strCNIC = strLicenseNumber;
-                    apiCallLicense(strCNIC);
+                    if (CheckNetwork.isInternetAvailable(getActivity())) {
+                        apiCallLicense(strCNIC);
+                        pDialog.dismiss();
+                    }else{
+                        pDialog.dismiss();
+                        new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
+                                .setTitleText("No Internet Connection")
+                                .setConfirmText("Refresh")
+                                .setCancelText("Cancel")
+                                .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                    @Override
+                                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                        sweetAlertDialog.dismiss();
+
+                                    }
+                                })
+                                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                    @Override
+                                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                        startActivity(new Intent(getActivity(), MainDrawerActivity.class));
+                                        sweetAlertDialog.dismiss();
+                                        getActivity().finish();
+
+                                    }
+                                })
+                                .show();
+                    }
                 }
 
             }
@@ -481,8 +562,7 @@ public class MainFragment extends Fragment {
                             } else {
                                 pDialog.dismiss();
                                 new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
-                                        .setTitleText("Oops...")
-                                        .setContentText("No Data found")
+                                        .setTitleText("No Data found")
                                         .show();
                             }
                         } catch (JSONException e) {
@@ -500,10 +580,10 @@ public class MainFragment extends Fragment {
             @Override
             public void onErrorResponse(VolleyError error) {
                 pDialog.dismiss();
-                new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
-                        .setTitleText("Server Error")
+                new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
+                        .setTitleText("Please enter correct CNIC.")
+                        .setContentText("")
                         .show();
-                Log.d("zma error registration", String.valueOf(error));
             }
         }) {
             @Override

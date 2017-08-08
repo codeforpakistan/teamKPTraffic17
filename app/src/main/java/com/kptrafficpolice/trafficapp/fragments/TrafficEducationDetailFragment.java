@@ -16,6 +16,8 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.kptrafficpolice.trafficapp.R;
 
+import uk.co.senab.photoview.PhotoViewAttacher;
+
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
@@ -75,6 +77,8 @@ public class TrafficEducationDetailFragment extends Fragment {
         tvUrduDescription.setText(String.valueOf(args.getString("urduDescription")));
         Glide.with(getActivity()).load("http://103.240.220.76/kptraffic/uploads/traffic-education/"+
         args.getString("image")).into(ivEducationImage);
+        PhotoViewAttacher pAttacher = new PhotoViewAttacher(ivEducationImage);
+        pAttacher.update();
         customActionBar();
         return view;
     }

@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="217dp"
             android:scaleType="fitXY"
-            android:src="@drawable/test_image_traffic_edu" />
+             />
 
         <TextView
             android:id="@+id/tv_image_title"

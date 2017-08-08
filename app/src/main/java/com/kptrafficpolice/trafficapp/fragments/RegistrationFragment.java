@@ -247,6 +247,7 @@ public class RegistrationFragment extends Fragment {
                 params.put("cnic", strCNIC);
                 params.put("phone_no", strPhoneNumber);
                 editor.putString("user_name", strName).commit();
+                Log.d("zma reg name",strName);
                 return params;
             }
 

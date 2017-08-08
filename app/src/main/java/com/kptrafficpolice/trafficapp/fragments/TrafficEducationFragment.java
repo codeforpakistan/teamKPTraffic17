@@ -37,6 +37,7 @@ import com.thefinestartist.Base;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -72,6 +73,7 @@ public class TrafficEducationFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
     SweetAlertDialog pDialog;
     TrafficEducationHelper trafficEducationHelper;
+
     public TrafficEducationFragment() {
         // Required empty public constructor
     }
@@ -198,6 +200,19 @@ public class TrafficEducationFragment extends Fragment {
 
                         } catch (JSONException e) {
                             e.printStackTrace();
+                            pDialog.dismiss();
+                            new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
+                                    .setTitleText("Server Error")
+                                    .setConfirmText("OK")
+                                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                        @Override
+                                        public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                            Fragment fragment = new MainFragment();
+                                            getFragmentManager().beginTransaction().
+                                                    replace(R.id.fragment_container, fragment).commit();
+                                        }
+                                    })
+                                    .show();
                         }
                     }
                 }, new Response.ErrorListener() {
@@ -207,6 +222,15 @@ public class TrafficEducationFragment extends Fragment {
                 pDialog.dismiss();
                 new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
                         .setTitleText("Server Error")
+                        .setConfirmText("OK")
+                        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                Fragment fragment = new MainFragment();
+                                getFragmentManager().beginTransaction().
+                                        replace(R.id.fragment_container, fragment).commit();
+                            }
+                        })
                         .show();
             }
         }) {
@@ -270,6 +294,7 @@ public class TrafficEducationFragment extends Fragment {
         mAdapter.notifyDataSetChanged();
 
     }
+
     public void customActionBar() {
         android.support.v7.app.ActionBar mActionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         mActionBar.setDisplayShowHomeEnabled(false);
@@ -290,7 +315,8 @@ public class TrafficEducationFragment extends Fragment {
         mActionBar.setCustomView(mCustomView);
         mActionBar.setDisplayShowCustomEnabled(true);
     }
-    public void searchEducationList(){
+
+    public void searchEducationList() {
 
         searchBar.addTextChangeListener(new TextWatcher() {
             @Override
@@ -321,6 +347,7 @@ public class TrafficEducationFragment extends Fragment {
                 mRecyclerView.setAdapter(mAdapter);
                 mAdapter.notifyDataSetChanged();
             }
+
             @Override
             public void afterTextChanged(Editable editable) {
 

@@ -31,6 +31,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.kptrafficpolice.trafficapp.R;
+import com.kptrafficpolice.trafficapp.activities.MainDrawerActivity;
+import com.kptrafficpolice.trafficapp.utilities.CheckNetwork;
 import com.kptrafficpolice.trafficapp.utilities.Configuration;
 
 import org.json.JSONArray;
@@ -118,6 +120,7 @@ public class MainEmergencyFragment extends Fragment {
         }
         bundle = new Bundle();
         onEmergencyButtonClick();
+
         SmartLocation.with(getActivity()).location()
                 .start(new OnLocationUpdatedListener() {
 
@@ -195,8 +198,32 @@ public class MainEmergencyFragment extends Fragment {
                 //pDialog.show();
                 strHealth = "2";
                 bundle.putString("emergency_id", strHealth);
-                getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).addToBackStack("tag").commit();
-                fragment.setArguments(bundle);
+                if (CheckNetwork.isInternetAvailable(getActivity())) {
+                    getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).addToBackStack("tag").commit();
+                    fragment.setArguments(bundle);
+                } else {
+                    new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
+                            .setTitleText("No Internet Connection")
+                            .setConfirmText("Refresh")
+                            .setCancelText("Cancel")
+                            .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                @Override
+                                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                    sweetAlertDialog.dismiss();
+
+                                }
+                            })
+                            .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                @Override
+                                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                    startActivity(new Intent(getActivity(), MainDrawerActivity.class));
+                                    sweetAlertDialog.dismiss();
+                                    getActivity().finish();
+
+                                }
+                            })
+                            .show();
+                }
                 // getData(strHealth, String.valueOf(dblLat), String.valueOf(dblLon));
 
 
@@ -206,15 +233,34 @@ public class MainEmergencyFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 strMechanics = "3";
-               // pDialog.show();
+                // pDialog.show();
                 bundle.putString("emergency_id", strMechanics);
-                getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).addToBackStack("tag").commit();
-                fragment.setArguments(bundle);
-//                if (String.valueOf(dblLat).length() == 0 || String.valueOf(dblLon).length() == 0) {
-//                    getData(strMechanics, String.valueOf(dblLat), String.valueOf(dblLon));
-//                } else {
-//                    Toast.makeText(getActivity(), "Mechanics lat/Lon zero", Toast.LENGTH_SHORT).show();
-//                }
+                if (CheckNetwork.isInternetAvailable(getActivity())) {
+                    getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).addToBackStack("tag").commit();
+                    fragment.setArguments(bundle);
+                }else {
+                    new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
+                            .setTitleText("No Internet Connection")
+                            .setConfirmText("Refresh")
+                            .setCancelText("Cancel")
+                            .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                @Override
+                                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                    sweetAlertDialog.dismiss();
+
+                                }
+                            })
+                            .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                @Override
+                                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                    startActivity(new Intent(getActivity(), MainDrawerActivity.class));
+                                    sweetAlertDialog.dismiss();
+                                    getActivity().finish();
+
+                                }
+                            })
+                            .show();
+                }
 
             }
         });
@@ -223,9 +269,32 @@ public class MainEmergencyFragment extends Fragment {
             public void onClick(View view) {
                 strHighwayOfficers = "4";
                 bundle.putString("emergency_id", strHighwayOfficers);
-                //getData(strHighwayOfficers, String.valueOf(dblLat), String.valueOf(dblLon));
-                getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).addToBackStack("tag").commit();
-                fragment.setArguments(bundle);
+                if (CheckNetwork.isInternetAvailable(getActivity())) {
+                    getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).addToBackStack("tag").commit();
+                    fragment.setArguments(bundle);
+                }else {
+                    new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
+                            .setTitleText("No Internet Connection")
+                            .setConfirmText("Refresh")
+                            .setCancelText("Cancel")
+                            .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                @Override
+                                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                    sweetAlertDialog.dismiss();
+
+                                }
+                            })
+                            .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                @Override
+                                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                    startActivity(new Intent(getActivity(), MainDrawerActivity.class));
+                                    sweetAlertDialog.dismiss();
+                                    getActivity().finish();
+
+                                }
+                            })
+                            .show();
+                }
             }
         });
 
