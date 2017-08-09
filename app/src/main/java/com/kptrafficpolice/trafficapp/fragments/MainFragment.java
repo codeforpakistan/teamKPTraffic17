@@ -1,5 +1,6 @@
 package com.kptrafficpolice.trafficapp.fragments;
 
+import android.Manifest;
 import android.app.Dialog;
 import android.app.Fragment;
 import android.content.Intent;
@@ -103,7 +104,7 @@ public class MainFragment extends Fragment {
     private Tracker mTracker;
     private FirebaseAnalytics mFirebaseAnalytics;
     public static boolean SUCCESS_DIALOG = false;
-
+    SweetAlertDialog myDialog;
     public MainFragment() {
         // Required empty public constructor
     }
@@ -133,7 +134,11 @@ public class MainFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_main, container, false);
-        getActivity().setTitle("Main Screen");
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION,
+                    android.Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.INTERNET }, 1);
+        }
+        myDialog = new SweetAlertDialog(getActivity());
         if (SUCCESS_DIALOG) {
             new SweetAlertDialog(getActivity(), SweetAlertDialog.SUCCESS_TYPE)
                     .setTitleText("Complaint registered")
@@ -141,7 +146,7 @@ public class MainFragment extends Fragment {
             SUCCESS_DIALOG = false;
         }
         setHasOptionsMenu(true);
-        {
+
             try {
                 SmartLocation.with(getActivity()).location()
                         .start(new OnLocationUpdatedListener() {
@@ -185,7 +190,6 @@ public class MainFragment extends Fragment {
                                     }
                                     // Log.d("zma city", strCityName);
                                     if (address.size() > 0) {
-
                                         System.out.println(address.get(0).getCountryName());
                                         System.out.println(address.get(0).getAdminArea());
                                         System.out.println(address.get(0).getSubLocality());
@@ -200,7 +204,7 @@ public class MainFragment extends Fragment {
                 e.printStackTrace();
             }
 
-        }
+
         MyApplication application = new MyApplication();
         mTracker = application.getDefaultTracker();
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
@@ -210,11 +214,6 @@ public class MainFragment extends Fragment {
         pDialog.getProgressHelper().setBarColor(Color.parseColor("#179e99"));
         pDialog.setCancelable(false);
 
-//        Bundle args = getArguments();
-//        boolean status = args.getBoolean("status");
-//        if (status){
-//            Toast.makeText(getActivity(), "Good nice", Toast.LENGTH_SHORT).show();
-//        }
         sharedPreferences = getActivity().getSharedPreferences("com.ghosttech.kptraffic", 0);
         editor = sharedPreferences.edit();
         String user_name_from_reg = sharedPreferences.getString("user_name", "");
@@ -250,10 +249,7 @@ public class MainFragment extends Fragment {
         }
         customActionBar();
         //((AppCompatActivity) getActivity()).getSupportActionBar().hide();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION,
-                    android.Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
-        }
+
 
         return view;
     }
@@ -367,9 +363,9 @@ public class MainFragment extends Fragment {
         final LocationManager manager = (LocationManager) getActivity().getSystemService(getActivity().LOCATION_SERVICE);
 
         if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
+            myDialog = new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
                     .setTitleText("Turn on your GPS")
-                    .setConfirmText("OK")
+                    .setConfirmText("YES")
                     .setCancelText("NO")
                     .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
                         @Override
@@ -386,11 +382,18 @@ public class MainFragment extends Fragment {
                             sweetAlertDialog.dismiss();
 
                         }
-                    })
-                    .show();
+                    });
+            myDialog.show();
             // Call your Alert message
         }
     }
+    @Override
+    public void onPause() {
+        super.onPause();
+        myDialog.dismiss();
+
+    }
+
 
     public void customActionBar() {
         android.support.v7.app.ActionBar mActionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
@@ -682,26 +685,12 @@ public class MainFragment extends Fragment {
         mRequestQueue.add(jsonObjRequest);
     }
 
-//    public void footerButtons() {
-//        ivSettingButton = (ImageView) view.findViewById(R.id.iv_setting_menu);
-//        ivWebsiteButton = (ImageView) view.findViewById(R.id.iv_website_link);
-//        ivWebsiteButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                new FinestWebView.Builder(getActivity())
-//                        .titleDefault("KP Traffic Police Official Website")
-//                        .titleFont("Roboto-Medium.ttf")
-//                        .disableIconForward(true)
-//                        .disableIconBack(true)
-//                        .show("http://www.ptpkp.gov.pk/");            }
-//        });
-//    }
-
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setHasOptionsMenu(true);
     }
+
 
 }
