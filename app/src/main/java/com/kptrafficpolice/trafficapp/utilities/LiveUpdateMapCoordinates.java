@@ -7,7 +7,8 @@ import java.util.ArrayList;
 /**
  * Created by Asus on 4/28/2017.
  */
-
+//raabta
+//rabta
 public class LiveUpdateMapCoordinates {
     public static final LatLng CHARSADDA_ROAD_1 = new LatLng(34.032627, 71.576201);//initialize first point of the route like this
     public static final ArrayList<LatLng> ARRAY_CHARSADDA_ROAD = new ArrayList<>();//define array name

@@ -12,7 +12,8 @@ import com.kptrafficpolice.trafficapp.fragments.LoginFragment;
 import com.kptrafficpolice.trafficapp.R;
 
 public class MainActivity extends AppCompatActivity {
-
+    //raabta
+//rabta
     Fragment fragment;
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;

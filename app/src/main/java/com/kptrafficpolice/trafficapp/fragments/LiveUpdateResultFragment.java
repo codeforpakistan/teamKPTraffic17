@@ -30,7 +30,8 @@ import java.util.ArrayList;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
-
+//raabta
+//rabta
 public class LiveUpdateResultFragment extends Fragment {
 
     ArrayList<LatLng> locations = new ArrayList<>();

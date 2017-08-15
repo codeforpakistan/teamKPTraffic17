@@ -11,7 +11,8 @@ import android.view.ViewGroup;
 
 import com.github.paolorotolo.appintro.ISlideBackgroundColorHolder;
 import com.kptrafficpolice.trafficapp.R;
-
+//raabta
+//rabta
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the

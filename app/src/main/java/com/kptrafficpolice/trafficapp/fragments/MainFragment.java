@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.app.Fragment;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
@@ -63,6 +64,8 @@ import io.nlopez.smartlocation.SmartLocation;
 
 import static com.thefinestartist.utils.content.ContextUtil.getContentResolver;
 
+//raabta
+//rabta
 
 /**
  * A simple {@link Fragment} subclass.
@@ -105,6 +108,7 @@ public class MainFragment extends Fragment {
     private FirebaseAnalytics mFirebaseAnalytics;
     public static boolean SUCCESS_DIALOG = false;
     SweetAlertDialog myDialog;
+
     public MainFragment() {
         // Required empty public constructor
     }
@@ -134,9 +138,11 @@ public class MainFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_main, container, false);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
+                getActivity().checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION,
-                    android.Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.INTERNET }, 1);
+                    android.Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.INTERNET}, 1);
         }
         myDialog = new SweetAlertDialog(getActivity());
         if (SUCCESS_DIALOG) {
@@ -147,62 +153,62 @@ public class MainFragment extends Fragment {
         }
         setHasOptionsMenu(true);
 
-            try {
-                SmartLocation.with(getActivity()).location()
-                        .start(new OnLocationUpdatedListener() {
+        try {
+            SmartLocation.with(getActivity()).location()
+                    .start(new OnLocationUpdatedListener() {
 
-                            @Override
-                            public void onLocationUpdated(Location location) {
-                                dblLat = location.getLatitude();
-                                dblLon = location.getLongitude();
-                                Log.d("Location : ", "" + dblLat + " " + dblLon);
-                                Geocoder geoCoder = null;
-                                try {
+                        @Override
+                        public void onLocationUpdated(Location location) {
+                            dblLat = location.getLatitude();
+                            dblLon = location.getLongitude();
+                            Log.d("Location : ", "" + dblLat + " " + dblLon);
+                            Geocoder geoCoder = null;
+                            try {
 
 
-                                    geoCoder = new Geocoder(getActivity(), Locale.getDefault());
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                                StringBuilder builder = new StringBuilder();
-
-                                try {
-                                    List<Address> address = geoCoder.getFromLocation(dblLat, dblLon, 1);
-                                    int maxLines = address.get(0).getMaxAddressLineIndex();
-                                    for (int i = 0; i < maxLines; i++) {
-                                        String addressStr = address.get(0).getAddressLine(i);
-                                        String city = address.get(0).getLocality();
-                                        String state = address.get(0).getAdminArea();
-                                        String country = address.get(0).getCountryName();
-                                        String postalCode = address.get(0).getPostalCode();
-                                        String knownName = address.get(0).getFeatureName();
-                                        String subadmin = address.get(0).getSubLocality();
-                                        Log.d("zma city 2", "city " + city + "\nstate " + state + "\n country " +
-                                                country + "\n postal code " + postalCode + "\nknow name " + knownName + "get sub admin area" + subadmin);
-                                        builder.append(addressStr);
-                                        builder.append(" ");
-                                    }
-
-                                    strCityName = builder.toString(); //This is the complete address.
-                                    mTitleTextView.setText(strCityName);
-                                    if (strCityName.equals("")) {
-                                        mTitleTextView.setText("Our Services");
-                                    }
-                                    // Log.d("zma city", strCityName);
-                                    if (address.size() > 0) {
-                                        System.out.println(address.get(0).getCountryName());
-                                        System.out.println(address.get(0).getAdminArea());
-                                        System.out.println(address.get(0).getSubLocality());
-                                    }
-                                } catch (IOException e) {
-                                } catch (NullPointerException e) {
-                                }
-
+                                geoCoder = new Geocoder(getActivity(), Locale.getDefault());
+                            } catch (Exception e) {
+                                e.printStackTrace();
                             }
-                        });
-            }catch (Exception e){
-                e.printStackTrace();
-            }
+                            StringBuilder builder = new StringBuilder();
+
+                            try {
+                                List<Address> address = geoCoder.getFromLocation(dblLat, dblLon, 1);
+                                int maxLines = address.get(0).getMaxAddressLineIndex();
+                                for (int i = 0; i < maxLines; i++) {
+                                    String addressStr = address.get(0).getAddressLine(i);
+                                    String city = address.get(0).getLocality();
+                                    String state = address.get(0).getAdminArea();
+                                    String country = address.get(0).getCountryName();
+                                    String postalCode = address.get(0).getPostalCode();
+                                    String knownName = address.get(0).getFeatureName();
+                                    String subadmin = address.get(0).getSubLocality();
+                                    Log.d("zma city 2", "city " + city + "\nstate " + state + "\n country " +
+                                            country + "\n postal code " + postalCode + "\nknow name " + knownName + "get sub admin area" + subadmin);
+                                    builder.append(addressStr);
+                                    builder.append(" ");
+                                }
+
+                                strCityName = builder.toString(); //This is the complete address.
+                                mTitleTextView.setText(strCityName);
+                                if (strCityName.equals("")) {
+                                    mTitleTextView.setText("Our Services");
+                                }
+                                // Log.d("zma city", strCityName);
+                                if (address.size() > 0) {
+                                    System.out.println(address.get(0).getCountryName());
+                                    System.out.println(address.get(0).getAdminArea());
+                                    System.out.println(address.get(0).getSubLocality());
+                                }
+                            } catch (IOException e) {
+                            } catch (NullPointerException e) {
+                            }
+
+                        }
+                    });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
 
         MyApplication application = new MyApplication();
@@ -318,7 +324,7 @@ public class MainFragment extends Fragment {
                     fragment = new TrafficEducationFragment();
                     getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).
                             addToBackStack("tag").commit();
-                }else {
+                } else {
                     new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
                             .setTitleText("No Internet Connection")
                             .setConfirmText("Refresh")
@@ -387,6 +393,7 @@ public class MainFragment extends Fragment {
             // Call your Alert message
         }
     }
+
     @Override
     public void onPause() {
         super.onPause();
@@ -418,6 +425,8 @@ public class MainFragment extends Fragment {
         dialog.setCancelable(true);
         etLicNumber = (EditText) dialog.findViewById(R.id.et_verify_license);
         btnShowRecord = (Button) dialog.findViewById(R.id.btn_search_license_record);
+        ImageView ivInputIcon = (ImageView)dialog.findViewById(R.id.iv_input_dialog);
+        ivInputIcon.setImageResource(R.drawable.search_license_icon);
         dialog.show();
         dialog.getWindow().getDecorView().setBackgroundResource(android.R.color.transparent);
         inputValidationLicense();
@@ -428,6 +437,8 @@ public class MainFragment extends Fragment {
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.custom_input_dialog);
         dialog.setCancelable(true);
+        ImageView ivInputIcon = (ImageView)dialog.findViewById(R.id.iv_input_dialog);
+        ivInputIcon.setImageResource(R.drawable.search_challam_icon);
         etLicNumber = (EditText) dialog.findViewById(R.id.et_verify_license);
         etLicNumber.setHint("Enter Challan Number");
         btnShowRecord = (Button) dialog.findViewById(R.id.btn_search_license_record);
@@ -449,7 +460,7 @@ public class MainFragment extends Fragment {
                     if (CheckNetwork.isInternetAvailable(getActivity())) {
                         apiCallChallan(strChallanTrackingID);
                         dialog.dismiss();
-                    }else{
+                    } else {
                         dialog.dismiss();
                         new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
                                 .setTitleText("No Internet Connection")
@@ -485,15 +496,15 @@ public class MainFragment extends Fragment {
             public void onClick(View v) {
                 strLicenseNumber = etLicNumber.getText().toString();
                 if (strLicenseNumber.toString().equals("")
-                        || strLicenseNumber.toString().length() < 12) {
+                        || strLicenseNumber.toString().length() < 13) {
                     //  Log.d("zma else", strLicenseNumber);
                     etLicNumber.startAnimation(shake);
                 } else if (strLicenseNumber.toString().length() == 13) {
                     strCNIC = strLicenseNumber;
                     if (CheckNetwork.isInternetAvailable(getActivity())) {
                         apiCallLicense(strCNIC);
-                        pDialog.dismiss();
-                    }else{
+                        pDialog.show();
+                    } else {
                         pDialog.dismiss();
                         new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
                                 .setTitleText("No Internet Connection")
@@ -525,19 +536,23 @@ public class MainFragment extends Fragment {
 
     public void apiCallLicense(final String cnic) {
         pDialog.setTitleText("Verifying Your License");
-        pDialog.show();
+
         String url = Configuration.END_POINT_LIVE + "license_verification/get_license_data";
         final Bundle args = new Bundle();
-        StringRequest jsonObjRequest = new StringRequest(Request.Method.POST,
+        final StringRequest jsonObjRequest = new StringRequest(Request.Method.POST,
                 url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+
                         try {
                             JSONObject jsonResponseObject = new JSONObject(response);
                             boolean status = jsonResponseObject.getBoolean("status");
-                            //  Log.d("zma status", String.valueOf(status));
-                            if (status) {
+                            Log.d("zma status new", String.valueOf(status));
+                            //boolean bData = jsonResponseObject.getBoolean("data");
+                            String strMessage = jsonResponseObject.getString("message");
+                            Log.d("zma str message", strMessage + "\n" + String.valueOf(status));
+                            if (status && strMessage.contains("License Verified!")) {
                                 pDialog.dismiss();
                                 dialog.dismiss();
                                 JSONArray jsonArray = jsonResponseObject.getJSONArray("data");
@@ -562,18 +577,19 @@ public class MainFragment extends Fragment {
                                 getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).addToBackStack("tag").commit();
                                 fragment.setArguments(args);
                                 //TODO extract data from jsonarray data
-                            } else {
-                                pDialog.dismiss();
-                                new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
-                                        .setTitleText("No Data found")
-                                        .show();
+                            } else if (status && strMessage.contains("License Expired")) {
+                                    pDialog.dismiss();
+                                    new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
+                                            .setTitleText("License Expired")
+                                            .show();
+
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
                             pDialog.dismiss();
                             Log.d("zma status lic", String.valueOf(response));
                             new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
-                                    .setTitleText("Please enter correct CNIC.")
+                                    .setTitleText("CNIC not found.")
                                     .setContentText("")
                                     .show();
                         }
@@ -584,7 +600,7 @@ public class MainFragment extends Fragment {
             public void onErrorResponse(VolleyError error) {
                 pDialog.dismiss();
                 new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
-                        .setTitleText("Please enter correct CNIC.")
+                        .setTitleText("CNIC not found.")
                         .setContentText("")
                         .show();
             }

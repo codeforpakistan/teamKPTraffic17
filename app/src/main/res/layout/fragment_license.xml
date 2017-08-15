@@ -263,11 +263,11 @@
     </RelativeLayout>
 
     <ImageView
-        android:layout_width="156dp"
-        android:layout_height="156dp"
+        android:layout_width="140dp"
+        android:layout_height="140dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="30dp"
-        android:src="@drawable/license_icon" />
+        android:src="@drawable/license_detail_icon" />
 
 
 </FrameLayout>

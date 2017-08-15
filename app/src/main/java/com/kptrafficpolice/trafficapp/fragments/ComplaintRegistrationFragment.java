@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -77,7 +78,8 @@ import io.nlopez.smartlocation.SmartLocation;
 import static android.app.Activity.RESULT_OK;
 import static com.thefinestartist.utils.content.ContextUtil.getSharedPreferences;
 import static com.thefinestartist.utils.service.ServiceUtil.getSystemService;
-
+//raabta
+//rabta
 public class ComplaintRegistrationFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -180,7 +182,14 @@ public class ComplaintRegistrationFragment extends Fragment {
 //        ivImagePreview = (ImageView) view.findViewById(R.id.iv_image_preview);
         spComlaintType.setItems("Complaint Type", "Traffic Jam", "Complaint against Wardens", "Illegal Parking", "Other");
         shake = AnimationUtils.loadAnimation(getActivity(), R.anim.shake);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
+                getActivity().checkSelfPermission(Manifest.permission.CAMERA)
+                        != PackageManager.PERMISSION_GRANTED &&
+                getActivity().checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                        != PackageManager.PERMISSION_GRANTED &&
+                getActivity().checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
+                        != PackageManager.PERMISSION_GRANTED
+                ) {
             requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
                     Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, 1);
         }
@@ -314,6 +323,13 @@ public class ComplaintRegistrationFragment extends Fragment {
         return view;
 
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+    }
+
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
@@ -600,7 +616,7 @@ public class ComplaintRegistrationFragment extends Fragment {
 
         } else if (requestCode == RESULT_LOAD_IMAGE && null != data) {
             Uri selectedImage = data.getData();
-            Bitmap photo = (Bitmap) data.getExtras().get("data");
+          //  Bitmap photo = (Bitmap) data.getExtras().get("data");
             String[] filePathColumn = {MediaStore.Images.Media.DATA};
             Cursor cursor = getActivity().getContentResolver().query(selectedImage,
                     filePathColumn, null, null, null);

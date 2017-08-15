@@ -36,7 +36,7 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_maps_key" />
+            android:value="AIzaSyCZBc3tKoUmoctNHPe9g-I639pdOahrL74" />
 
         <receiver
             android:name=".utilities.NetworkChangeReceiver"

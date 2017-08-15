@@ -1,4 +1,6 @@
 package com.kptrafficpolice.trafficapp.fragments;
+//raabta
+//rabta
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -68,6 +70,7 @@ public class MyComplaintsFragment extends Fragment {
     private String mParam2;
     View view;
     TextView mTitleTextView;
+    TextView tvNoComplaints;
 
     private OnFragmentInteractionListener mListener;
 
@@ -112,13 +115,15 @@ public class MyComplaintsFragment extends Fragment {
         pDialog.setTitleText("Wait a while");
         pDialog.setCancelable(false);
         pDialog.show();
+        tvNoComplaints = (TextView) view.findViewById(R.id.tv_no_complaint);
+        tvNoComplaints.setVisibility(View.GONE);
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(mLayoutManager);
         sharedPreferences = getActivity().getSharedPreferences("com.ghosttech.kptraffic", 0);
         editor = sharedPreferences.edit();
         strUserID = sharedPreferences.getString("user_id", "");
-        Log.d("zma user id",strUserID);//problem with id, it should be one, but sending 2
+        Log.d("zma user id", strUserID);//problem with id, it should be one, but sending 2
         customActionBar();
         getData(strUserID);
         list = new ArrayList<>();
@@ -192,18 +197,19 @@ public class MyComplaintsFragment extends Fragment {
                         complaintsListAdapter.notifyDataSetChanged();
                     } else {
                         pDialog.dismiss();
-                        new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
-                                .setTitleText("Oops")
-                                .setContentText("No complaints found")
-                                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                                    @Override
-                                    public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                        Fragment fragment = new MainFragment();
-                                        getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
-                                        sweetAlertDialog.dismiss();
-
-                                    }
-                                }).show();
+                        tvNoComplaints.setVisibility(View.VISIBLE);
+//                        new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
+//                                .setTitleText("Oops")
+//                                .setContentText("No complaints found")
+//                                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+//                                    @Override
+//                                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+//                                        Fragment fragment = new MainFragment();
+//                                        getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
+//                                        sweetAlertDialog.dismiss();
+//
+//                                    }
+//                                }).show();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -232,11 +238,11 @@ public class MyComplaintsFragment extends Fragment {
                                 public void onClick(SweetAlertDialog sweetAlertDialog) {
                                     sweetAlertDialog.dismiss();
                                     Fragment fragment = new MyComplaintsFragment();
-                                    getFragmentManager().beginTransaction().replace(R.id.fragment_container,fragment).commit();
+                                    getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
                                 }
                             })
                             .show();
-                   // Toast.makeText(getActivity(), "Check your internet connection", Toast.LENGTH_SHORT).show();
+                    // Toast.makeText(getActivity(), "Check your internet connection", Toast.LENGTH_SHORT).show();
                 }
 //                Toast.makeText(getActivity(), "Something went wrong, try later", Toast.LENGTH_SHORT).show();
             }
@@ -249,7 +255,7 @@ public class MyComplaintsFragment extends Fragment {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
-              //  params.put("user_id", strUserID);
+                //  params.put("user_id", strUserID);
                 return params;
             }
         };
@@ -261,6 +267,7 @@ public class MyComplaintsFragment extends Fragment {
         requestQueue.add(request);
 
     }
+
     public void customActionBar() {
         android.support.v7.app.ActionBar mActionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         mActionBar.setDisplayShowHomeEnabled(false);

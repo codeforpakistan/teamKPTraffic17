@@ -7,7 +7,8 @@ import android.widget.TextView;
 
 /**
  * Created by kaxhif on 3/24/17.
- */
+ *///raabta
+//rabta
 
 public class StringUtils {
     public static String getText(View view){

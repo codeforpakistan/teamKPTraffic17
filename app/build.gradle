@@ -16,14 +16,22 @@ repositories {
 
 
 android {
+    signingConfigs {
+        config {
+            keyAlias 'abc123'
+            keyPassword 'abc123'
+            storePassword 'abc123'
+            storeFile file('D:/CFP Stuff/trafficApp.jks')
+        }
+    }
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
     defaultConfig {
         applicationId "com.kptrafficpolice.trafficapp"
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode 3
-        versionName "1"
+        versionCode 8
+        versionName "Some changes in Emer list"
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -34,6 +42,10 @@ android {
             }
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.config
+        }
+        debug {
+            signingConfig signingConfigs.config
         }
     }
     packagingOptions {
@@ -51,19 +63,16 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-
     compile files('libs/httpclient-4.3.6.jar')
     compile files('libs/httpcore-4.3.3.jar')
     compile files('libs/httpmime-4.3.6.jar')
     compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
         transitive = true;
     }
-
-
     compile 'com.iceteck.silicompressorr:silicompressor:2.0'
     compile 'com.iceteck.silicompressorr:silicompressor:2.0'
     compile 'com.android.support:appcompat-v7:25.3.1'

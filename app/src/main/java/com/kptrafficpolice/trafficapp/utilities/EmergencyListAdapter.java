@@ -4,13 +4,15 @@ package com.kptrafficpolice.trafficapp.utilities;
  * Created by Asus on 6/15/2017.
  */
 
-
+//raabta
+//rabta
 import java.util.ArrayList;
 import java.util.List;
 
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.support.v4.app.ActivityCompat;
@@ -33,6 +35,8 @@ public class EmergencyListAdapter extends RecyclerView.Adapter<EmergencyListAdap
     private ArrayList<String> mDataset;
     List<EmergencyHelper> emergencyHelperList;
     Context context;
+    SharedPreferences sharedPreferences;
+    SharedPreferences.Editor editor;
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -45,6 +49,9 @@ public class EmergencyListAdapter extends RecyclerView.Adapter<EmergencyListAdap
 
         public ViewHolder(View v) {
             super(v);
+            sharedPreferences = context.getSharedPreferences("com.ghosttech.kptraffic", 0);
+            editor = sharedPreferences.edit();
+
             tvEmergencyHelperName = (TextView) itemView.findViewById(R.id.tv_emergency_helper_name);
             tvEmergencyPhone = (TextView) itemView.findViewById(R.id.tv_emergency_phone);
             tvEmergencyDistance = (TextView) itemView.findViewById(R.id.tvDistance);
@@ -86,14 +93,25 @@ public class EmergencyListAdapter extends RecyclerView.Adapter<EmergencyListAdap
     public void onBindViewHolder(ViewHolder holder, int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
+        String strClickedItem = sharedPreferences.getString("clicked_item","");
+        if (strClickedItem.equals("health")){
+            holder.ivHelperIcon.setImageResource(R.drawable.emergency_health);
+        }else if (strClickedItem.equals("mechanics")){
+            holder.ivHelperIcon.setImageResource(R.drawable.mechanics_icon_emergency);
+        }else if (strClickedItem.equals("officer")){
+            holder.ivHelperIcon.setImageResource(R.drawable.emergency_highway_officer);
+        }
         final EmergencyHelper helper = emergencyHelperList.get(position);
         holder.tvEmergencyHelperName.setText(helper.getStrHelperName());
         String strDistance = helper.getStrHelperDistance();
+        Log.d("zma distance new",strDistance);
         strDistance = Double.parseDouble(strDistance)*1000+"";
+
         if (Double.parseDouble(strDistance)>1000){
+            String strDistanceNew = helper.getStrHelperDistance();
             Log.d("zma distance in KM",strDistance);
-            strDistance = strDistance.substring(0,3);
-            holder.tvEmergencyDistance.setText(strDistance+" km");
+            strDistanceNew = strDistanceNew.substring(0,3);
+            holder.tvEmergencyDistance.setText(strDistanceNew+" km");
         }else {
             Log.d("zma distance in M",strDistance);
             strDistance = strDistance.substring(0, 3);

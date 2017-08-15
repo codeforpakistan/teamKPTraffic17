@@ -42,7 +42,8 @@ import java.util.Map;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 import static com.thefinestartist.utils.content.ContextUtil.startActivity;
-
+//raabta
+//rabta
 public class LiveUpdateAdapter extends RecyclerView.Adapter<LiveUpdateAdapter.ViewHolder> {
     private ArrayList<String> mDataset;
     List<LiveUpdateHelper> liveUpdateHelpers;

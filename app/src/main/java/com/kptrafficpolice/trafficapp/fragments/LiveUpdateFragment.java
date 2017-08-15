@@ -18,7 +18,8 @@ import com.kptrafficpolice.trafficapp.utilities.LiveUpdateAdapter;
 import com.kptrafficpolice.trafficapp.utilities.LiveUpdateHelper;
 import java.util.ArrayList;
 import java.util.List;
-
+//raabta
+//rabta
 public class LiveUpdateFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER

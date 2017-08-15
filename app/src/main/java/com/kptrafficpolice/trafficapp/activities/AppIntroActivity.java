@@ -10,7 +10,8 @@ import android.support.v4.app.Fragment;
 
 import com.github.paolorotolo.appintro.AppIntro;
 import com.kptrafficpolice.trafficapp.fragments.SliderFragment;
-
+//raabta
+//rabta
 public class AppIntroActivity extends AppIntro {
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;

@@ -11,7 +11,8 @@ import com.kptrafficpolice.trafficapp.R;
 /**
  * Created by Asus on 5/30/2017.
  */
-
+//raabta
+//rabta
 public class MyApplication extends Application {
     Context context;
     private static GoogleAnalytics sAnalytics;

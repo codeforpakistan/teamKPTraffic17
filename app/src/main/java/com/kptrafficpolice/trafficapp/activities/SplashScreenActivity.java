@@ -13,7 +13,8 @@ import android.widget.Toast;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.kptrafficpolice.trafficapp.R;
-
+//raabta
+//rabta
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
@@ -113,7 +114,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                     finish();
                 }
             }
-        }, 1000);
+        }, 3000);
         mVisible = true;
         mContentView = findViewById(R.id.fullscreen_content);
 

@@ -14,12 +14,13 @@
         android:layout_marginTop="30sp"
         android:layout_weight="1">
         <ImageView
-            android:layout_width="40sp"
-            android:layout_height="40sp"
+            android:id="@+id/iv_input_dialog"
+            android:layout_width="30sp"
+            android:layout_height="30sp"
             android:layout_gravity="center"
-            android:src="@drawable/license_icon"/>
+            android:src="@drawable/search_license_icon"/>
         <EditText
-            android:layout_width="match_parent"
+            android:layout_width="250dp"
             android:layout_height="wrap_content"
             android:hint="Enter CNIC without dashes(-)"
             android:layout_marginLeft="10sp"
@@ -27,6 +28,7 @@
             android:id="@+id/et_verify_license"
             android:backgroundTint="#fff"
             android:maxLength="13"
+
             android:layout_gravity="center"
             android:textColorHint="#ffffff"
             android:textColor="#ffffff"/>

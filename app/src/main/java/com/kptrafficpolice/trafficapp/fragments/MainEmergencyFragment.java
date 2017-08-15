@@ -2,6 +2,7 @@ package com.kptrafficpolice.trafficapp.fragments;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
@@ -45,7 +46,8 @@ import java.util.Map;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import io.nlopez.smartlocation.OnLocationUpdatedListener;
 import io.nlopez.smartlocation.SmartLocation;
-
+//raabta
+//rabta
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
@@ -71,6 +73,8 @@ public class MainEmergencyFragment extends Fragment {
     LinearLayout lLCallView;
     Bundle bundle;
     SweetAlertDialog pDialog;
+    SharedPreferences sharedPreferences;
+    SharedPreferences.Editor editor;
 
     public MainEmergencyFragment() {
         // Required empty public constructor
@@ -108,6 +112,9 @@ public class MainEmergencyFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_main_emergency, container, false);
+        sharedPreferences = getActivity().getSharedPreferences("com.ghosttech.kptraffic", 0);
+        editor = sharedPreferences.edit();
+
         ivHealthEmergency = (ImageView) view.findViewById(R.id.iv_emergency_health);
         ivHighOfficer = (ImageView) view.findViewById(R.id.iv_emergency_highway_officer);
         ivMechanicsEmergency = (ImageView) view.findViewById(R.id.iv_emergency_mechanics);
@@ -115,7 +122,7 @@ public class MainEmergencyFragment extends Fragment {
         pDialog = new SweetAlertDialog(getActivity(), SweetAlertDialog.PROGRESS_TYPE);
         pDialog.getProgressHelper().setBarColor(Color.parseColor("#179e99"));
         pDialog.setTitleText("Sending complaint");
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && getActivity().checkSelfPermission(android.Manifest.permission.CALL_PHONE)!= PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{android.Manifest.permission.CALL_PHONE}, 1);
         }
         bundle = new Bundle();
@@ -199,7 +206,9 @@ public class MainEmergencyFragment extends Fragment {
                 strHealth = "2";
                 bundle.putString("emergency_id", strHealth);
                 if (CheckNetwork.isInternetAvailable(getActivity())) {
-                    getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).addToBackStack("tag").commit();
+                    editor.putString("clicked_item","health").commit();
+                    getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).
+                            addToBackStack("tag").commit();
                     fragment.setArguments(bundle);
                 } else {
                     new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
@@ -235,6 +244,7 @@ public class MainEmergencyFragment extends Fragment {
                 strMechanics = "3";
                 // pDialog.show();
                 bundle.putString("emergency_id", strMechanics);
+                editor.putString("clicked_item","mechanics").commit();
                 if (CheckNetwork.isInternetAvailable(getActivity())) {
                     getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).addToBackStack("tag").commit();
                     fragment.setArguments(bundle);
@@ -269,6 +279,7 @@ public class MainEmergencyFragment extends Fragment {
             public void onClick(View view) {
                 strHighwayOfficers = "4";
                 bundle.putString("emergency_id", strHighwayOfficers);
+                editor.putString("clicked_item","officer").commit();
                 if (CheckNetwork.isInternetAvailable(getActivity())) {
                     getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).addToBackStack("tag").commit();
                     fragment.setArguments(bundle);

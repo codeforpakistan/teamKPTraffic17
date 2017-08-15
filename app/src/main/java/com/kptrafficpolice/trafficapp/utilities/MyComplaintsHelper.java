@@ -3,7 +3,8 @@ package com.kptrafficpolice.trafficapp.utilities;
 /**
  * Created by Asus on 6/22/2017.
  */
-
+//raabta
+//rabta
 public class MyComplaintsHelper {
     String strComplaintID, strLatitude, strLongitude, strDescription,
             strComplaintType, strComplaintStatus, strDate, strImage, strVideo;

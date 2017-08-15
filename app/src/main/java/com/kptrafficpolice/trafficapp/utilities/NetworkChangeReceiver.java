@@ -2,7 +2,8 @@ package com.kptrafficpolice.trafficapp.utilities;
 
 /**
  * Created by Asus on 4/25/2017.
- */
+ *///raabta
+//rabta
 
 import android.content.BroadcastReceiver;
 import android.content.ComponentCallbacks2;

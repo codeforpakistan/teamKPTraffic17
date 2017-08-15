@@ -63,7 +63,8 @@ public class TrafficEducationAdapter extends RecyclerView.Adapter<TrafficEducati
         this.data = data;
         ;
     }
-
+    //raabta
+//rabta
     // Create new views (invoked by the layout manager)
     @Override
     public TrafficEducationAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,

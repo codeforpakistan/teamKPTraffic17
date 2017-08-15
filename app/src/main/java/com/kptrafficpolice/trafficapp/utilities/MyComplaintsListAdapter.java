@@ -24,7 +24,8 @@ import com.kptrafficpolice.trafficapp.fragments.MyComplaintsDetailedFragment;
 
 import java.util.ArrayList;
 import java.util.List;
-
+//raabta
+//rabta
 public class MyComplaintsListAdapter extends RecyclerView.Adapter<MyComplaintsListAdapter.ViewHolder> {
     private ArrayList<String> mDataset;
     List<MyComplaintsHelper> complaintsHelperList;

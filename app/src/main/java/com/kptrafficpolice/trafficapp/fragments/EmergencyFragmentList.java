@@ -36,6 +36,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,7 +45,8 @@ import java.util.Map;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import io.nlopez.smartlocation.OnLocationUpdatedListener;
 import io.nlopez.smartlocation.SmartLocation;
-
+//raabta
+//rabta
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
@@ -199,6 +202,14 @@ public class EmergencyFragmentList extends Fragment {
                             Log.d("zma phone number",shopObject.getString("contact_no"));
                             list.add(helper);
                         }
+                        Collections.sort(list, new Comparator<EmergencyHelper>() {
+                            @Override
+                            public int compare(EmergencyHelper emergencyHelper, EmergencyHelper t1) {
+                                String firstItem = emergencyHelper.getStrHelperDistance();
+                                String secondItem = t1.getStrHelperDistance();
+                                return firstItem.compareTo(secondItem);
+                            }
+                        });
                         emergencyListAdapter.notifyDataSetChanged();
                     } else {
                         pDialog.dismiss();
