@@ -102,7 +102,7 @@ public class RegistrationFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_registration, container, false);
-        mRequestQueue = Volley.newRequestQueue(getActivity());
+            mRequestQueue = Volley.newRequestQueue(getActivity());
         sharedPreferences = getActivity().getSharedPreferences("com.ghosttech.kptraffic", 0);
         editor = sharedPreferences.edit();
         shake = AnimationUtils.loadAnimation(getActivity(), R.anim.shake);
@@ -151,7 +151,7 @@ public class RegistrationFragment extends Fragment {
     public void formValidation() {
         etName = (EditText) view.findViewById(R.id.et_name);
         etCNIC = (EditText) view.findViewById(R.id.et_cnic);
-        etEmail = (EditText) view.findViewById(R.id.et_password);
+        etEmail = (EditText) view.findViewById(R.id.et_email);
         etPhoneNumber = (EditText) view.findViewById(R.id.et_phone_number);
 
         strName = etName.getText().toString().trim();

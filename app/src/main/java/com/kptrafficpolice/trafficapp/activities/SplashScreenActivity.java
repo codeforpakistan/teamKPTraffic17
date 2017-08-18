@@ -3,16 +3,23 @@ package com.kptrafficpolice.trafficapp.activities;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.AssetManager;
+import android.graphics.Typeface;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.kptrafficpolice.trafficapp.R;
+
+import java.util.Locale;
+
+import static android.R.attr.typeface;
 //raabta
 //rabta
 /**
@@ -99,6 +106,10 @@ public class SplashScreenActivity extends AppCompatActivity {
         sharedPreferences = getSharedPreferences("com.kptraficpolice.trafficapp", 0);
         editor = sharedPreferences.edit();
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+        TextView tx = (TextView)findViewById(R.id.app_name);
+        Typeface custom_font = Typeface.createFromAsset(getAssets(),  "fonts/ethnocentric rg it.ttf");
+
+        tx.setTypeface(custom_font);
         Bundle bundle = new Bundle();
         bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "1");
         bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "SplashScreen");

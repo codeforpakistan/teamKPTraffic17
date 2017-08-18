@@ -52,13 +52,39 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
+                android:layout_marginTop="-25dp"
                 android:padding="16dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
+                    <com.jaredrummler.materialspinner.MaterialSpinner
+                        android:id="@+id/spinner"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="kuch bhi" />
 
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1.7dp"
+                        android:background="#EEEEEE" />
+                    <EditText
+                        android:id="@+id/et_description"
+                        android:layout_width="match_parent"
+                        android:layout_height="100dp"
+                        android:layout_gravity="center_horizontal"
+                        android:gravity="top"
+                        android:background="@drawable/edit_text_bg_green"
+                        android:layout_marginTop="20dp"
+                        android:hint="Write Complaint Detail"
+                        android:paddingLeft="15dp"
+                        android:textCursorDrawable="@drawable/color_cursor"
+                        android:textColor="#000"
+                        android:textSize="15sp" />
+
+
+                </LinearLayout>
 
                     <LinearLayout
                         android:id="@+id/llayout_camera"
@@ -147,31 +173,7 @@
                         </LinearLayout>
                     </LinearLayout>
 
-                    <EditText
-                        android:id="@+id/et_description"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_marginTop="40dp"
-                        android:drawableRight="@drawable/edit"
-                        android:hint="Add Description"
-                        android:textColorHint="#000"
-                        android:paddingLeft="18dp"
-                        android:textColor="#000"
-                        android:textSize="15sp" />
 
-                    <com.jaredrummler.materialspinner.MaterialSpinner
-                        android:id="@+id/spinner"
-                        android:layout_marginTop="30dp"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="kuch bhi" />
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1.7dp"
-                        android:background="#EEEEEE" />
-                </LinearLayout>
 
                 <Button
                     android:id="@+id/btn_send_complaint"

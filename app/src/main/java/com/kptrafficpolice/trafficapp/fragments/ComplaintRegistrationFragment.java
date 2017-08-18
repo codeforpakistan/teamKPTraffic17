@@ -159,6 +159,7 @@ public class ComplaintRegistrationFragment extends Fragment {
         Log.d("zma date", strFormattedDate);
         strUserID = sharedPreferences.getString("user_id", "");
         requestQueue = Volley.newRequestQueue(getActivity());
+
         Base.initialize(getActivity());
         ScrollView scrollView = (ScrollView) view.findViewById(R.id.sv_complaint);
         scrollView.setOnTouchListener(new View.OnTouchListener() {
