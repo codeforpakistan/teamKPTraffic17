@@ -1,7 +1,5 @@
 # Team KP Traffic Project
 This repository is intended to contain the work done by the KP Traffic team for the 3rd Batch of KP Civic Innovation Fellowship Program 2017.
-Team KP Traffic have successfully developed android application for traffic police Khyber Pakhtunkhwa. The aim of the project is to reduce the 
-issues which public are facing daily. There are six modules of the project includes:
 
 The android based mobile application “KP Traffic” is a platform that will facilitate the public as well as the traffic police officials in realtime, improving their existing traditional and inefficient way of registering complaints.
 
