@@ -45,6 +45,7 @@ import android.widget.Toast;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.kptrafficpolice.trafficapp.R;
 import com.kptrafficpolice.trafficapp.utilities.CheckNetwork;
 import com.kptrafficpolice.trafficapp.utilities.Configuration;
@@ -121,6 +122,7 @@ public class ComplaintRegistrationFragment extends Fragment {
     boolean isImage = false;
     boolean isVideo = false;
     File videoCaptureSourceFile;
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     public ComplaintRegistrationFragment() {
         // Required empty public constructor
@@ -179,6 +181,7 @@ public class ComplaintRegistrationFragment extends Fragment {
         ivCrossVideo = (ImageView) view.findViewById(R.id.iv_cross_video);
         ivCrossVideo.setVisibility(View.GONE);
         spComlaintType = (MaterialSpinner) view.findViewById(R.id.spinner);
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
         btnSendComplaint = (Button) view.findViewById(R.id.btn_send_complaint);
 //        ivImagePreview = (ImageView) view.findViewById(R.id.iv_image_preview);
         spComlaintType.setItems("Complaint Type", "Traffic Jam", "Complaint against Wardens", "Illegal Parking", "Other");
@@ -377,6 +380,10 @@ public class ComplaintRegistrationFragment extends Fragment {
             if (CheckNetwork.isInternetAvailable(getActivity())) {
                 pDialog.show();
                 new UploadFileToServer().execute();
+                Bundle bundle = new Bundle();
+                bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "2");
+                bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "Complaint send button");
+                mFirebaseAnalytics.logEvent("complaint_sent", bundle);
             } else {
                 new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
                         .setTitleText("Oops")
@@ -463,9 +470,6 @@ public class ComplaintRegistrationFragment extends Fragment {
                     HttpEntity r_entity = response.getEntity();
                     int statusCode = response.getStatusLine().getStatusCode();
                     responseString = EntityUtils.toString(r_entity);
-                    Log.d("zma response comp image", responseString);
-                    Log.d("zma status code if", String.valueOf(statusCode));
-                    Toast.makeText(getActivity(), "Great Job", Toast.LENGTH_SHORT).show();
 
                 } catch (ClientProtocolException e) {
                     responseString = e.toString();

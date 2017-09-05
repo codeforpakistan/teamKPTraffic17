@@ -45,16 +45,14 @@
                     android:layout_width="32dp"
                     android:layout_height="32dp"
                     android:layout_marginLeft="20dp"
-                    android:layout_marginTop="30dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="20dp"
                     android:src="@drawable/cnic_icon" />
 
-                <com.wrapp.floatlabelededittext.FloatLabeledEditText
-                    android:id="@+id/view8"
+                <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginTop="10dp">
+                    android:textColorHint="#ffffff"
+                    android:layout_height="wrap_content">
 
                     <EditText
                         android:id="@+id/et_cnic_login"
@@ -64,11 +62,11 @@
                         android:hint="CNIC without dashes(-)"
                         android:inputType="number"
                         android:maxLength="13"
-                        android:nextFocusUp="@id/et_cnic_login"
                         android:nextFocusLeft="@id/et_cnic_login"
+                        android:nextFocusUp="@id/et_cnic_login"
                         android:textColor="#fff"
                         android:textColorHint="#fff" />
-                </com.wrapp.floatlabelededittext.FloatLabeledEditText>
+                </android.support.design.widget.TextInputLayout>
             </LinearLayout>
 
             <Button
@@ -93,8 +91,7 @@
                 android:layout_toRightOf="@+id/btnSubmit"
                 android:text="REGISTER HERE"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="#fff"
-                />
+                android:textColor="#fff" />
         </LinearLayout>
     </TableLayout>
 </ScrollView>

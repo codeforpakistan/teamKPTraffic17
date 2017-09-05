@@ -27,6 +27,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.kptrafficpolice.trafficapp.R;
 import com.kptrafficpolice.trafficapp.utilities.Configuration;
 import com.kptrafficpolice.trafficapp.utilities.TrafficEducationAdapter;
@@ -48,6 +49,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 import static com.thefinestartist.utils.service.ServiceUtil.getSystemService;
 //raabta
 //rabta
+
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
@@ -67,13 +69,14 @@ public class TrafficEducationFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-
+    TextView tvNoDataFound;
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private OnFragmentInteractionListener mListener;
     SweetAlertDialog pDialog;
     TrafficEducationHelper trafficEducationHelper;
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     public TrafficEducationFragment() {
         // Required empty public constructor
@@ -111,6 +114,15 @@ public class TrafficEducationFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_traffic_education, container, false);
+
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "6");
+        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "Traffic Education Clicked");
+        mFirebaseAnalytics.logEvent("Traffic_Education_List", bundle);
+        tvNoDataFound = (TextView)view.findViewById(R.id.tv_no_data_found);
+        tvNoDataFound.setVisibility(View.GONE);
+
         customActionBar();
         Base.initialize(getActivity());
         searchBar = (MaterialSearchBar) view.findViewById(R.id.searchBar);
@@ -150,7 +162,6 @@ public class TrafficEducationFragment extends Fragment {
         pDialog = new SweetAlertDialog(getActivity(), SweetAlertDialog.PROGRESS_TYPE);
         pDialog.getProgressHelper().setBarColor(Color.parseColor("#179e99"));
         pDialog.setTitleText("Loading data");
-        pDialog.setCancelable(false);
         apiCall();
         searchEducationList();
         return view;
@@ -274,6 +285,10 @@ public class TrafficEducationFragment extends Fragment {
                     Configuration.Traffic_Education_Gif_Image_Boolean = true;
                     trafficEducationHelper.strImage = jsonObject.getString("image");
 
+                }
+                if (jsonArray.length() == 0) {
+                    pDialog.dismiss();
+                    tvNoDataFound.setVisibility(View.VISIBLE);
                 }
 
                 data.add(trafficEducationHelper);

@@ -24,16 +24,14 @@
         android:id="@+id/textView3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/textView2"
-        android:layout_marginLeft="10dp"
-        android:layout_marginStart="10dp"
         android:gravity="center"
         android:text="Public Traffic Application"
         android:textAllCaps="true"
         android:textColor="#fff"
-        android:textSize="15dp" />
+        android:textSize="15dp"
+        android:layout_below="@+id/app_name"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
     <TextView
         android:id="@+id/app_name"

@@ -14,5 +14,11 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:scrollbars="vertical" />
+    <TextView
+        android:id="@+id/tv_no_data_found"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="No contacts found around your location"
+        android:layout_gravity="center"/>
 
 </FrameLayout>

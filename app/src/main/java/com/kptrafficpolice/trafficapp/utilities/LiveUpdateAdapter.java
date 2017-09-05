@@ -26,6 +26,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.kptrafficpolice.trafficapp.R;
 import com.kptrafficpolice.trafficapp.activities.MainDrawerActivity;
 import com.kptrafficpolice.trafficapp.fragments.LiveUpdateResultFragment;
@@ -53,6 +54,7 @@ public class LiveUpdateAdapter extends RecyclerView.Adapter<LiveUpdateAdapter.Vi
     RequestQueue mRequestQueue;
     Fragment fragment;
     Bundle args;
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -163,6 +165,11 @@ public class LiveUpdateAdapter extends RecyclerView.Adapter<LiveUpdateAdapter.Vi
                     }
                     fragment.setArguments(args);
                     Log.d("zma id", String.valueOf(position));
+                    mFirebaseAnalytics = FirebaseAnalytics.getInstance(context);
+                    Bundle bundle = new Bundle();
+                    bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "3");
+                    bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "Road Status check");
+                    mFirebaseAnalytics.logEvent(strRoadName+" Status checked", bundle);
                 }else  {
                     new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
                             .setTitleText("No Internet Connection")

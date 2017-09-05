@@ -23,7 +23,7 @@ public class MyApplication extends Application {
     public void onCreate() {
         super.onCreate();
         MultiDex.install(this);
-        //sAnalytics = GoogleAnalytics.getInstance(this);
+        sAnalytics = GoogleAnalytics.getInstance(this);
         // Required initialization logic here!
     }
     synchronized public Tracker getDefaultTracker() {

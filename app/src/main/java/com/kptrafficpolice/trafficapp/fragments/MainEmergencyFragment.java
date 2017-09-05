@@ -139,6 +139,7 @@ public class MainEmergencyFragment extends Fragment {
                     }
                 });
         customActionBar();
+        Log.d("zma Location main: ", "" + dblLat + " " + dblLon);
         return view;
     }
 

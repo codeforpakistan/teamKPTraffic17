@@ -106,10 +106,9 @@ public class SplashScreenActivity extends AppCompatActivity {
         sharedPreferences = getSharedPreferences("com.kptraficpolice.trafficapp", 0);
         editor = sharedPreferences.edit();
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
-        TextView tx = (TextView)findViewById(R.id.app_name);
-        Typeface custom_font = Typeface.createFromAsset(getAssets(),  "fonts/ethnocentric rg it.ttf");
-
-        tx.setTypeface(custom_font);
+//        TextView tx = (TextView)findViewById(R.id.app_name);
+//        Typeface custom_font = Typeface.createFromAsset(getAssets(),  "fonts/ethnocentric rg it.ttf");
+//        tx.setTypeface(custom_font);
         Bundle bundle = new Bundle();
         bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "1");
         bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "SplashScreen");

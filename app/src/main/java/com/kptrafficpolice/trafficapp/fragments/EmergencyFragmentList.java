@@ -1,10 +1,15 @@
 package com.kptrafficpolice.trafficapp.fragments;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.location.Criteria;
 import android.location.Location;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -26,10 +31,13 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.kptrafficpolice.trafficapp.R;
 import com.kptrafficpolice.trafficapp.utilities.Configuration;
 import com.kptrafficpolice.trafficapp.utilities.EmergencyHelper;
 import com.kptrafficpolice.trafficapp.utilities.EmergencyListAdapter;
+import com.kptrafficpolice.trafficapp.utilities.GPSTracker;
+import com.thefinestartist.Base;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -45,8 +53,12 @@ import java.util.Map;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import io.nlopez.smartlocation.OnLocationUpdatedListener;
 import io.nlopez.smartlocation.SmartLocation;
+
+import static android.content.Context.LOCATION_SERVICE;
+import static com.thefinestartist.utils.service.ServiceUtil.getSystemService;
 //raabta
 //rabta
+
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
@@ -70,8 +82,11 @@ public class EmergencyFragmentList extends Fragment {
     double dblLat, dblLon;
     SweetAlertDialog pDialog;
     public static String CATEGORY_NAME = "";
-
+    GPSTracker gpsTracker;
+    Location location;
     private OnFragmentInteractionListener mListener;
+    private FirebaseAnalytics mFirebaseAnalytics;
+    TextView tvNoDataFound;
 
     public EmergencyFragmentList() {
         // Required empty public constructor
@@ -110,23 +125,33 @@ public class EmergencyFragmentList extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.emergency_fragment_list, container, false);
+        tvNoDataFound = (TextView)view.findViewById(R.id.tv_no_data_found);
+        tvNoDataFound.setVisibility(View.GONE);
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
+        Base.initialize(getActivity());
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "8");
+        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "Emergency Contacts");
+        mFirebaseAnalytics.logEvent("Emergency_Contacts_Detail", bundle);
+
+
         Bundle args = new Bundle(getArguments());
         pDialog = new SweetAlertDialog(getActivity(), SweetAlertDialog.PROGRESS_TYPE);
         pDialog.getProgressHelper().setBarColor(Color.parseColor("#179e99"));
         pDialog.setTitleText("Wait a while");
-        pDialog.setCancelable(false);
         pDialog.show();
         strEmergencyTypeID = args.getString("emergency_id");
         if (strEmergencyTypeID.equals("2")) {
             CATEGORY_NAME = "Medical Assistance Contacts";
-        }else if (strEmergencyTypeID.equals("3")){
+        } else if (strEmergencyTypeID.equals("3")) {
             CATEGORY_NAME = "Mechanics Contacts";
-        }else if (strEmergencyTypeID.equals("4")){
+        } else if (strEmergencyTypeID.equals("4")) {
             CATEGORY_NAME = "Highway Officer Contacts";
-        }else{
+        } else {
             CATEGORY_NAME = "Rescue Contacts";
         }
         customActionBar();
+        _getLocation();
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(mLayoutManager);
@@ -138,12 +163,20 @@ public class EmergencyFragmentList extends Fragment {
                     public void onLocationUpdated(Location location) {
                         dblLat = location.getLatitude();
                         dblLon = location.getLongitude();
-                        Log.d("zma Location list : ", "" + dblLat + " " + dblLon);
-                        getData(strEmergencyTypeID,String.valueOf(dblLat),String.valueOf(dblLon));
+                        getData(strEmergencyTypeID, String.valueOf(dblLat), String.valueOf(dblLon));
                     }
                 });
+        if (String.valueOf(dblLat).equals("0.0")) {
+            gpsTracker = new GPSTracker(getActivity());
+
+            location = gpsTracker.getLocation();
+            dblLat = gpsTracker.getLatitude();
+            dblLon = gpsTracker.getLongitude();
+            getData(strEmergencyTypeID, String.valueOf(dblLat), String.valueOf(dblLon));
+        }
 
         list = new ArrayList<>();
+        Log.d("zma Location out : ", "" + dblLat + " " + dblLon);
         emergencyListAdapter = new EmergencyListAdapter(getActivity(), list);
         recyclerView.setAdapter(emergencyListAdapter);
         return view;
@@ -178,17 +211,45 @@ public class EmergencyFragmentList extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
+    private void _getLocation() {
+        // Get the location manager
+        LocationManager locationManager = (LocationManager)
+                getSystemService(LOCATION_SERVICE);
+        Criteria criteria = new Criteria();
+        String bestProvider = locationManager.getBestProvider(criteria, false);
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        Location location = locationManager.getLastKnownLocation(bestProvider);
+        try {
+            dblLon = location.getLatitude();
+            dblLon = location.getLongitude();
+            Log.d("zma new loc", String.valueOf(dblLat));
+        } catch (NullPointerException e) {
+            dblLon = -1.0;
+            dblLon = -1.0;
+        }
+    }
+
     public void getData(final String strCategoryID, final String latitude, final String longitude) {
-        final String url = Configuration.END_POINT_LIVE + "emergency_contacts/getEmergencyContact?category_id=" + strCategoryID + "&latitude=" + String.valueOf(dblLat) + "&longitude=" + String.valueOf(dblLon);
+        final String url = Configuration.END_POINT_LIVE + "emergency_contacts/getEmergencyContact?category_id=" +
+                strCategoryID + "&latitude=" + String.valueOf(dblLat) + "&longitude=" + String.valueOf(dblLon);
         Log.d("zma url", url);
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
+                Log.d("zma emer new res", String.valueOf(response));
                 try {
-
-                    Log.d("zma url emer list", url + "\n" + response.getBoolean("status") + "\n" + String.valueOf(response));
+                   // Log.d("zma url emer list", url + "\n" + response.getBoolean("status") + "\n" + String.valueOf(response));
                     list.clear();
-
                     if (response.getBoolean("status")) {
                         pDialog.dismiss();
                         JSONArray data = response.getJSONArray("data");
@@ -199,8 +260,11 @@ public class EmergencyFragmentList extends Fragment {
                             helper.setStrHelperLocation(shopObject.getString("district_name"));
                             helper.setStrHelperName(shopObject.getString("name"));
                             helper.setStrHelperPhoneNumber(shopObject.getString("contact_no"));
-                            Log.d("zma phone number",shopObject.getString("contact_no"));
                             list.add(helper);
+                        }
+                        if (data.length()==0){
+                            pDialog.dismiss();
+                            tvNoDataFound.setVisibility(View.VISIBLE);
                         }
                         Collections.sort(list, new Comparator<EmergencyHelper>() {
                             @Override
@@ -228,6 +292,8 @@ public class EmergencyFragmentList extends Fragment {
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
+                    pDialog.dismiss();
+                    tvNoDataFound.setVisibility(View.VISIBLE);
                 }
 
             }
@@ -263,6 +329,8 @@ public class EmergencyFragmentList extends Fragment {
         requestQueue.add(request);
 
     }
+
+
     public void customActionBar() {
         android.support.v7.app.ActionBar mActionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         mActionBar.setDisplayShowHomeEnabled(false);

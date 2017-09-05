@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.kptrafficpolice.trafficapp.R;
 //raabta
 //rabta
@@ -35,7 +36,7 @@ public class ChallanFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-
+    private FirebaseAnalytics mFirebaseAnalytics;
     private OnFragmentInteractionListener mListener;
 
     public ChallanFragment() {
@@ -82,6 +83,13 @@ public class ChallanFragment extends Fragment {
         tvOfficerName = (TextView) view.findViewById(R.id.tv_officer_name);
         tvChallanAmount = (TextView) view.findViewById(R.id.tv_challan_amount);
         tvChallanStatus = (TextView) view.findViewById(R.id.tv_challan_status);
+
+
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "5");
+        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "Challan Status Checked");
+        mFirebaseAnalytics.logEvent("Challan_checked", bundle);
 
         tvChallanDate.setText(String.valueOf(args.getString("date")));
         tvOfficerName.setText(String.valueOf(args.get("name")));

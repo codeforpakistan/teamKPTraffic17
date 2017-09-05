@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.kptrafficpolice.trafficapp.R;
 //raabta
 //rabta
@@ -23,6 +24,7 @@ public class LicenseFragment extends Fragment {
     TextView tvLicHolderName, tvLicHolderFatherName, tvLicHolderDistrict, tvLicType, tvLicIssueDate,
             tvLisExpiryDate,tvCNICNumber,tvLicenseNumber;
     private OnFragmentInteractionListener mListener;
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     public LicenseFragment() {
         // Required empty public constructor
@@ -59,6 +61,14 @@ public class LicenseFragment extends Fragment {
         tvLisExpiryDate = (TextView) view.findViewById(R.id.tv_expiry_date);
         tvLicenseNumber = (TextView)view.findViewById(R.id.tv_license_number);
         tvCNICNumber = (TextView)view.findViewById(R.id.tv_lh_cnic_number);
+
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "4");
+        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "License Status Checked");
+        mFirebaseAnalytics.logEvent("License_checked", bundle);
+
+
         Bundle args = new Bundle(getArguments());
         tvLicHolderName.setText(String.valueOf(args.get("name")));
         tvLicHolderDistrict.setText(String.valueOf(args.get("district")));

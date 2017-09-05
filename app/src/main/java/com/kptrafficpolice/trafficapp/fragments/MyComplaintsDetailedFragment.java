@@ -24,6 +24,7 @@ import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.kptrafficpolice.trafficapp.R;
 import com.squareup.picasso.Picasso;
 
@@ -55,6 +56,7 @@ public class MyComplaintsDetailedFragment extends Fragment {
     TextView tvComplaintType, tvComplaintDescription, tvComplaintDate, tvComplaintStatus;
     SweetAlertDialog pDialog;
     private OnFragmentInteractionListener mListener;
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     public MyComplaintsDetailedFragment() {
         // Required empty public constructor
@@ -101,7 +103,15 @@ public class MyComplaintsDetailedFragment extends Fragment {
         ivComplaintImage = (ImageView) view.findViewById(R.id.iv_detail_title_image);
         ivMapPointer = (ImageView) view.findViewById(R.id.iv_detail_marker);
         vvMyComplaints = (VideoView) view.findViewById(R.id.vv_my_complaints);
+
         customActionBar();
+
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "2");
+        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "My Complaint List");
+        mFirebaseAnalytics.logEvent("My_Complaint_screen", bundle);
+
         pDialog = new SweetAlertDialog(getActivity(), SweetAlertDialog.PROGRESS_TYPE);
         pDialog.getProgressHelper().setBarColor(Color.parseColor("#179e99"));
         pDialog.setTitleText("Loading Video");
@@ -145,7 +155,7 @@ public class MyComplaintsDetailedFragment extends Fragment {
 
             } else if (!args.getString("image").equals("")) {
                 ivComplaintImage.setVisibility(View.VISIBLE);
-                Picasso.with(getActivity()).load("http://103.240.220.76/kptraffic/uploads/images/" + args.getString("image")).into(ivComplaintImage);
+                Glide.with(getActivity()).load("http://103.240.220.76/kptraffic/uploads/images/" + args.getString("image")).into(ivComplaintImage);
             }
         }
 

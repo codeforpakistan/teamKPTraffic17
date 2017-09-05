@@ -62,6 +62,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 import io.nlopez.smartlocation.OnLocationUpdatedListener;
 import io.nlopez.smartlocation.SmartLocation;
 
+import static com.thefinestartist.utils.content.ContextUtil.getApplicationContext;
 import static com.thefinestartist.utils.content.ContextUtil.getContentResolver;
 
 //raabta
@@ -211,19 +212,20 @@ public class MainFragment extends Fragment {
         }
 
 
-        MyApplication application = new MyApplication();
-        mTracker = application.getDefaultTracker();
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
-        Log.d("zma analytics", "Setting screen name: " + "Main Fragment");
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "1");
+        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "Main Module Screen");
+        mFirebaseAnalytics.logEvent("Main_Screen", bundle);
+
         tvUserName = (TextView) view.findViewById(R.id.tv_user_name);
         pDialog = new SweetAlertDialog(getActivity(), SweetAlertDialog.PROGRESS_TYPE);
         pDialog.getProgressHelper().setBarColor(Color.parseColor("#179e99"));
         pDialog.setCancelable(false);
 
         sharedPreferences = getActivity().getSharedPreferences("com.ghosttech.kptraffic", 0);
-        editor = sharedPreferences.edit();
         String user_name_from_reg = sharedPreferences.getString("user_name", "");
-        // Log.d("zma reg name", user_name_from_reg);
+         Log.d("zma reg name", user_name_from_reg);
         tvUserName.setText(user_name_from_reg);
         MultiDex.install(getActivity());
         shake = AnimationUtils.loadAnimation(getActivity(), R.anim.shake);

@@ -28,6 +28,7 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.kptrafficpolice.trafficapp.R;
 import com.kptrafficpolice.trafficapp.activities.MainDrawerActivity;
 import com.kptrafficpolice.trafficapp.utilities.Configuration;
@@ -71,6 +72,7 @@ public class MyComplaintsFragment extends Fragment {
     View view;
     TextView mTitleTextView;
     TextView tvNoComplaints;
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     private OnFragmentInteractionListener mListener;
 
@@ -111,6 +113,13 @@ public class MyComplaintsFragment extends Fragment {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_my_complaints, container, false);
         pDialog = new SweetAlertDialog(getActivity(), SweetAlertDialog.PROGRESS_TYPE);
+
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "2");
+        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "My Complaint List");
+        mFirebaseAnalytics.logEvent("My_Complaint_screen", bundle);
+
         pDialog.getProgressHelper().setBarColor(Color.parseColor("#179e99"));
         pDialog.setTitleText("Wait a while");
         pDialog.setCancelable(false);
@@ -123,7 +132,6 @@ public class MyComplaintsFragment extends Fragment {
         sharedPreferences = getActivity().getSharedPreferences("com.ghosttech.kptraffic", 0);
         editor = sharedPreferences.edit();
         strUserID = sharedPreferences.getString("user_id", "");
-        Log.d("zma user id", strUserID);//problem with id, it should be one, but sending 2
         customActionBar();
         getData(strUserID);
         list = new ArrayList<>();
@@ -186,7 +194,7 @@ public class MyComplaintsFragment extends Fragment {
                             helper.setStrLatitude(complaintObject.getString("latitude"));
                             helper.setStrLongitude(complaintObject.getString("longitude"));
                             helper.setStrDate(complaintObject.getString("dated"));
-                            helper.setStrImage(complaintObject.getString("image"));
+                            helper. setStrImage(complaintObject.getString("image"));
 
                             helper.setStrVideo(complaintObject.getString("video"));
                             if (complaintObject.getString("video").contains("mp4")) {

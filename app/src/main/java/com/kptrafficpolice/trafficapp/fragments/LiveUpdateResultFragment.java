@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -27,6 +28,7 @@ import com.kptrafficpolice.trafficapp.R;
 import com.kptrafficpolice.trafficapp.utilities.LiveUpdateMapCoordinates;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
@@ -46,6 +48,7 @@ public class LiveUpdateResultFragment extends Fragment {
     TextView tvRoadStatus, tvUpdateTime;
     ImageView ivHomeButton, ivSettingButton, ivWebsiteButton;
     CardView cardView;
+    boolean timeFlag = false;
 
     public LiveUpdateResultFragment() {
     }
@@ -67,7 +70,7 @@ public class LiveUpdateResultFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_live_update_result, container, false);
 
         mMapView = (MapView) view.findViewById(R.id.mapView);
-        cardView = (CardView)view.findViewById(R.id.card_view_live_update);
+        cardView = (CardView) view.findViewById(R.id.card_view_live_update);
         mMapView.onCreate(savedInstanceState);
         args = getArguments();
         strStatus = args.getString("status");
@@ -100,6 +103,8 @@ public class LiveUpdateResultFragment extends Fragment {
                     return;
                 }
                 googleMap.setMyLocationEnabled(true);
+                googleMap.setIndoorEnabled(true);
+                googleMap.setTrafficEnabled(true);
                 pickMapView();
             }
         });
@@ -180,7 +185,7 @@ public class LiveUpdateResultFragment extends Fragment {
         LayoutInflater mInflater = LayoutInflater.from(getActivity());
         View mCustomView = mInflater.inflate(R.layout.custom_action_bar, null);
         TextView mTitleTextView = (TextView) mCustomView.findViewById(R.id.title_text);
-        mTitleTextView.setText(args.getString("clicked_road_name")+" Status");
+        mTitleTextView.setText(args.getString("clicked_road_name") + " Status");
         ImageView mBackArrow = (ImageView) mCustomView.findViewById(R.id.iv_back_arrow);
         mActionBar.setCustomView(mCustomView);
         mActionBar.setDisplayShowCustomEnabled(true);

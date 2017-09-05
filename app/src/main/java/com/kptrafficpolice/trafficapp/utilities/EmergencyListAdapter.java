@@ -15,6 +15,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
@@ -29,6 +30,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.kptrafficpolice.trafficapp.R;
 
 public class EmergencyListAdapter extends RecyclerView.Adapter<EmergencyListAdapter.ViewHolder> {
@@ -37,6 +39,7 @@ public class EmergencyListAdapter extends RecyclerView.Adapter<EmergencyListAdap
     Context context;
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -93,7 +96,7 @@ public class EmergencyListAdapter extends RecyclerView.Adapter<EmergencyListAdap
     public void onBindViewHolder(ViewHolder holder, int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        String strClickedItem = sharedPreferences.getString("clicked_item","");
+        final String strClickedItem = sharedPreferences.getString("clicked_item","");
         if (strClickedItem.equals("health")){
             holder.ivHelperIcon.setImageResource(R.drawable.emergency_health);
         }else if (strClickedItem.equals("mechanics")){
@@ -104,16 +107,15 @@ public class EmergencyListAdapter extends RecyclerView.Adapter<EmergencyListAdap
         final EmergencyHelper helper = emergencyHelperList.get(position);
         holder.tvEmergencyHelperName.setText(helper.getStrHelperName());
         String strDistance = helper.getStrHelperDistance();
-        Log.d("zma distance new",strDistance);
+        //if (strDistance.com)
         strDistance = Double.parseDouble(strDistance)*1000+"";
 
         if (Double.parseDouble(strDistance)>1000){
             String strDistanceNew = helper.getStrHelperDistance();
-            Log.d("zma distance in KM",strDistance);
+
             strDistanceNew = strDistanceNew.substring(0,3);
             holder.tvEmergencyDistance.setText(strDistanceNew+" km");
         }else {
-            Log.d("zma distance in M",strDistance);
             strDistance = strDistance.substring(0, 3);
             holder.tvEmergencyDistance.setText(strDistance + " m");
         }
@@ -123,6 +125,14 @@ public class EmergencyListAdapter extends RecyclerView.Adapter<EmergencyListAdap
         holder.lLCallNow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                mFirebaseAnalytics = FirebaseAnalytics.getInstance(context);
+                Bundle bundle = new Bundle();
+                bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "9");
+                bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "Emergency Contacts personal");
+                mFirebaseAnalytics.logEvent(strClickedItem+" Call made", bundle);
+
+
                 Intent callIntent = new Intent(Intent.ACTION_CALL);
                 callIntent.setData(Uri.parse("tel:" + helper.getStrHelperPhoneNumber()));
                 callIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
