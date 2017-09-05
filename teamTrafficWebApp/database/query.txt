@@ -1,0 +1,6 @@
+SELECT (cast(license_verification.license_type as unsigned)),license_verification.name,license_verification.father_name,license_types.license_type FROM `license_verification` 
+
+inner join license_types on license_types.type_id=license_verification.license_type
+
+
+WHERE license_verification.license_id=86

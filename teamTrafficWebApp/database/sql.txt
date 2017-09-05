@@ -1,0 +1,143 @@
+SignUP
+--------
+SET @row_number = 0;
+SELECT (
+@row_number := @row_number +1
+) AS num,  `name` ,  `email` ,  `cnic` ,  `phone_no` 
+FROM signup
+================
+SELECT MAX(`user_id`)+1 as user_id FROM `signup`
+SELECT (case when max(user_id) IS NULL then 1 else max(user_id)+1 end) as user_id FROM `signup`
+--------------------------------------------------
+
+SELECT *
+FROM `routes` 
+INNER JOIN `route_updates`
+INNER JOIN `route_status`
+ON `routes`.`route_id` = `route_updates`.`route_id`
+ON `route_status`.`route_status_id` = `route_updates`.`route_status_id`
+ORDER BY `route_update_id` 
+DESC
+
+----------------------------------------------------
+
+
+select route_name, route_status,updated_time
+from route_updates
+inner join routes
+on route_updates.route_id = routes.route_id
+inner join route_status
+on route_updates.route_status_id =  route_status.route_status_id
+order by route_update_id
+desc
+
+----------------------------------------------------
+
+select *
+from route_updates
+inner join route_status
+on route_updates.route_status_id = route_status.route_status_id
+order by route_update_id
+desc
+
+====================================================================
+
+------------ Complaints -----------
+
+SELECT complaint_id, latitude, longitude, description, image, video, complaint_type, 
+STATUS 
+FROM complaints
+INNER JOIN complaint_types ON complaint_types.complaint_type_id = complaints.complaint_type_id
+INNER JOIN complaints_status ON complaints_status.complaints_status_id = complaints.complaints_status_id
+ORDER BY  `complaint_id` DESC
+
+COmplaints JOIN with Signup for USERNAME
+_________________________________________
+SELECT `complaint_id`, `complaints`.`complaint_type_id`, `latitude`, `longitude`, `description`, `image`, `video`, `dated`, `complaint_type`, `status`, `signup`.`name`, `signup`.`phone_no`
+FROM `complaints`
+INNER JOIN `signup` ON `signup`.`signup_id` = `complaints`.`signup_id`
+INNER JOIN `complaint_types` ON `complaint_types`.`complaint_type_id` = `complaints`.`complaint_type_id` 
+INNER JOIN `complaints_status` ON `complaints_status`.`complaints_status_id` = `complaints`.`complaints_status_id` 
+ORDER BY `complaint_id` DESC
+
+
+myComplaints API
+----------------
+SELECT `complaint_id`, `name`, `cnic`, `latitude`, `longitude`, `description`, `image`, `video`, `complaint_type`, `status` 
+FROM `complaints` 
+INNER JOIN `complaint_types` ON `complaint_types`.`complaint_type_id` = `complaints`.`complaint_type_id` 
+INNER JOIN `complaints_status` ON `complaints_status`.`complaints_status_id` = `complaints`.`complaints_status_id` 
+INNER JOIN `signup` ON `signup`.`signup_id` = `complaints`.`signup_id`
+WHERE `signup`.`user_id`=1
+ORDER BY `complaint_id` DESC
+
+=====================================================================
+
+------------ Emergency Contacts -----------------
+	    --------------------
+
+SELECT emergency_contacts_detail.emergency_category_id,latitude,longitude,name,contact_no, category_name,division_name,district_name
+FROM  `emergency_contacts_detail` 
+INNER JOIN  `emergency_categories` ON  `emergency_contacts_detail`.`emergency_category_id` =  `emergency_categories`.`emergency_category_id` 
+INNER JOIN  `emergency_divisions` ON  `emergency_contacts_detail`.`emergency_division_id` =  `emergency_divisions`.`emergency_division_id` 
+INNER JOIN  `emergency_districts` ON  `emergency_districts`.`emergency_division_id` =  `emergency_divisions`.`emergency_division_id` 
+WHERE  `emergency_contacts_detail`.`emergency_category_id` =  '3'
+LIMIT 0 , 5
+
+=======
+EDITED (FINAL)
+=======
+
+SELECT emergency_contacts_detail.emergency_category_id, latitude, longitude, name, contact_no, category_name, division_name, district_name
+FROM  `emergency_contacts_detail` 
+INNER JOIN  `emergency_districts` ON  `emergency_districts`.`emergency_districts_id` =  `emergency_contacts_detail`.`emergency_district_id` 
+INNER JOIN  `emergency_divisions` ON  `emergency_districts`.`emergency_division_id` =  `emergency_divisions`.`emergency_division_id` 
+INNER JOIN  `emergency_categories` ON  `emergency_contacts_detail`.`emergency_category_id` =  `emergency_categories`.`emergency_category_id` 
+WHERE  `emergency_contacts_detail`.`emergency_category_id` =  '3'
+LIMIT 0 , 5
+
+---------------------------------------------------
+fInd distance (lat,lng) ---- We have original-coordinates stored in dbase and pass user-cordinates to query to compare cordinates as result out in nearest distance to user
+=======================
+
+SELECT ( 6371 * acos( cos( radians(34.0170118) ) * cos( radians( `latitude` ) ) * cos( radians( `longitude` ) - radians(71.5624867) ) + sin( radians(34.0170118) ) * sin( radians( `latitude` ) ) ) ) AS distance, emergency_contacts_detail.emergency_category_id, latitude, longitude,address, name, contact_no, category_name, division_name, district_name
+FROM  `emergency_contacts_detail` 
+INNER JOIN  `emergency_districts` ON  `emergency_districts`.`emergency_districts_id` =  `emergency_contacts_detail`.`emergency_district_id` 
+INNER JOIN  `emergency_divisions` ON  `emergency_districts`.`emergency_division_id` =  `emergency_divisions`.`emergency_division_id` 
+INNER JOIN  `emergency_categories` ON  `emergency_contacts_detail`.`emergency_category_id` =  `emergency_categories`.`emergency_category_id` 
+WHERE  `emergency_contacts_detail`.`emergency_category_id` =  '3'
+HAVING distance < 5
+ORDER BY distance DESC
+LIMIT 0 , 5
+
+HAVERSINE FORMULA
+-----------------
+SELECT ( 6371000 * ACOS( COS( RADIANS( 33.9971124 ) ) * COS( RADIANS(  `latitude` ) ) * COS( RADIANS(  `longitude` ) - RADIANS( 71.4684094 ) ) + SIN( RADIANS( 33.9971124 ) ) * SIN( RADIANS(  `latitude` ) ) ) ) AS distance,  `address`
+FROM `emergency_contacts_detail`
+WHERE `emergency_category_id` = 2
+HAVING distance <=5
+ORDER BY distance DESC 
+LIMIT 0 , 5
+------TESTED----------------------
+SELECT ( 6371 * ACOS( COS( RADIANS( 33.9971124 ) ) * COS( RADIANS(  `latitude` ) ) * COS( RADIANS(  `longitude` ) - RADIANS( 71.4684094 ) ) + SIN( RADIANS( 33.9971124 ) ) * SIN( RADIANS(  `latitude` ) ) ) ) AS distance,  `address` 
+FROM  `emergency_contacts_detail` 
+WHERE  `emergency_category_id` =2
+HAVING distance <=5
+ORDER BY distance DESC 
+LIMIT 0 , 5
+---------------------------------------------------
+SELECT `address`,(((acos(sin((33.9987422*pi()/180)) * 
+sin((`latitude`*pi()/180))+cos((33.9987422*pi()/180)) * 
+cos((`latitude`*pi()/180)) * cos(((71.4702606 - `longitude`)
+*pi()/180))))*180/pi())*60*1.1515*1.609344) as distance
+FROM `emergency_contacts_detail`
+WHERE `emergency_category_id` = 3
+HAVING distance <= 5
+ORDER BY distance DESC
+LIMIT 0,5
+===================================================
+
+SELECT *
+FROM  `emergency_divisions` 
+JOIN emergency_districts ON emergency_districts.emergency_division_id = emergency_divisions.emergency_division_id
+WHERE emergency_divisions.emergency_division_id =1
