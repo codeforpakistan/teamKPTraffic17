@@ -1,5 +1,6 @@
 # Team KP Traffic Project
 This repository is intended to contain the work done by the KP Traffic team for the 3rd Batch of KP Civic Innovation Fellowship Program 2017.
+![alt text](http://codeforpakistan.org/wp-content/uploads/2017/08/Raabta-01-1-1024x370.png)
 
 The android based mobile application “KP Traffic” is a platform that will facilitate the public as well as the traffic police officials in realtime, improving their existing traditional and inefficient way of registering complaints.
 
