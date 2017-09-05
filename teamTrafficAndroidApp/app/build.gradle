@@ -30,8 +30,8 @@ android {
         applicationId "com.kptrafficpolice.trafficapp"
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode 13
-        versionName "Google Traffic API Implemented"
+        versionCode 14
+        versionName "Build for zero coordinates"
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }

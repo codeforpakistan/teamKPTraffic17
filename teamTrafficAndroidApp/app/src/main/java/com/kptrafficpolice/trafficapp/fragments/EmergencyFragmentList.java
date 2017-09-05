@@ -87,6 +87,7 @@ public class EmergencyFragmentList extends Fragment {
     private OnFragmentInteractionListener mListener;
     private FirebaseAnalytics mFirebaseAnalytics;
     TextView tvNoDataFound;
+    public static boolean DistanceORDivision = false;
 
     public EmergencyFragmentList() {
         // Required empty public constructor
@@ -125,7 +126,7 @@ public class EmergencyFragmentList extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.emergency_fragment_list, container, false);
-        tvNoDataFound = (TextView)view.findViewById(R.id.tv_no_data_found);
+        tvNoDataFound = (TextView) view.findViewById(R.id.tv_no_data_found);
         tvNoDataFound.setVisibility(View.GONE);
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
         Base.initialize(getActivity());
@@ -168,7 +169,6 @@ public class EmergencyFragmentList extends Fragment {
                 });
         if (String.valueOf(dblLat).equals("0.0")) {
             gpsTracker = new GPSTracker(getActivity());
-
             location = gpsTracker.getLocation();
             dblLat = gpsTracker.getLatitude();
             dblLon = gpsTracker.getLongitude();
@@ -247,53 +247,98 @@ public class EmergencyFragmentList extends Fragment {
             @Override
             public void onResponse(JSONObject response) {
                 Log.d("zma emer new res", String.valueOf(response));
-                try {
-                   // Log.d("zma url emer list", url + "\n" + response.getBoolean("status") + "\n" + String.valueOf(response));
-                    list.clear();
-                    if (response.getBoolean("status")) {
-                        pDialog.dismiss();
-                        JSONArray data = response.getJSONArray("data");
-                        for (int i = 0; i < data.length(); i++) {
-                            JSONObject shopObject = data.getJSONObject(i);
-                            EmergencyHelper helper = new EmergencyHelper();
-                            helper.setStrHelperDistance(shopObject.getString("distance"));
-                            helper.setStrHelperLocation(shopObject.getString("district_name"));
-                            helper.setStrHelperName(shopObject.getString("name"));
-                            helper.setStrHelperPhoneNumber(shopObject.getString("contact_no"));
-                            list.add(helper);
-                        }
-                        if (data.length()==0){
+                String res = response.toString();
+                if (res.contains("distance")) {
+                    try {
+                        // Log.d("zma url emer list", url + "\n" + response.getBoolean("status") + "\n" + String.valueOf(response));
+                        list.clear();
+                        if (response.getBoolean("status")) {
                             pDialog.dismiss();
-                            tvNoDataFound.setVisibility(View.VISIBLE);
-                        }
-                        Collections.sort(list, new Comparator<EmergencyHelper>() {
-                            @Override
-                            public int compare(EmergencyHelper emergencyHelper, EmergencyHelper t1) {
-                                String firstItem = emergencyHelper.getStrHelperDistance();
-                                String secondItem = t1.getStrHelperDistance();
-                                return firstItem.compareTo(secondItem);
-                            }
-                        });
-                        emergencyListAdapter.notifyDataSetChanged();
-                    } else {
-                        pDialog.dismiss();
-                        new SweetAlertDialog(getActivity(),SweetAlertDialog.WARNING_TYPE)
-                                .setTitleText("Oops!")
-                                .setContentText("No data found around your location")
-                                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                                    @Override
-                                    public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                        Fragment fragment = new MainEmergencyFragment();
-                                        getFragmentManager().beginTransaction().replace(R.id.fragment_container,fragment).commit();
-                                        sweetAlertDialog.dismiss();
+                            JSONArray data = response.getJSONArray("data");
+                            for (int i = 0; i < data.length(); i++) {
+                                JSONObject shopObject = data.getJSONObject(i);
+                                EmergencyHelper helper = new EmergencyHelper();
 
-                                    }
-                                }).show();
+                                helper.setStrHelperDistance(shopObject.getString("distance"));
+                                helper.setStrHelperLocation(shopObject.getString("district_name"));
+                                helper.setStrHelperName(shopObject.getString("name"));
+                                helper.setStrHelperPhoneNumber(shopObject.getString("contact_no"));
+                                list.add(helper);
+                            }
+                            if (data.length() == 0) {
+                                pDialog.dismiss();
+                                tvNoDataFound.setVisibility(View.VISIBLE);
+                            }
+                            Collections.sort(list, new Comparator<EmergencyHelper>() {
+                                @Override
+                                public int compare(EmergencyHelper emergencyHelper, EmergencyHelper t1) {
+                                    String firstItem = emergencyHelper.getStrHelperDistance();
+                                    String secondItem = t1.getStrHelperDistance();
+                                    return firstItem.compareTo(secondItem);
+                                }
+                            });
+                            emergencyListAdapter.notifyDataSetChanged();
+                        } else {
+                            pDialog.dismiss();
+                            new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
+                                    .setTitleText("Oops!")
+                                    .setContentText("No data found around your location")
+                                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                        @Override
+                                        public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                            Fragment fragment = new MainEmergencyFragment();
+                                            getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
+                                            sweetAlertDialog.dismiss();
+
+                                        }
+                                    }).show();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        pDialog.dismiss();
+                        tvNoDataFound.setVisibility(View.VISIBLE);
                     }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    pDialog.dismiss();
-                    tvNoDataFound.setVisibility(View.VISIBLE);
+                }else {
+                    try {
+                        // Log.d("zma url emer list", url + "\n" + response.getBoolean("status") + "\n" + String.valueOf(response));
+                        list.clear();
+                        if (response.getBoolean("status")) {
+                            pDialog.dismiss();
+                            JSONArray data = response.getJSONArray("data");
+                            for (int i = 0; i < data.length(); i++) {
+                                JSONObject shopObject = data.getJSONObject(i);
+                                EmergencyHelper helper = new EmergencyHelper();
+                                DistanceORDivision = true;
+                                helper.setStrHelperLocation(shopObject.getString("district_name"));
+                                helper.setStrHelperName(shopObject.getString("name"));
+                                helper.setStrHelperPhoneNumber(shopObject.getString("contact_no"));
+                                list.add(helper);
+                            }
+                            if (data.length() == 0) {
+                                pDialog.dismiss();
+                                tvNoDataFound.setVisibility(View.VISIBLE);
+                            }
+                            emergencyListAdapter.notifyDataSetChanged();
+                        } else {
+                            pDialog.dismiss();
+                            new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
+                                    .setTitleText("Oops!")
+                                    .setContentText("No data found around your location")
+                                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                        @Override
+                                        public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                            Fragment fragment = new MainEmergencyFragment();
+                                            getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
+                                            sweetAlertDialog.dismiss();
+
+                                        }
+                                    }).show();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        pDialog.dismiss();
+                        tvNoDataFound.setVisibility(View.VISIBLE);
+                    }
                 }
 
             }

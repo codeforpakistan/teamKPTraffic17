@@ -368,32 +368,6 @@ public class MainFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        final LocationManager manager = (LocationManager) getActivity().getSystemService(getActivity().LOCATION_SERVICE);
-
-        if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            myDialog = new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
-                    .setTitleText("Turn on your GPS")
-                    .setConfirmText("YES")
-                    .setCancelText("NO")
-                    .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                        @Override
-                        public void onClick(SweetAlertDialog sweetAlertDialog) {
-                            sweetAlertDialog.dismiss();
-
-                        }
-                    })
-                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                        @Override
-                        public void onClick(SweetAlertDialog sweetAlertDialog) {
-                            Intent settingsIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                            getActivity().startActivity(settingsIntent);
-                            sweetAlertDialog.dismiss();
-
-                        }
-                    });
-            myDialog.show();
-            // Call your Alert message
-        }
     }
 
     @Override
@@ -412,9 +386,6 @@ public class MainFragment extends Fragment {
         View mCustomView = mInflater.inflate(R.layout.custom_action_bar, null);
         mTitleTextView = (TextView) mCustomView.findViewById(R.id.title_text);
         mTitleTextView.setText("Our Services");
-        //  ImageView mBackArrow = (ImageView) mCustomView.findViewById(R.id.iv_back_arrow);
-        //mBackArrow.setImageResource(R.drawable.map_pointer);
-//        mBackArrow.setVisibility(View.GONE);
         mActionBar.setCustomView(mCustomView);
         mActionBar.setDisplayShowCustomEnabled(true);
     }

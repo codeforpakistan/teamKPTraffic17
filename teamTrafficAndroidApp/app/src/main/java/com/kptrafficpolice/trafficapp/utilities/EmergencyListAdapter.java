@@ -32,6 +32,7 @@ import android.widget.TextView;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.kptrafficpolice.trafficapp.R;
+import com.kptrafficpolice.trafficapp.fragments.EmergencyFragmentList;
 
 public class EmergencyListAdapter extends RecyclerView.Adapter<EmergencyListAdapter.ViewHolder> {
     private ArrayList<String> mDataset;
@@ -45,7 +46,7 @@ public class EmergencyListAdapter extends RecyclerView.Adapter<EmergencyListAdap
 
         // each data item is just a string in this case
         CardView cvEmergencyItem;
-        TextView tvEmergencyHelperName, tvEmergencyPhone, tvEmergencyLocation, tvEmergencyDistance, tvCallNow;
+        TextView tvEmergencyHelperName, tvEmergencyPhone, tvDivisionName, tvEmergencyLocation, tvEmergencyDistance, tvCallNow;
         ImageView ivCallNow, ivHelperIcon;
         LinearLayout lLCallNow;
 
@@ -107,20 +108,23 @@ public class EmergencyListAdapter extends RecyclerView.Adapter<EmergencyListAdap
         final EmergencyHelper helper = emergencyHelperList.get(position);
         holder.tvEmergencyHelperName.setText(helper.getStrHelperName());
         String strDistance = helper.getStrHelperDistance();
-        //if (strDistance.com)
-        strDistance = Double.parseDouble(strDistance)*1000+"";
+        if (!EmergencyFragmentList.DistanceORDivision) {
+            if (!strDistance.equals(""))
+                strDistance = Double.parseDouble(strDistance) * 1000 + "";
 
-        if (Double.parseDouble(strDistance)>1000){
-            String strDistanceNew = helper.getStrHelperDistance();
+            if (Double.parseDouble(strDistance) > 1000) {
+                String strDistanceNew = helper.getStrHelperDistance();
 
-            strDistanceNew = strDistanceNew.substring(0,3);
-            holder.tvEmergencyDistance.setText(strDistanceNew+" km");
+                strDistanceNew = strDistanceNew.substring(0, 3);
+                holder.tvEmergencyDistance.setText(strDistanceNew + " km");
+            } else {
+                strDistance = strDistance.substring(0, 3);
+                holder.tvEmergencyDistance.setText(strDistance + " m");
+            }
         }else {
-            strDistance = strDistance.substring(0, 3);
-            holder.tvEmergencyDistance.setText(strDistance + " m");
+            holder.tvEmergencyDistance.setVisibility(View.GONE);
         }
         holder.tvEmergencyLocation.setText(helper.getStrHelperLocation());
-
         holder.tvEmergencyPhone.setText(helper.getStrHelperPhoneNumber());
         holder.lLCallNow.setOnClickListener(new View.OnClickListener() {
             @Override

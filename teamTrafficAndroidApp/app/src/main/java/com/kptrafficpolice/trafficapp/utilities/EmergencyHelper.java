@@ -6,8 +6,15 @@ package com.kptrafficpolice.trafficapp.utilities;
 //raabta
 //rabta
 public class EmergencyHelper {
-    String strHelperName, strHelperPhoneNumber, strHelperDistance, strHelperLocation;
+    String strHelperDivisionName, strHelperName, strHelperPhoneNumber, strHelperDistance, strHelperLocation;
 
+    public String getStrHelperDivisionName() {
+        return strHelperDivisionName;
+    }
+
+    public void setStrHelperDivisionName(String strHelperDivisionName) {
+        this.strHelperDivisionName = strHelperDivisionName;
+    }
 
     public String getStrHelperDistance() {
         return strHelperDistance;
