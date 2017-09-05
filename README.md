@@ -17,3 +17,6 @@ This module will contain different graphical symbols meant to be used to educate
 To overcome corruption in Traffic Police, this module was developed for the public to verify the authenticity of traffic violation tickets.
 # Emergency contacts 
 This module will allow the public to find a nearby rescue personnel to overcome any problems that they may be facing while travelling
+
+
+![alt text](https://lh3.googleusercontent.com/G_uV9d8e-qR4URByLxMWNUcKdIWtMhRJRqGDB5TGiIs_JbBZ-xhT5Lf5g8rbSZ2485c=h900-rw)
