@@ -15,8 +15,5 @@ This module will help the public to verify their driving license directly throug
 This module will contain different graphical symbols meant to be used to educate people about traffic rules and regulations.
 # Challan Verification  
 To overcome corruption in Traffic Police, this module was developed for the public to verify the authenticity of traffic violation tickets.
-![alt text](https://drive.google.com/file/d/0B_YjvhsRbWi-bnlQc1pxWEZONnc/view?usp=sharing)
-
-
 # Emergency contacts 
 This module will allow the public to find a nearby rescue personnel to overcome any problems that they may be facing while travelling
