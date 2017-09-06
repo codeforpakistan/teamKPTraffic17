@@ -26,6 +26,7 @@ import android.widget.VideoView;
 import com.bumptech.glide.Glide;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.kptrafficpolice.trafficapp.R;
+import com.kptrafficpolice.trafficapp.utilities.Configuration;
 import com.squareup.picasso.Picasso;
 
 import java.net.URI;
@@ -155,7 +156,7 @@ public class MyComplaintsDetailedFragment extends Fragment {
 
             } else if (!args.getString("image").equals("")) {
                 ivComplaintImage.setVisibility(View.VISIBLE);
-                Glide.with(getActivity()).load("http://103.240.220.76/kptraffic/uploads/images/" + args.getString("image")).into(ivComplaintImage);
+                Glide.with(getActivity()).load(Configuration.END_POINT_LIVE+"uploads/images/" + args.getString("image")).into(ivComplaintImage);
             }
         }
 

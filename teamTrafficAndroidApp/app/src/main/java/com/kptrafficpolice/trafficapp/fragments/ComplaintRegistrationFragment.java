@@ -563,13 +563,7 @@ public class ComplaintRegistrationFragment extends Fragment {
         mTitleTextView.setText("Write a complaint here");
         mActionBar.setCustomView(mCustomView);
         mActionBar.setDisplayShowCustomEnabled(true);
-//        mBackArrow.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                fragment = new MainFragment();
-//                getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
-//            }
-//        });
+
     }
 
     public void cameraIntent() {
@@ -663,7 +657,6 @@ public class ComplaintRegistrationFragment extends Fragment {
         } else if (resultCode == RESULT_OK && requestCode == CAMERA_VIDEO_CAPTURE && data != null) {
             Uri picUri = data.getData();
             if (data.getData() != null) {
-                //create destination directory
                 videoCaptureSourceFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + getActivity().getPackageName() + "/media/videos");
                 if (videoCaptureSourceFile.mkdirs() || videoCaptureSourceFile.isDirectory())
                     //compress and output new video specs
@@ -671,8 +664,6 @@ public class ComplaintRegistrationFragment extends Fragment {
                 Glide.with(getActivity())
                         .load(picUri)
                         .into(ivRecordVideo);
-//                Bitmap bitmap = ThumbnailUtils.createVideoThumbnail(videoCaptureSourceFile.getAbsolutePath(), MediaStore.Video.Thumbnails.MINI_KIND);
-//                ivRecordVideo.setImageBitmap(bitmap);
                 tvRecordVideo.setText("Replace Video");
                 tvRecordVideo.setTextColor(Color.RED);
                 isVideo = true;
@@ -706,7 +697,6 @@ public class ComplaintRegistrationFragment extends Fragment {
         protected String doInBackground(String... paths) {
             try {
                 compressedVideoPath = SiliCompressor.with(mContext).compressVideo(paths[0], paths[1]);
-                Log.d("zma compressed path", compressedVideoPath.toString());
 
             } catch (URISyntaxException e) {
                 e.printStackTrace();

@@ -93,7 +93,7 @@ public class TrafficEducationAdapter extends RecyclerView.Adapter<TrafficEducati
         holder.imageTitle.setText(educationHelper.strImageTitle);
         holder.descriptionEnglish.setText(educationHelper.strDescriptionEnglish);
         holder.descriptionUrdu.setText(educationHelper.strDescriptionUrdu);
-        Glide.with(context).load("http://103.240.220.76/kptraffic/uploads/traffic-education/" + educationHelper.strImage)
+        Glide.with(context).load(Configuration.END_POINT_LIVE+"uploads/traffic-education/" + educationHelper.strImage)
                 .into(holder.ivTrafficEducationImage);
 
         holder.cvTrafficEducation.setOnClickListener(new View.OnClickListener() {

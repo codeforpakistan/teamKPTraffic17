@@ -300,7 +300,6 @@ public class EmergencyFragmentList extends Fragment {
                     }
                 }else {
                     try {
-                        // Log.d("zma url emer list", url + "\n" + response.getBoolean("status") + "\n" + String.valueOf(response));
                         list.clear();
                         if (response.getBoolean("status")) {
                             pDialog.dismiss();
