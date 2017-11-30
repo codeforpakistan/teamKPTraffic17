@@ -10,11 +10,9 @@ import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
-import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.multidex.MultiDex;
 import android.support.v7.app.AppCompatActivity;
@@ -39,16 +37,13 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.kptrafficpolice.trafficapp.R;
 import com.kptrafficpolice.trafficapp.activities.MainDrawerActivity;
 import com.kptrafficpolice.trafficapp.utilities.CheckNetwork;
 import com.kptrafficpolice.trafficapp.utilities.Configuration;
-import com.kptrafficpolice.trafficapp.utilities.MyApplication;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -61,9 +56,6 @@ import java.util.Map;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import io.nlopez.smartlocation.OnLocationUpdatedListener;
 import io.nlopez.smartlocation.SmartLocation;
-
-import static com.thefinestartist.utils.content.ContextUtil.getApplicationContext;
-import static com.thefinestartist.utils.content.ContextUtil.getContentResolver;
 
 //raabta
 //rabta
@@ -141,7 +133,7 @@ public class MainFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_main, container, false);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
                 getActivity().checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
+                        != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION,
                     android.Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.INTERNET}, 1);
         }
@@ -225,7 +217,7 @@ public class MainFragment extends Fragment {
 
         sharedPreferences = getActivity().getSharedPreferences("com.ghosttech.kptraffic", 0);
         String user_name_from_reg = sharedPreferences.getString("user_name", "");
-         Log.d("zma reg name", user_name_from_reg);
+        Log.d("zma reg name", user_name_from_reg);
         tvUserName.setText(user_name_from_reg);
         MultiDex.install(getActivity());
         shake = AnimationUtils.loadAnimation(getActivity(), R.anim.shake);
@@ -398,7 +390,7 @@ public class MainFragment extends Fragment {
         dialog.setCancelable(true);
         etLicNumber = (EditText) dialog.findViewById(R.id.et_verify_license);
         btnShowRecord = (Button) dialog.findViewById(R.id.btn_search_license_record);
-        ImageView ivInputIcon = (ImageView)dialog.findViewById(R.id.iv_input_dialog);
+        ImageView ivInputIcon = (ImageView) dialog.findViewById(R.id.iv_input_dialog);
         ivInputIcon.setImageResource(R.drawable.search_license_icon);
         dialog.show();
         dialog.getWindow().getDecorView().setBackgroundResource(android.R.color.transparent);
@@ -410,7 +402,7 @@ public class MainFragment extends Fragment {
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.custom_input_dialog);
         dialog.setCancelable(true);
-        ImageView ivInputIcon = (ImageView)dialog.findViewById(R.id.iv_input_dialog);
+        ImageView ivInputIcon = (ImageView) dialog.findViewById(R.id.iv_input_dialog);
         ivInputIcon.setImageResource(R.drawable.search_challam_icon);
         etLicNumber = (EditText) dialog.findViewById(R.id.et_verify_license);
         etLicNumber.setHint("Enter Challan Number");
@@ -510,7 +502,7 @@ public class MainFragment extends Fragment {
     public void apiCallLicense(final String cnic) {
         pDialog.setTitleText("Verifying Your License");
 
-        String url = Configuration.END_POINT_LIVE + "license_verification/get_license_data";
+        String url = Configuration.LICENSE_URL + cnic;
         final Bundle args = new Bundle();
         final StringRequest jsonObjRequest = new StringRequest(Request.Method.POST,
                 url,
@@ -519,29 +511,23 @@ public class MainFragment extends Fragment {
                     public void onResponse(String response) {
 
                         try {
+                            pDialog.dismiss();
+                            dialog.dismiss();
                             JSONObject jsonResponseObject = new JSONObject(response);
-                            boolean status = jsonResponseObject.getBoolean("status");
-                            Log.d("zma status new", String.valueOf(status));
-                            //boolean bData = jsonResponseObject.getBoolean("data");
-                            String strMessage = jsonResponseObject.getString("message");
-                            Log.d("zma str message", strMessage + "\n" + String.valueOf(status));
-                            if (status && strMessage.contains("License Verified!")) {
-                                pDialog.dismiss();
-                                dialog.dismiss();
-                                JSONArray jsonArray = jsonResponseObject.getJSONArray("data");
-                                for (int i = 0; i < jsonArray.length(); i++) {
-                                    JSONObject jsonObject = jsonArray.getJSONObject(i);
-                                    strResponseLicHolderName = String.valueOf(jsonObject.get("name"));
-                                    strResponseDLNumber = String.valueOf(jsonObject.get("dl_number"));
-                                    strResponseCNIC = String.valueOf(jsonObject.get("cnic"));
-                                    strResponseLicHolderFatherName = String.valueOf(jsonObject.get("father_name"));
-                                    strResponseLicType = String.valueOf(jsonObject.get("license_type"));
-                                    strResponseExpiryDate = String.valueOf(jsonObject.get("license_expiry_date"));
-                                    strResponseLicHolderDistrict = String.valueOf(jsonObject.get("district"));
-                                }
+                            JSONObject fullResponseObject = new JSONObject(response).getJSONObject("LICENSE_DATA");
+                            int error = jsonResponseObject.getInt("error");
+                            if (error == 0) {
+                                strResponseLicHolderName = String.valueOf(fullResponseObject.get("name"));
+                                strResponseDLNumber = String.valueOf(fullResponseObject.get("license_no"));
+
+                                strResponseLicHolderFatherName = String.valueOf(fullResponseObject.get("father_name"));
+                                strResponseLicType = String.valueOf(fullResponseObject.get("license_type"));
+                                strResponseExpiryDate = String.valueOf(fullResponseObject.get("expiry_date"));
+                                strResponseLicHolderDistrict = String.valueOf(fullResponseObject.get("district"));
+
                                 args.putString("name", strResponseLicHolderName);
                                 args.putString("f_name", strResponseLicHolderFatherName);
-                                args.putString("cnic", strResponseCNIC);
+                                args.putString("cnic", cnic);
                                 args.putString("license_number", strResponseDLNumber);
                                 args.putString("lic_type", strResponseLicType);
                                 args.putString("expiry_date", strResponseExpiryDate);
@@ -549,14 +535,14 @@ public class MainFragment extends Fragment {
                                 fragment = new LicenseFragment();
                                 getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).addToBackStack("tag").commit();
                                 fragment.setArguments(args);
-                                //TODO extract data from jsonarray data
-                            } else if (status && strMessage.contains("License Expired")) {
-                                    pDialog.dismiss();
-                                    new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
-                                            .setTitleText("License Expired")
-                                            .show();
-
+                            } else {
+                                new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
+                                        .setTitleText("CNIC not found.")
+                                        .setContentText("")
+                                        .show();
                             }
+                            //TODO extract data from jsonarray data
+
                         } catch (JSONException e) {
                             e.printStackTrace();
                             pDialog.dismiss();
