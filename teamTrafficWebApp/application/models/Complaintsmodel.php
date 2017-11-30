@@ -11,7 +11,7 @@ class Complaintsmodel extends CI_Model{
         //echo $this->db->last_query(); die;
     }
     
-    function my_complaints($table,$id)
+    function my_complaints($table,$id, $search = "by_user_id")
     {
         $this->db
             ->select("complaint_id, name, cnic, latitude, longitude, description, image, video,dated, complaint_type, status")
@@ -19,7 +19,11 @@ class Complaintsmodel extends CI_Model{
             ->join('complaint_types','complaint_types.complaint_type_id = complaints.complaint_type_id', 'inner')
             ->join('complaints_status','complaints_status.complaints_status_id = complaints.complaints_status_id', 'inner')
             ->join('signup', 'signup.signup_id = complaints.signup_id', 'inner');
-        $this->db->where('user_id', $id);
+        if ($search == "by_complaint_id") {
+            $this->db->where('complaint_id', $id);
+        } else {
+            $this->db->where('user_id', $id);
+        }
         $this->db->order_by('complaint_id','DESC');
         
         $my_complaints	=	$this->db->get();
