@@ -30,9 +30,10 @@ class Complaints extends CI_Controller {
                 );
               //print_r($dataImage);die;
               $insert = $this->Complaintsmodel->InsertDB($dataImage);
+              $lastId = $this->db->insert_id();
               if($insert)
                {
-                     $Response = array('message' => 'Complaint is done!', 'status' => true, 'data'=>$insert); 
+                     $Response = array('message' => 'Complaint is done!', 'status' => true, 'data'=>$lastId); 
                     echo json_encode($Response);
                }
                else
@@ -115,6 +116,29 @@ class Complaints extends CI_Controller {
         {
             $id = $_GET['user_id'];
             $result = $this->Complaintsmodel->my_complaints('complaints',$id);
+
+            if(!empty($result))
+            {
+                $Response = array('message' => 'Success!', 'status' => true, 'data' => $result);
+                echo json_encode($Response);
+            }
+            else{
+                $Response = array('message' => 'No record exists!', 'status' => false);
+                echo json_encode($Response);
+            }
+        }else{
+            echo 'No User Record To Get';
+        }
+    }
+
+    public function searchByComplaintId()
+    {
+       header('Content-Type: text/html; charset=utf-8');
+        
+        if(isset($_GET['complaint_id']))
+        {
+            $id = $_GET['complaint_id'];
+            $result = $this->Complaintsmodel->my_complaints('complaints',$id, "by_complaint_id");
 
             if(!empty($result))
             {
