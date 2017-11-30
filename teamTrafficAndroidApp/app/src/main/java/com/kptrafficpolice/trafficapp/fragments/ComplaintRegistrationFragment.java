@@ -184,7 +184,7 @@ public class ComplaintRegistrationFragment extends Fragment {
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
         btnSendComplaint = (Button) view.findViewById(R.id.btn_send_complaint);
 //        ivImagePreview = (ImageView) view.findViewById(R.id.iv_image_preview);
-        spComlaintType.setItems("Complaint Type", "Traffic Jam", "Complaint against Wardens", "Illegal Parking", "Other");
+        spComlaintType.setItems("Complaint Type", "Traffic Jam", "Complaint against Wardens", "Illegal Parking", "Others");
         shake = AnimationUtils.loadAnimation(getActivity(), R.anim.shake);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
                 getActivity().checkSelfPermission(Manifest.permission.CAMERA)
@@ -454,7 +454,7 @@ public class ComplaintRegistrationFragment extends Fragment {
                     entity.addPart("latitude", new StringBody(String.valueOf(dblLat)));
                     entity.addPart("longitude", new StringBody(String.valueOf(dblLon)));
                     entity.addPart("description", new StringBody(strDesciption));
-                    entity.addPart("complaints_status_id", new StringBody("2"));
+                    entity.addPart("complaints_status_id", new StringBody("2"));//for pending complaint
                     entity.addPart("dated", new StringBody(strFormattedDate));
                     pDialog.dismiss();
                     Bundle args = new Bundle();

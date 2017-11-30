@@ -1,5 +1,6 @@
 package com.kptrafficpolice.trafficapp.fragments;
 
+import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -109,6 +110,7 @@ public class TrafficEducationFragment extends Fragment {
         }
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -238,9 +240,11 @@ public class TrafficEducationFragment extends Fragment {
                         .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                             @Override
                             public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                sweetAlertDialog.dismiss();
                                 Fragment fragment = new MainFragment();
                                 getFragmentManager().beginTransaction().
                                         replace(R.id.fragment_container, fragment).commit();
+
                             }
                         })
                         .show();
