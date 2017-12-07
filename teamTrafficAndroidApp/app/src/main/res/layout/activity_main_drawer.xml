@@ -21,6 +21,13 @@
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/nav_header_main_drawer"
-        app:menu="@menu/activity_main_drawer_drawer" />
+        app:menu="@menu/activity_main_drawer_drawer">
+        <!--<ImageView-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="200dp"-->
+            <!--android:padding="20dp"-->
+            <!--android:layout_gravity="bottom"-->
+            <!--android:src="@drawable/emergency_call_icon"/>-->
+    </android.support.design.widget.NavigationView>
 
 </android.support.v4.widget.DrawerLayout>

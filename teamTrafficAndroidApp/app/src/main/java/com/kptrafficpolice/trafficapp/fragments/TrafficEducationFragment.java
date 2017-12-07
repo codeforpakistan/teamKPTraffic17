@@ -13,9 +13,11 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -92,7 +94,6 @@ public class TrafficEducationFragment extends Fragment {
         mFirebaseAnalytics.logEvent("Traffic_Education_List", bundle);
         tvNoDataFound = (TextView) view.findViewById(R.id.tv_no_data_found);
         tvNoDataFound.setVisibility(View.GONE);
-
         customActionBar();
         Base.initialize(getActivity());
         searchBar = (MaterialSearchBar) view.findViewById(R.id.searchBar);
@@ -129,11 +130,10 @@ public class TrafficEducationFragment extends Fragment {
             @Override
             public void onResponse(JSONObject response) {
                 try {
-
+                    Log.d("zma traf respo", String.valueOf(response));
                     JSONArray data = response.getJSONArray("data");
                     for (int i = 0; i < data.length(); i++) {
                         pDialog.dismiss();
-                        Log.d("zma traf respo", String.valueOf(response));
                         JSONObject jsonObject = data.getJSONObject(i);
                         trafficEducationHelper = new TrafficEducationHelper();
                         trafficEducationHelper.strImageTitle = jsonObject.getString("image_title");
@@ -144,7 +144,6 @@ public class TrafficEducationFragment extends Fragment {
                             Log.d("zma image", jsonObject.getString("image"));
                             Configuration.Traffic_Education_Gif_Image_Boolean = true;
                             trafficEducationHelper.strImage = jsonObject.getString("image");
-
                         }
                         if (data.length() == 0) {
                             pDialog.dismiss();
@@ -199,12 +198,9 @@ public class TrafficEducationFragment extends Fragment {
                 query = query.toString().toLowerCase();
                 // Toast.makeText(TrafficSigns.this, "Query is: "+query, Toast.LENGTH_SHORT).show();
                 List<TrafficEducationHelper> newData = new ArrayList<>();
-
                 for (int j = 0; j < ListTrafficEducation.size(); j++) {
                     final String test = ListTrafficEducation.get(j).strImageTitle.toLowerCase();
                     final String test2 = ListTrafficEducation.get(j).strDescriptionEnglish.toLowerCase();
-
-
                     if (test.contains(query) || test2.contains(query)) {
                         newData.add(ListTrafficEducation.get(j));
                     }
@@ -214,11 +210,26 @@ public class TrafficEducationFragment extends Fragment {
                 mGridView.setAdapter(mAdapter);
                 mAdapter.notifyDataSetChanged();
             }
-
             @Override
             public void afterTextChanged(Editable editable) {
 
             }
         });
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        ListTrafficEducation.clear();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mAdapter = new TrafficEducationAdapter(getActivity(), R.layout.traffic_education_items, ListTrafficEducation);
+        mGridView.setAdapter(mAdapter);
+        apiCall();
+        Log.d("zma list resume  ", "de");
+
     }
 }

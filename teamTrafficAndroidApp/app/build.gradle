@@ -102,6 +102,7 @@ dependencies {
     compile 'com.google.android.gms:play-services-analytics:11.0.2'
     compile 'com.nineoldandroids:library:2.4.0'
     testCompile 'junit:junit:4.12'
+    compile 'com.jaredrummler:material-spinner:1.1.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.0.0-RC0'
 }
 apply plugin: 'com.google.gms.google-services'
