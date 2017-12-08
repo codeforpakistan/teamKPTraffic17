@@ -1,11 +1,14 @@
 package com.kptrafficpolice.trafficapp.fragments;
 
+import android.app.Fragment;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.SpannableString;
@@ -23,6 +26,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -37,18 +41,25 @@ import com.kptrafficpolice.trafficapp.activities.MainActivity;
 import com.kptrafficpolice.trafficapp.activities.MainDrawerActivity;
 import com.kptrafficpolice.trafficapp.utilities.CheckNetwork;
 import com.kptrafficpolice.trafficapp.utilities.Configuration;
+import com.kptrafficpolice.trafficapp.utilities.GPSTracker;
 import com.thefinestartist.Base;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
+import io.nlopez.smartlocation.OnLocationUpdatedListener;
+import io.nlopez.smartlocation.SmartLocation;
 
 import static com.thefinestartist.utils.service.ServiceUtil.getSystemService;
+
 //raabta
 //rabta
 public class LoginFragment extends Fragment {
@@ -68,9 +79,10 @@ public class LoginFragment extends Fragment {
     RequestQueue mRequestQueue;
     String strCNIC, strUserID;
     SweetAlertDialog pDialog;
-    TextView tvSkip;
+    TextView tvNewUser;
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
+    double dblLat, dblLon;
 
     public LoginFragment() {
         // Required empty public constructor
@@ -93,6 +105,21 @@ public class LoginFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        SmartLocation.with(getActivity()).location()
+                .start(new OnLocationUpdatedListener() {
+
+                    @Override
+                    public void onLocationUpdated(Location location) {
+                        dblLat = location.getLatitude();
+                        dblLon = location.getLongitude();
+
+                    }
+                });
+        GPSTracker gpsTracker = new GPSTracker(getActivity());
+        dblLat = gpsTracker.getLatitude();
+        dblLon = gpsTracker.getLongitude();
+        Log.d("Location : ", "" + dblLat + " " + dblLon);
+
     }
 
     @Override
@@ -105,16 +132,16 @@ public class LoginFragment extends Fragment {
         sharedPreferences = getActivity().getSharedPreferences("com.ghosttech.kptraffic", 0);
         editor = sharedPreferences.edit();
         customActionBar();
-        tvSkip = (TextView) view.findViewById(R.id.tvSkip);
+        tvNewUser = (TextView) view.findViewById(R.id.tv_new_user_registere_here);
         SpannableString contentRegister = new SpannableString("New user? Register Here");
         contentRegister.setSpan(new UnderlineSpan(), 0, contentRegister.length(), 0);
-        tvSkip.setText(contentRegister);
+        tvNewUser.setText(contentRegister);
         mRequestQueue = Volley.newRequestQueue(getActivity());
         pDialog = new SweetAlertDialog(getActivity(), SweetAlertDialog.PROGRESS_TYPE);
         pDialog.getProgressHelper().setBarColor(Color.parseColor("#179e99"));
         pDialog.setTitleText("Getting Login");
         pDialog.setCancelable(false);
-        tvSkip.setOnClickListener(new View.OnClickListener() {
+        tvNewUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 fragment = new RegistrationFragment();
@@ -132,6 +159,42 @@ public class LoginFragment extends Fragment {
                 return false;
             }
         });
+
+
+        Geocoder geocoder;
+        List<Address> addresses;
+        geocoder = new Geocoder(getActivity(), Locale.getDefault());
+
+        try {
+            addresses = geocoder.getFromLocation(dblLat, dblLon, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
+//            String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
+//            String city = addresses.get(0).getLocality();
+            String state = addresses.get(0).getAdminArea();
+//            String country = addresses.get(0).getCountryName();
+//            String postalCode = addresses.get(0).getPostalCode();
+//            String knownName = addresses.get(0).getFeatureName();
+            if (state.equals("Khyber Pakhtunkhwa")) {
+
+
+            } else {
+                new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
+                        .setTitleText("Important Message")
+                        .setContentText("This app only works\nin Khyber Pakhtunkhwa,\npress continue if you still \nwish to explore it.")
+                        .setConfirmText("Continue")
+                        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                sweetAlertDialog.dismiss();
+                            }
+
+                        })
+                        .show();
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         return view;
     }
 

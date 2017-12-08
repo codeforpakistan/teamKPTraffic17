@@ -3,6 +3,9 @@ package com.kptrafficpolice.trafficapp.fragments;
 import android.app.Fragment;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.multidex.MultiDex;
@@ -30,10 +33,15 @@ import com.kptrafficpolice.trafficapp.R;
 import com.kptrafficpolice.trafficapp.utilities.CheckNetwork;
 import com.kptrafficpolice.trafficapp.utilities.Configuration;
 
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
+import io.nlopez.smartlocation.OnLocationUpdatedListener;
+import io.nlopez.smartlocation.SmartLocation;
 //raabta
 //rabta
 
@@ -114,6 +122,9 @@ public class RegistrationFragment extends Fragment {
         onSubmitButton();
         customActionBar();
         // Inflate the layout for this fragment
+
+
+
         return view;
     }
 

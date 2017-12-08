@@ -49,6 +49,7 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 import com.kptrafficpolice.trafficapp.R;
 import com.kptrafficpolice.trafficapp.utilities.CheckNetwork;
 import com.kptrafficpolice.trafficapp.utilities.Configuration;
+import com.kptrafficpolice.trafficapp.utilities.GPSTracker;
 import com.kptrafficpolice.trafficapp.utilities.GeneralUtils;
 import com.kptrafficpolice.trafficapp.utilities.HTTPMultiPartEntity;
 import com.iceteck.silicompressorr.SiliCompressor;
@@ -145,6 +146,20 @@ public class ComplaintRegistrationFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        SmartLocation.with(getActivity()).location()
+                .start(new OnLocationUpdatedListener() {
+
+                    @Override
+                    public void onLocationUpdated(Location location) {
+                        dblLat = location.getLatitude();
+                        dblLon = location.getLongitude();
+                    }
+                });
+        GPSTracker gpsTracker = new GPSTracker(getActivity());
+        dblLat = gpsTracker.getLatitude();
+        dblLon = gpsTracker.getLongitude();
+        Log.d("zma compl Location : ", "" + dblLat + " " + dblLon);
+
     }
 
     @Override
@@ -289,16 +304,7 @@ public class ComplaintRegistrationFragment extends Fragment {
         });
         customActionBar();
 
-        SmartLocation.with(getActivity()).location()
-                .start(new OnLocationUpdatedListener() {
 
-                    @Override
-                    public void onLocationUpdated(Location location) {
-                        dblLat = location.getLatitude();
-                        dblLon = location.getLongitude();
-                        Log.d("Location : ", "" + dblLat + " " + dblLon);
-                    }
-                });
         onSendButton();
         ivCrossImage.setOnClickListener(new View.OnClickListener() {
             @Override
