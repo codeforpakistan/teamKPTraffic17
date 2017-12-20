@@ -1,19 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/cv_traffic_education"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="5dp"
     android:layout_marginTop="50dp"
     android:background="@drawable/border"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="5dp">
 
     <ImageView
         android:id="@+id/traffic_education_image"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:scaleType="fitCenter"
         android:layout_gravity="center_horizontal"
+        android:scaleType="centerCrop"
         />
 
 
@@ -25,10 +24,10 @@
         android:gravity="center_horizontal"
         android:maxLength="20"
         android:text="Image Title"
-        android:textStyle="bold"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="#126266"
         android:textSize="12sp"
+        android:textStyle="bold"
         />
 
     <TextView
@@ -39,15 +38,14 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
 
+        android:gravity="center_horizontal"
         android:text="English Description English Description here here"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="#ababaa"
-        android:gravity="center_horizontal"
         android:textSize="18sp"
         android:visibility="gone" />
 
     <TextView
-        android:id="@+id/description_urdu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/description_english"

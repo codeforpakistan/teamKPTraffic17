@@ -3,9 +3,6 @@ package com.kptrafficpolice.trafficapp.fragments;
 import android.app.Fragment;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.location.Address;
-import android.location.Geocoder;
-import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.multidex.MultiDex;
@@ -18,7 +15,6 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
@@ -33,15 +29,10 @@ import com.kptrafficpolice.trafficapp.R;
 import com.kptrafficpolice.trafficapp.utilities.CheckNetwork;
 import com.kptrafficpolice.trafficapp.utilities.Configuration;
 
-import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
-import io.nlopez.smartlocation.OnLocationUpdatedListener;
-import io.nlopez.smartlocation.SmartLocation;
 //raabta
 //rabta
 
@@ -58,22 +49,21 @@ public class RegistrationFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    // ProgressDialog dialog;
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
     public static RequestQueue mRequestQueue;
     View view;
-
     Button btnSubmit;
     Fragment fragment;
     String strEmail, strCNIC, strPhoneNumber, strName;
     EditText etName, etPhoneNumber, etCNIC, etEmail;
-    private OnFragmentInteractionListener mListener;
     Animation shake;
     SweetAlertDialog pDialog;
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
+    // ProgressDialog dialog;
+    // TODO: Rename and change types of parameters
+    private String mParam1;
+    private String mParam2;
+    private OnFragmentInteractionListener mListener;
 
     public RegistrationFragment() {
         // Required empty public constructor
@@ -139,11 +129,6 @@ public class RegistrationFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
-    }
-
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
     }
 
     public void onSubmitButton() {
@@ -278,10 +263,14 @@ public class RegistrationFragment extends Fragment {
         LayoutInflater mInflater = LayoutInflater.from(getActivity());
         View mCustomView = mInflater.inflate(R.layout.custom_action_bar, null);
         TextView mTitleTextView = (TextView) mCustomView.findViewById(R.id.title_text);
-        ImageView mBackArrow = (ImageView) mCustomView.findViewById(R.id.iv_back_arrow);
         mTitleTextView.setText("Sign Up");
         mActionBar.setCustomView(mCustomView);
         mActionBar.setDisplayShowCustomEnabled(true);
+    }
+
+    public interface OnFragmentInteractionListener {
+        // TODO: Update argument type and name
+        void onFragmentInteraction(Uri uri);
     }
 
 

@@ -4,7 +4,6 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -16,20 +15,14 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
 import com.kptrafficpolice.trafficapp.R;
-import com.kptrafficpolice.trafficapp.fragments.LoginFragment;
 import com.kptrafficpolice.trafficapp.fragments.MainFragment;
 import com.kptrafficpolice.trafficapp.fragments.MyComplaintsFragment;
-import com.kptrafficpolice.trafficapp.utilities.CheckNetwork;
 import com.thefinestartist.finestwebview.FinestWebView;
 
-import java.util.MissingFormatArgumentException;
-
-import cn.pedant.SweetAlert.SweetAlertDialog;
 import io.fabric.sdk.android.Fabric;
 //raabta
 //rabta
@@ -137,7 +130,6 @@ public class MainDrawerActivity extends AppCompatActivity
         LayoutInflater mInflater = LayoutInflater.from(MainDrawerActivity.this);
         View mCustomView = mInflater.inflate(R.layout.custom_action_bar, null);
         TextView mTitleTextView = (TextView) mCustomView.findViewById(R.id.title_text);
-        ImageView mBackArrow = (ImageView) mCustomView.findViewById(R.id.iv_back_arrow);
         mTitleTextView.setText("Write a complaint here");
         mActionBar.setCustomView(mCustomView);
         mActionBar.setDisplayShowCustomEnabled(true);

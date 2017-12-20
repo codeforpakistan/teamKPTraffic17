@@ -8,7 +8,6 @@
     android:orientation="vertical">
 
     <LinearLayout
-        android:id="@+id/llmain"
         android:layout_width="match_parent"
         android:layout_height="115dp"
         android:layout_gravity="center_horizontal"

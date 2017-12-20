@@ -8,7 +8,6 @@
     android:orientation="vertical">
 
     <LinearLayout
-        android:id="@+id/llmain"
         android:layout_width="match_parent"
         android:layout_height="115dp"
         android:layout_gravity="center_horizontal"
@@ -23,14 +22,14 @@
                 android:id="@+id/iv_complaint_image"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
-                android:textStyle="bold"
-                android:textSize="20dp"
-                android:text="03"
-                android:background="#eee"
-                android:gravity="center_vertical|center_horizontal"
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="15dp"
-                android:src="@drawable/emergency_health" />
+                android:background="#eee"
+                android:gravity="center_vertical|center_horizontal"
+                android:src="@drawable/emergency_health"
+                android:text="03"
+                android:textSize="20dp"
+                android:textStyle="bold" />
             <TextView
                 android:id="@+id/tv_complaint_status"
                 android:layout_width="wrap_content"
@@ -59,19 +58,19 @@
                 android:layout_height="wrap_content"
                 android:text="Complaint ID:"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textStyle="bold"
-                android:textColor="@color/app_background" />
+                android:textColor="@color/app_background"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/tv_complaint_id"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="123"
                 android:gravity="end"
                 android:paddingLeft="10dp"
                 android:paddingRight="20dp"
-                android:textColor="@color/app_background"
+                android:text="123"
                 android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/app_background"
                 android:textStyle="bold"
                 />
 </LinearLayout>

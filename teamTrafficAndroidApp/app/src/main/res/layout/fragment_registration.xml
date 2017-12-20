@@ -2,11 +2,9 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:float="http://schemas.android.com/tools"
-    android:orientation="vertical"
-    android:padding="16dp"
     android:background="@color/app_background"
->
+    android:orientation="vertical"
+    android:padding="16dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -17,11 +15,10 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="10dp">
+            android:layout_marginBottom="10dp"
+            android:orientation="horizontal">
 
             <ImageView
-                android:id="@+id/imageView10"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:layout_marginLeft="20dp"
@@ -29,7 +26,6 @@
                 android:src="@drawable/user_icon" />
 
             <com.wrapp.floatlabelededittext.FloatLabeledEditText
-                android:id="@+id/view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
@@ -40,13 +36,13 @@
                     android:id="@+id/et_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Name"
                     android:backgroundTint="#fff"
-                    android:singleLine="true"
+                    android:hint="Name"
                     android:inputType="none"
                     android:maxLength="20"
-                    android:textColorHint="#fff"
-                    android:textColor="#fff" />
+                    android:singleLine="true"
+                    android:textColor="#fff"
+                    android:textColorHint="#fff" />
 
             </com.wrapp.floatlabelededittext.FloatLabeledEditText>
 
@@ -55,11 +51,10 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="10dp">
+            android:layout_marginBottom="10dp"
+            android:orientation="horizontal">
 
             <ImageView
-                android:id="@+id/imageView2"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:layout_marginLeft="20dp"
@@ -67,7 +62,6 @@
                 android:src="@drawable/phone_number_icon" />
 
             <com.wrapp.floatlabelededittext.FloatLabeledEditText
-                android:id="@+id/view1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
@@ -78,12 +72,12 @@
                     android:id="@+id/et_phone_number"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:backgroundTint="#fff"
                     android:hint="03xx1234567"
                     android:inputType="number"
-                    android:backgroundTint="#fff"
                     android:maxLength="11"
-                    android:textColorHint="#fff"
-                    android:textColor="#fff"/>
+                    android:textColor="#fff"
+                    android:textColorHint="#fff" />
 
             </com.wrapp.floatlabelededittext.FloatLabeledEditText>
 
@@ -92,11 +86,10 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="10dp">
+            android:layout_marginBottom="10dp"
+            android:orientation="horizontal">
 
             <ImageView
-                android:id="@+id/imageView8"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:layout_marginLeft="20dp"
@@ -104,7 +97,6 @@
                 android:src="@drawable/cnic_icon" />
 
             <com.wrapp.floatlabelededittext.FloatLabeledEditText
-                android:id="@+id/view8"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
@@ -115,22 +107,21 @@
                     android:id="@+id/et_cnic"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:backgroundTint="#fff"
                     android:hint="CNIC without dashes(-)"
                     android:inputType="number"
                     android:maxLength="13"
-                    android:backgroundTint="#fff"
-                    android:textColorHint="#fff"
-                    android:textColor="#fff" />
+                    android:textColor="#fff"
+                    android:textColorHint="#fff" />
             </com.wrapp.floatlabelededittext.FloatLabeledEditText>
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="10dp">
+            android:layout_marginBottom="10dp"
+            android:orientation="horizontal">
 
             <ImageView
-                android:id="@+id/imageView100"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:layout_marginLeft="20dp"
@@ -138,7 +129,6 @@
                 android:src="@drawable/mail_icon" />
 
             <com.wrapp.floatlabelededittext.FloatLabeledEditText
-                android:id="@+id/view9"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
@@ -149,11 +139,11 @@
                     android:id="@+id/et_email"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Email"
                     android:backgroundTint="#fff"
+                    android:hint="Email"
                     android:inputType="textEmailAddress"
-                    android:textColorHint="#fff"
-                    android:textColor="#fff"/>
+                    android:textColor="#fff"
+                    android:textColorHint="#fff" />
             </com.wrapp.floatlabelededittext.FloatLabeledEditText>
         </LinearLayout>
 
@@ -163,9 +153,9 @@
             android:layout_height="40dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="30dp"
+            android:background="@color/button_color"
             android:text="Create Account"
             android:textColor="#fff"
-            android:background="@color/button_color"
             android:textSize="18sp" />
 
 

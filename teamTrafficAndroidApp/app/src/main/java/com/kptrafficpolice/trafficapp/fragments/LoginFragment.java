@@ -1,13 +1,16 @@
 package com.kptrafficpolice.trafficapp.fragments;
 
+import android.Manifest;
 import android.app.Fragment;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -23,10 +26,8 @@ import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -67,15 +68,10 @@ public class LoginFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
     Button btnSubmit;
     EditText etCNIC;
     View view;
     Fragment fragment;
-    private OnFragmentInteractionListener mListener;
     RequestQueue mRequestQueue;
     String strCNIC, strUserID;
     SweetAlertDialog pDialog;
@@ -83,7 +79,11 @@ public class LoginFragment extends Fragment {
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
     double dblLat, dblLon;
-
+    String state;
+    // TODO: Rename and change types of parameters
+    private String mParam1;
+    private String mParam2;
+    private OnFragmentInteractionListener mListener;
     public LoginFragment() {
         // Required empty public constructor
     }
@@ -101,24 +101,33 @@ public class LoginFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
+                getActivity().checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+                        != PackageManager.PERMISSION_GRANTED &&
+                getActivity().checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION)
+                        != PackageManager.PERMISSION_GRANTED
+                ) {
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
+            SmartLocation.with(getActivity()).location()
+                    .start(new OnLocationUpdatedListener() {
+
+                        @Override
+                        public void onLocationUpdated(Location location) {
+                            dblLat = location.getLatitude();
+                            dblLon = location.getLongitude();
+
+                        }
+                    });
+            if (dblLat != 0.0 || dblLon != 0.0) {
+                GPSTracker gpsTracker = new GPSTracker(getActivity());
+                dblLat = gpsTracker.getLatitude();
+                dblLon = gpsTracker.getLongitude();
+                Log.d("Location : ", "" + dblLat + " " + dblLon);
+            }
         }
-        SmartLocation.with(getActivity()).location()
-                .start(new OnLocationUpdatedListener() {
 
-                    @Override
-                    public void onLocationUpdated(Location location) {
-                        dblLat = location.getLatitude();
-                        dblLon = location.getLongitude();
 
-                    }
-                });
-        GPSTracker gpsTracker = new GPSTracker(getActivity());
-        dblLat = gpsTracker.getLatitude();
-        dblLon = gpsTracker.getLongitude();
-        Log.d("Location : ", "" + dblLat + " " + dblLon);
 
     }
 
@@ -160,39 +169,41 @@ public class LoginFragment extends Fragment {
             }
         });
 
+        if (dblLat != 0.0 || dblLon != 0.0) {
+            Geocoder geocoder;
+            List<Address> addresses;
+            geocoder = new Geocoder(getActivity(), Locale.getDefault());
 
-        Geocoder geocoder;
-        List<Address> addresses;
-        geocoder = new Geocoder(getActivity(), Locale.getDefault());
-
-        try {
-            addresses = geocoder.getFromLocation(dblLat, dblLon, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
+            try {
+                addresses = geocoder.getFromLocation(dblLat, dblLon, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
 //            String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
 //            String city = addresses.get(0).getLocality();
-            String state = addresses.get(0).getAdminArea();
+                state = addresses.get(0).getAdminArea();
 //            String country = addresses.get(0).getCountryName();
 //            String postalCode = addresses.get(0).getPostalCode();
 //            String knownName = addresses.get(0).getFeatureName();
-            if (state.equals("Khyber Pakhtunkhwa")) {
+                Log.d("zma state", state);
+                if (state.equals("Khyber Pakhtunkhwa")) {
 
 
-            } else {
-                new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
-                        .setTitleText("Important Message")
-                        .setContentText("This app only works\nin Khyber Pakhtunkhwa,\npress continue if you still \nwish to explore it.")
-                        .setConfirmText("Continue")
-                        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                            @Override
-                            public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                sweetAlertDialog.dismiss();
-                            }
+                } else {
+                    new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
+                            .setTitleText("Important Message")
+                            .setContentText("This app only works\nin Khyber Pakhtunkhwa,\npress continue if you still \nwish to explore it.")
+                            .setConfirmText("Continue")
+                            .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                @Override
+                                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                    sweetAlertDialog.dismiss();
+                                }
 
-                        })
-                        .show();
+                            })
+                            .show();
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-
-        } catch (IOException e) {
-            e.printStackTrace();
         }
 
         return view;
@@ -209,11 +220,6 @@ public class LoginFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
-    }
-
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
     }
 
     public void onButtonClick() {
@@ -322,7 +328,6 @@ public class LoginFragment extends Fragment {
         mRequestQueue.add(jsonObjRequest);
     }
 
-
     public void customActionBar() {
         android.support.v7.app.ActionBar mActionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         mActionBar.setDisplayShowHomeEnabled(false);
@@ -330,10 +335,14 @@ public class LoginFragment extends Fragment {
         LayoutInflater mInflater = LayoutInflater.from(getActivity());
         View mCustomView = mInflater.inflate(R.layout.custom_action_bar, null);
         TextView mTitleTextView = (TextView) mCustomView.findViewById(R.id.title_text);
-        ImageView mBackArrow = (ImageView) mCustomView.findViewById(R.id.iv_back_arrow);
-//        mBackArrow.setImageResource(R.mipmap.ic_launcher);
         mTitleTextView.setText("Sign In");
         mActionBar.setCustomView(mCustomView);
         mActionBar.setDisplayShowCustomEnabled(true);
+    }
+
+
+    public interface OnFragmentInteractionListener {
+        // TODO: Update argument type and name
+        void onFragmentInteraction(Uri uri);
     }
 }

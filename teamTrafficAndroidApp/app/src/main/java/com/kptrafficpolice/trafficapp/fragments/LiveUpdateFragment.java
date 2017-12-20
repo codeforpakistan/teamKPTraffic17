@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.kptrafficpolice.trafficapp.R;
 import com.kptrafficpolice.trafficapp.utilities.LiveUpdateAdapter;
 import com.kptrafficpolice.trafficapp.utilities.LiveUpdateHelper;
+
 import java.util.ArrayList;
 import java.util.List;
 //raabta
@@ -25,18 +26,17 @@ public class LiveUpdateFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
+    String[] myDataset;
+    List<LiveUpdateHelper> liveUpdateHelpers;
+    EditText etSearchBar;
+    ImageView ivSearchIcon;
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    String[] myDataset;
-    List<LiveUpdateHelper> liveUpdateHelpers;
     private OnFragmentInteractionListener mListener;
-    EditText etSearchBar;
-    ImageView ivSearchIcon;
 
     public LiveUpdateFragment() {
         // Required empty public constructor
@@ -108,10 +108,6 @@ public class LiveUpdateFragment extends Fragment {
         mListener = null;
     }
 
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-    }
     public void customActionBar() {
         android.support.v7.app.ActionBar mActionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         mActionBar.setDisplayShowHomeEnabled(false);
@@ -119,17 +115,13 @@ public class LiveUpdateFragment extends Fragment {
         LayoutInflater mInflater = LayoutInflater.from(getActivity());
         View mCustomView = mInflater.inflate(R.layout.custom_action_bar, null);
         TextView mTitleTextView = (TextView) mCustomView.findViewById(R.id.title_text);
-        ImageView mBackArrow = (ImageView) mCustomView.findViewById(R.id.iv_back_arrow);
         mTitleTextView.setText("Check traffic status");
-//        mBackArrow.setImageResource(R.drawable.back_arrow);
-//        mBackArrow.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Fragment fragment = new MainFragment();
-//                getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
-//            }
-//        });
         mActionBar.setCustomView(mCustomView);
         mActionBar.setDisplayShowCustomEnabled(true);
+    }
+
+    public interface OnFragmentInteractionListener {
+        // TODO: Update argument type and name
+        void onFragmentInteraction(Uri uri);
     }
 }

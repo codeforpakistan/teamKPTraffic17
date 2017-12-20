@@ -21,17 +21,16 @@
         android:src="@drawable/splash_icon" />
 
     <TextView
-        android:id="@+id/textView3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/app_name"
         android:gravity="center"
         android:text="Public Traffic Application"
         android:textAllCaps="true"
         android:textColor="#fff"
-        android:textSize="15dp"
-        android:layout_below="@+id/app_name"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:textSize="15dp" />
 
     <TextView
         android:id="@+id/app_name"

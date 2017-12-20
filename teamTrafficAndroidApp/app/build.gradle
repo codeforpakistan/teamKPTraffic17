@@ -30,8 +30,8 @@ android {
         applicationId "com.kptrafficpolice.trafficapp"
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode 15
-        versionName "Build"
+        versionCode 17
+        versionName "Bugs Free"
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -70,7 +70,7 @@ dependencies {
     compile files('libs/httpcore-4.3.3.jar')
     compile files('libs/httpmime-4.3.6.jar')
     compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
-        transitive = true;
+        transitive = true
     }
     compile 'com.iceteck.silicompressorr:silicompressor:2.0'
     compile 'com.iceteck.silicompressorr:silicompressor:2.0'

@@ -40,7 +40,6 @@
                 </LinearLayout>
 
                 <ImageView
-                    android:id="@+id/imageView3"
                     android:layout_width="96dp"
                     android:layout_height="96dp"
                     android:layout_gravity="center"
@@ -51,8 +50,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
                 android:layout_marginTop="-25dp"
+                android:orientation="vertical"
                 android:padding="16dp">
 
                 <LinearLayout
@@ -74,13 +73,13 @@
                         android:layout_width="match_parent"
                         android:layout_height="100dp"
                         android:layout_gravity="center_horizontal"
-                        android:gravity="top"
-                        android:background="@drawable/edit_text_bg_green"
                         android:layout_marginTop="20dp"
+                        android:background="@drawable/edit_text_bg_green"
+                        android:gravity="top"
                         android:hint="Write Complaint Detail"
                         android:paddingLeft="15dp"
-                        android:textCursorDrawable="@drawable/color_cursor"
                         android:textColor="#000"
+                        android:textCursorDrawable="@drawable/color_cursor"
                         android:textSize="15sp" />
 
 

@@ -25,7 +25,6 @@
                 android:orientation="vertical">
 
                 <ImageView
-                    android:id="@+id/imageView9"
                     android:layout_width="130dp"
                     android:layout_height="130dp"
                     android:layout_gravity="center_horizontal"
@@ -41,7 +40,6 @@
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:id="@+id/imageView8"
                     android:layout_width="32dp"
                     android:layout_height="32dp"
                     android:layout_marginLeft="20dp"
@@ -51,8 +49,8 @@
 
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
-                    android:textColorHint="#ffffff"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:textColorHint="#ffffff">
 
                     <EditText
                         android:id="@+id/et_cnic_login"

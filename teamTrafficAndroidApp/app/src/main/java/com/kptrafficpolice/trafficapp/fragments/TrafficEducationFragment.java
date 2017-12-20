@@ -13,11 +13,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -47,17 +44,17 @@ import static com.thefinestartist.utils.service.ServiceUtil.getSystemService;
 
 public class TrafficEducationFragment extends Fragment {
 
-    private MaterialSearchBar searchBar;
     List<TrafficEducationHelper> ListTrafficEducation;
     View view;
+    TextView tvNoDataFound;
+    SweetAlertDialog pDialog;
+    TrafficEducationHelper trafficEducationHelper;
+    private MaterialSearchBar searchBar;
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-    TextView tvNoDataFound;
     private GridView mGridView;
     private TrafficEducationAdapter mAdapter;
-    SweetAlertDialog pDialog;
-    TrafficEducationHelper trafficEducationHelper;
     private FirebaseAnalytics mFirebaseAnalytics;
 
     public TrafficEducationFragment() {
@@ -178,7 +175,6 @@ public class TrafficEducationFragment extends Fragment {
         LayoutInflater mInflater = LayoutInflater.from(getActivity());
         View mCustomView = mInflater.inflate(R.layout.custom_action_bar, null);
         TextView mTitleTextView = (TextView) mCustomView.findViewById(R.id.title_text);
-        ImageView mBackArrow = (ImageView) mCustomView.findViewById(R.id.iv_back_arrow);
         mTitleTextView.setText("Traffic Education");
         mActionBar.setCustomView(mCustomView);
         mActionBar.setDisplayShowCustomEnabled(true);

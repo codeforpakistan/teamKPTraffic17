@@ -14,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -28,7 +27,6 @@ import com.kptrafficpolice.trafficapp.R;
 import com.kptrafficpolice.trafficapp.utilities.LiveUpdateMapCoordinates;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
@@ -38,7 +36,6 @@ public class LiveUpdateResultFragment extends Fragment {
 
     ArrayList<LatLng> locations = new ArrayList<>();
     MapView mMapView;
-    private GoogleMap googleMap;
     String strStatus, strRoadName;
     Bundle args;
     PolylineOptions polylineOptions;
@@ -49,6 +46,7 @@ public class LiveUpdateResultFragment extends Fragment {
     ImageView ivHomeButton, ivSettingButton, ivWebsiteButton;
     CardView cardView;
     boolean timeFlag = false;
+    private GoogleMap googleMap;
 
     public LiveUpdateResultFragment() {
     }
@@ -186,18 +184,8 @@ public class LiveUpdateResultFragment extends Fragment {
         View mCustomView = mInflater.inflate(R.layout.custom_action_bar, null);
         TextView mTitleTextView = (TextView) mCustomView.findViewById(R.id.title_text);
         mTitleTextView.setText(args.getString("clicked_road_name") + " Status");
-        ImageView mBackArrow = (ImageView) mCustomView.findViewById(R.id.iv_back_arrow);
         mActionBar.setCustomView(mCustomView);
         mActionBar.setDisplayShowCustomEnabled(true);
-//        mBackArrow.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                fragment = new LiveUpdateFragment();
-//                getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
-//
-//
-//            }
-//        });
 
     }
 
