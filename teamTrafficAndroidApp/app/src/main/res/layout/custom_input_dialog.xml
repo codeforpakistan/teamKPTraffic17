@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:padding="25sp"
     android:layout_weight="10"
+    android:background="@drawable/round_corner_updated"
     android:elevation="20dp"
-    android:background="@drawable/round_corner_updated">
+    android:orientation="vertical"
+    android:padding="25sp">
 
 <LinearLayout
     android:layout_width="match_parent"
@@ -20,30 +20,30 @@
             android:layout_gravity="center"
             android:src="@drawable/search_license_icon"/>
         <EditText
+            android:id="@+id/et_verify_license"
             android:layout_width="250dp"
             android:layout_height="wrap_content"
-            android:hint="Enter CNIC without dashes(-)"
-            android:layout_marginLeft="10sp"
-            android:inputType="number"
-            android:id="@+id/et_verify_license"
-            android:backgroundTint="#fff"
-            android:maxLength="13"
-
             android:layout_gravity="center"
+            android:layout_marginLeft="10sp"
+            android:backgroundTint="#fff"
+            android:hint="Enter CNIC without dashes(-)"
+            android:inputType="number"
+            android:maxLength="13"
+            android:textColor="#ffffff"
             android:textColorHint="#ffffff"
-            android:textColor="#ffffff"/>
+            android:textCursorDrawable="@null" />
     </LinearLayout>
 
         <Button
+            android:id="@+id/btn_search_license_record"
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:textColor="#ffffff"
-            android:id="@+id/btn_search_license_record"
-            android:layout_marginTop="20sp"
             android:layout_marginBottom="20sp"
+            android:layout_marginTop="20sp"
             android:background="@color/button_color"
-            android:text="Search"
             android:gravity="center"
+            android:text="Search"
+            android:textColor="#ffffff"
             android:textSize="25sp"/>
 
 

@@ -39,6 +39,11 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.gms.analytics.Tracker;
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.MultiplePermissionsReport;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.kptrafficpolice.trafficapp.R;
 import com.kptrafficpolice.trafficapp.activities.MainDrawerActivity;
 import com.kptrafficpolice.trafficapp.utilities.CheckNetwork;
@@ -73,9 +78,7 @@ public class MainFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    public static boolean SUCCESS_DIALOG = false;
     Fragment fragment;
     View view;
     TextView tvUserName;
@@ -96,11 +99,13 @@ public class MainFragment extends Fragment {
     Animation shake;
     LinearLayout btnComplaintSystem, btnLiveTrafficUpdates, btnChallanTracking, btnTrafficEducation,
             btnLicenseVerification, btnEmergencyContacts;
+    SweetAlertDialog myDialog;
+    // TODO: Rename and change types of parameters
+    private String mParam1;
+    private String mParam2;
     private OnFragmentInteractionListener mListener;
     private Tracker mTracker;
     private FirebaseAnalytics mFirebaseAnalytics;
-    public static boolean SUCCESS_DIALOG = false;
-    SweetAlertDialog myDialog;
 
     public MainFragment() {
         // Required empty public constructor
@@ -131,6 +136,32 @@ public class MainFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_main, container, false);
+        Dexter.withActivity(getActivity())
+                .withPermissions(
+                        Manifest.permission.ACCESS_COARSE_LOCATION,
+                        Manifest.permission.ACCESS_NETWORK_STATE,
+                        Manifest.permission.ACCESS_FINE_LOCATION)
+                .withListener(new MultiplePermissionsListener() {
+                    @Override
+                    public void onPermissionsChecked(MultiplePermissionsReport report) {
+                        // check if all permissions are granted
+                        if (report.areAllPermissionsGranted()) {
+                            // do you work now
+                        }
+
+                        // check for permanent denial of any permission
+                        if (report.isAnyPermissionPermanentlyDenied()) {
+                            // permission is denied permenantly, navigate user to app settings
+                        }
+                    }
+
+                    @Override
+                    public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+                        token.continuePermissionRequest();
+                    }
+                })
+                .onSameThread()
+                .check();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
                 getActivity().checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION)
                         != PackageManager.PERMISSION_GRANTED) {
@@ -272,6 +303,7 @@ public class MainFragment extends Fragment {
         btnComplaintSystem = (LinearLayout) view.findViewById(R.id.linear_layout_cs);
         btnChallanTracking = (LinearLayout) view.findViewById(R.id.linear_layout_ct);
         btnEmergencyContacts = (LinearLayout) view.findViewById(R.id.linear_layout_ec);
+        btnEmergencyContacts.setEnabled(false);
         btnLicenseVerification = (LinearLayout) view.findViewById(R.id.linear_layout_lv);
         btnLiveTrafficUpdates = (LinearLayout) view.findViewById(R.id.linear_layout_lu);
         btnTrafficEducation = (LinearLayout) view.findViewById(R.id.linear_layout_te);
@@ -352,11 +384,6 @@ public class MainFragment extends Fragment {
 
     }
 
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-    }
-
     @Override
     public void onResume() {
         super.onResume();
@@ -369,7 +396,6 @@ public class MainFragment extends Fragment {
 
     }
 
-
     public void customActionBar() {
         android.support.v7.app.ActionBar mActionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         mActionBar.setDisplayShowHomeEnabled(false);
@@ -381,7 +407,6 @@ public class MainFragment extends Fragment {
         mActionBar.setCustomView(mCustomView);
         mActionBar.setDisplayShowCustomEnabled(true);
     }
-
 
     public void customDialogLicenseVerification() {
         dialog = new Dialog(getActivity());
@@ -660,11 +685,16 @@ public class MainFragment extends Fragment {
         mRequestQueue.add(jsonObjRequest);
     }
 
-
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setHasOptionsMenu(true);
+    }
+
+
+    public interface OnFragmentInteractionListener {
+        // TODO: Update argument type and name
+        void onFragmentInteraction(Uri uri);
     }
 
 

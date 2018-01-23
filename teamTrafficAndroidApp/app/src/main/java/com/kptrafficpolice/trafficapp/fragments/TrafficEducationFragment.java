@@ -186,7 +186,6 @@ public class TrafficEducationFragment extends Fragment {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
             }
-
             @Override
             public void onTextChanged(CharSequence query, int i, int i1, int i2) {
                 Log.d("LOG_TAG", getClass().getSimpleName() + " text changed " + searchBar.getText());
@@ -216,7 +215,7 @@ public class TrafficEducationFragment extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
-        ListTrafficEducation.clear();
+//        ListTrafficEducation.clear();
     }
 
     @Override

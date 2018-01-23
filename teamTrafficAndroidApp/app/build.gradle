@@ -30,8 +30,8 @@ android {
         applicationId "com.kptrafficpolice.trafficapp"
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode 17
-        versionName "Bugs Free"
+        versionCode 18
+        versionName "Emergency contacts disabled"
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -103,6 +103,7 @@ dependencies {
     compile 'com.nineoldandroids:library:2.4.0'
     testCompile 'junit:junit:4.12'
     compile 'com.jaredrummler:material-spinner:1.1.0'
+    compile 'com.karumi:dexter:4.2.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.0.0-RC0'
 }
 apply plugin: 'com.google.gms.google-services'
