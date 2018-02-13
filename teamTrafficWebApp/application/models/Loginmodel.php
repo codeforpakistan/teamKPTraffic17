@@ -2,7 +2,7 @@
 
 class Loginmodel extends CI_Model{
 
-    function login($name, cnic)
+    function login($name, $password)
     {
         $this -> db -> select('signup_id, cnic');
         $this -> db -> from('signup');

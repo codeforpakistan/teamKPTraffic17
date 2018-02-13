@@ -25,16 +25,6 @@
                   <h3 class="box-title">Add License Verification District</h3>
                 </div>
                 <!-- /.box-header -->
-                
-                <!-- session message -->
-                <?php if($this->session->flashdata('msg')):?>
-                <div class="callout callout-success" id="msg">
-                    <p align="center" style="position:relative; font-size:16px;">
-                        <?=$this->session->flashdata('msg')?>
-                    </p>
-                </div>
-                <?php endif;?>
-                    
                 <!-- form start -->
                 <form class="form-horizontal" action="<?= $action;?>" method="post" enctype="multipart/form-data">
                   <div class="box-body">

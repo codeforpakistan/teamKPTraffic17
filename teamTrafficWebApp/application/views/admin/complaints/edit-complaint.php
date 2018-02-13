@@ -116,6 +116,7 @@
                     <div class="col-sm-offset-7 col-sm-3">
                         <a href="<?php echo base_url().'admin/get_complaints'; ?>" class="btn btn-default">Cancel</a>
                         <button type="submit" class="btn btn-info">Update</button>
+                        <a href="javascript:window.print()" class="btn btn-danger">Print</a>
                     </div>
                   </div>
                   <!-- /.box-footer -->

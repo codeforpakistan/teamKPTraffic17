@@ -163,7 +163,7 @@
                             position: latlng,
                             icon: icon,
                             animation: google.maps.Animation.DROP,
-                            content: '<p>'+description+'</p><p><b>Status: </b>'+complaint_status+'</p><p><b>Complaint Type: </b>'+complaint_type+'</p>'+(vid=='' ? ('<p><b>Complaint Image: </b><img src="http://localhost/kp-traffic-police/uploads/images/'+img+'" width="150px" height="140px" style="vertical-align:top;"/></p>') : ('<p><b style="vertical-align:top;">Video: </b><video width="180" height="150" controls autoplay><source src="http://localhost/kp-traffic-police/uploads/videos/'+vid+'" type="video/mp4"></video></p>')),
+                            content: '<p>'+description+'</p><p><b>Status: </b>'+complaint_status+'</p><p><b>Complaint Type: </b>'+complaint_type+'</p>'+(vid=='' ? ('<p><b>Complaint Image: </b><img src="http://103.240.220.76/kptraffic/uploads/images/'+img+'" width="150px" height="140px" style="vertical-align:top;"/></p>') : ('<p><b style="vertical-align:top;">Video: </b><video width="180" height="150" controls autoplay><source src="http://103.240.220.76/kptraffic/uploads/videos/'+vid+'" type="video/mp4"></video></p>')),
                             
                             dated: comp_dated,
                             map: map,
