@@ -331,14 +331,13 @@
     function get_complaints($table)
     {
         $this->db
-            ->select("complaint_id, complaints.complaint_type_id, latitude, longitude, description, image, video, dated, complaint_type, status, signup.name, signup.phone_no")
+            ->select("complaint_id, latitude, longitude, description, image, video,dated, complaint_type, status, signup.name, signup.phone_no")
             ->from($table)
             ->join('signup', 'signup.signup_id = complaints.signup_id', 'INNER ')
             ->join('complaint_types','complaint_types.complaint_type_id = complaints.complaint_type_id', 'inner')
             ->join('complaints_status','complaints_status.complaints_status_id = complaints.complaints_status_id', 'inner');
         $this->db->order_by('complaint_id','DESC');
         $select_complaints	=	$this->db->get();
-        //echo $this->db->last_query($select_complaints);
 
         if($select_complaints->num_rows() > 0){
             return $select_complaints->result();
@@ -347,7 +346,6 @@
             return array();
         }
     }
-    
     function completed_complaints_list($table)
     {
         $this->db

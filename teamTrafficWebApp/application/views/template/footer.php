@@ -9,8 +9,7 @@
 
 <!-- ./wrapper -->
 
-<!-- jQuery 1.12.4 -->
-<script src="<?php echo base_url();?>assets/plugins/jQuery/jquery-2.2.3.min.js"></script>
+  <!-- jQuery 1.12.4 -->
 <!-- Bootstrap 3.3.6 -->
 <script src="<?php echo base_url();?>assets/bootstrap/js/bootstrap.min.js"></script>
 <!-- DataTables -->
@@ -59,7 +58,6 @@ $(document).ready(function(){
     $('#datepicker').datepicker({
       autoclose: true
     });
-    
 </script>
 
 <!-- page script -->
@@ -80,7 +78,7 @@ $(document).ready(function(){
 
          $.ajax({
             type: "POST",
-            url: "http://localhost/kp-traffic-police/Admin_emergency/get_districts",
+            url: "http://103.240.220.76/kptraffic/Admin_emergency/get_districts",
             data: {division_id:id}, 
                  success: function(districts)
                  {
@@ -121,6 +119,14 @@ $(document).ready(function(){
            $(this).val($(this).val()+'-');
 
          });
+
+        // Ajax Starts Here................
+    $(document).ajaxStart(function() {
+        $('#loading-image').show();
+    }).ajaxStop(function() {
+        $('#loading-image').hide();
+    });
+// Adding Values...................
         </script>
 </body>
 </html>
