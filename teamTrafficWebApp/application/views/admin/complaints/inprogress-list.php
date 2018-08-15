@@ -1,23 +1,3 @@
-<?php
-error_reporting(0);
-//function to get address by given latitude and longitude
-  function getAddress($lat, $lon){
-    //Google map API (Freely Available)
-       $url  = "http://maps.googleapis.com/maps/api/geocode/json?latlng=".
-                $lat.",".$lon."&sensor=false";
-    //Get content from google map api in json format
-       $json = @file_get_contents($url);
-    //decode data
-       $data = json_decode($json);
-       $status = $data->status;
-       $address = '';
-       if($status == "OK"){
-          $address = $data->results[0]->formatted_address;
-        }
-       return $address;
-      }
-?>
- 
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
@@ -31,15 +11,13 @@ error_reporting(0);
       </ol>
     </section>
     
-    <!-- Main content -->
-    <section class="content">
     <!-- Main content dataTable -->
     <section class="content">
       <div class="row">
         <div class="col-xs-12">
           <div class="box">
             <div class="box-header">
-              <h3 class="box-title">In Progress Complaints List</h3>
+              <h3 class="box-title">ALL Complaints List</h3>
             </div>
             <!-- /.box-header -->
             <div class="box-body">
@@ -56,83 +34,14 @@ error_reporting(0);
                 <tr>
                   <th>S.No</th>
                   <th width="25%">Complaint Description</th>
-                  <th>Image / Video</th>
                   <th>Name</th>
                   <th>Phone No</th>
                   <th>Date</th>
-                  <th>Address</th>
-                  <!--<th>Latitude</th>-->
                   <th>Complaint Type</th>
                   <th>Complaint Status</th>
-                  <th>Action</th>
+                  <th width="80">Action</th>
                 </tr>
                 </thead>
-                
-                <tbody>
-                <?php
-                    $i=1;
-                    if(isset($data)) foreach($data as $row){
-                    //print_r($data);die;
-                    $latitude = $row->latitude;
-                    $longitude = $row->longitude;
-                        
-                    // Call Above function at top of page
-                    $address = getAddress($latitude, $longitude);
-                ?>
-                <tr>
-                  <td><?= $i;?></td>
-                  <td><?= $row->description;?></td>
-                  <td><?php if($row->image) {?>
-                     <a href="<?= base_url()."uploads/images/".$row->image;?>" data-lightbox="<?php echo $row->image;?>" data-title="<?php echo $row->image;?>">
-                          <img class="img-responsive" src="<?= base_url()."uploads/images/".$row->image;?>" style="width:80px; height:50px;" />
-                      </a>
-                      <?php } else if($row->video) { ?>
-                      <video width="160" height="120" controls autoplay>
-                         <source src="<?= base_url()."uploads/videos/".$row->video; ?>" type="video/mp4">
-                         Sorry, your browser doesn't support the video element.
-                      </video>
-                      <?php }else { echo 'Sorry! No image/video to display'; }?>
-                  </td>
-                  <td><?= $row->name;?></td>
-                  <td><?= $row->phone_no;?></td>
-                  <td><?= date('d-M-Y', strtotime($row->dated));?></td>
-                  <td><?php
-                        if($address){
-                            echo $address;
-                        }else{
-                             echo "Address Not found";
-                        }?>
-                  </td>
-                  <td><?= $row->complaint_type;?></td>
-                  <td><?php if($row->status == 'Completed'){ ?><span class="label label-success"><?php echo 'Completed'; ?></span> <?php }
-                            else if($row->status == 'Pending'){ ?><span class="label label-danger"><?php echo 'Pending'; ?></span><?php }
-                            else if($row->status == 'In Progress'){ ?><span class="label label-warning"><?php echo 'In Progress'; ?></span><?php }
-                      ?></td>
-                  <td>
-                      <a href="admin/edit_complaint/<?=$row->complaint_id?>" class="btn btn-primary"><i class="fa fa-pencil-square-o"></i></a>
-                      <!--<a onclick="return confirm('Are you sure you want to delete this?');" href="admin/delete_complaint/<?=$row->complaint_id?>" class="btn btn-danger"><i class="fa fa-trash-o"></i></a>-->
-                  </td>
-                </tr>
-                <?php
-                    $i++;
-                        }else echo "No record Found!";    
-                ?>
-                </tbody>
-                <tfoot>
-                <tr>
-                  <th>S.No</th>
-                  <th>Complaint Description</th>
-                  <th>Image / Video</th>
-                  <th>Name</th>
-                  <th>Phone No</th>
-                  <th>Date</th>
-                  <th>Address</th>
-                  <!--<th>Latitude</th>-->
-                  <th>Complaint Type</th>
-                  <th>Complaint Status</th>
-                  <th>Action</th>
-                </tr>
-                </tfoot>
               </table>
             </div>
             <!-- /.box-body -->
@@ -145,8 +54,54 @@ error_reporting(0);
     </section>
     <!-- /.content -->
 
-
-    </section>
-    <!-- /.content -->
   </div>
   <!-- /.content-wrapper -->
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Complaint Detail</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" id="getCompleteData"></div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DataTables -->
+<script src="<?php echo base_url();?>assets/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="<?php echo base_url();?>assets/plugins/datatables/dataTables.bootstrap.min.js"></script>
+<!-- Datepicker -->
+  <script>
+    loadDataintoTable();
+    function loadDataintoTable()
+    {
+      $('#example').DataTable({
+        "ajax": "<?php echo base_url('Admin/inProgressComplaints') ?>",
+        "columns": [
+        { "data": "0" },
+        { "data": "1" },
+        { "data": "3" },
+        { "data": "4" },
+        { "data": "5" },
+        { "data": "6" },
+        { "data": "8" },
+        { "data": "7" }
+        ]
+      });
+    }
+    function viewDetails(id)
+    {
+      $.post('<?php echo base_url('Admin/getComplaintDetail') ?>', {id:id}, function(data, textStatus, xhr)
+      {
+          $('#getCompleteData').html(data);
+      });
+    }
+  </script>

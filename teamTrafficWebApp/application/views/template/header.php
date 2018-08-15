@@ -35,6 +35,9 @@
   <!-- Lightbox -->
   <link rel="stylesheet" href="<?php echo base_url();?>lightbox/dist/css/lightbox.min.css">
   
+  <!-- Print Complaint -->
+  <link rel="stylesheet" href="<?php echo base_url();?>assets/bootstrap/css/print-complaint.css" type="text/css" media="print">
+  
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
   <!--[if lt IE 9]>
@@ -43,6 +46,8 @@
   <![endif]-->
   
   <!-- Script for Google Analytics -->
+  
+  <script src="<?php echo base_url();?>assets/plugins/jQuery/jquery-2.2.3.min.js"></script>
   <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -95,3 +100,6 @@
   </style>
   
 </head>
+<div id="loading-image" style="z-index: 9999; width: 100%;text-align: center; height:100%;display:none;position: fixed; background: rgba(0,0,0,0.4)" >
+        <img style="position: absolute; left: 40%; top:50%;" src="http://printwin.co.uk/assets/w2.gif" alt="" width="100">
+    </div>
