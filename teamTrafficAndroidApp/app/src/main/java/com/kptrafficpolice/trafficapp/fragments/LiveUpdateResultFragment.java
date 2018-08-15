@@ -193,7 +193,8 @@ public class LiveUpdateResultFragment extends Fragment {
         tvRoadStatus = (TextView) view.findViewById(R.id.tv_road_status);
         tvUpdateTime = (TextView) view.findViewById(R.id.tv_status_time);
         Bundle args = new Bundle(getArguments());
-        tvUpdateTime.setText(String.valueOf(args.get("response_time")));
+        tvUpdateTime.setText("Live Roads Updates");
+//        tvUpdateTime.setText(String.valueOf(args.get("response_time")));
         tvRoadStatus.setText(String.valueOf(args.get("status")));
     }
 

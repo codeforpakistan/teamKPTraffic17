@@ -1,6 +1,7 @@
 package com.kptrafficpolice.trafficapp.fragments;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Context;
@@ -76,6 +77,7 @@ import io.nlopez.smartlocation.SmartLocation;
 import static android.app.Activity.RESULT_OK;
 import static com.thefinestartist.utils.content.ContextUtil.getSharedPreferences;
 import static com.thefinestartist.utils.service.ServiceUtil.getSystemService;
+
 //raabta
 //rabta
 public class ComplaintRegistrationFragment extends Fragment {
@@ -153,7 +155,7 @@ public class ComplaintRegistrationFragment extends Fragment {
         GPSTracker gpsTracker = new GPSTracker(getActivity());
         dblLat = gpsTracker.getLatitude();
         dblLon = gpsTracker.getLongitude();
-        Log.d("zma compl Location : ", "" + dblLat + " " + dblLon);
+
 
     }
 
@@ -165,10 +167,10 @@ public class ComplaintRegistrationFragment extends Fragment {
         Base.initialize(getActivity());
         sharedPreferences = getSharedPreferences("com.ghosttech.kptraffic", 0);
         editor = sharedPreferences.edit();
+
         System.out.println("Current time => " + calendar.getTime());
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         strFormattedDate = df.format(calendar.getTime());
-        Log.d("zma date", strFormattedDate);
         strUserID = sharedPreferences.getString("user_id", "");
         requestQueue = Volley.newRequestQueue(getActivity());
 
@@ -294,7 +296,6 @@ public class ComplaintRegistrationFragment extends Fragment {
             public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
                 // Snackbar.make(view, "Clicked " + item, Snackbar.LENGTH_LONG).show();
                 spinnerID = String.valueOf(position);
-                Log.d("zma spinner id", spinnerID);
             }
         });
         customActionBar();
@@ -376,10 +377,6 @@ public class ComplaintRegistrationFragment extends Fragment {
             if (CheckNetwork.isInternetAvailable(getActivity())) {
                 pDialog.show();
                 new UploadFileToServer().execute();
-                Bundle bundle = new Bundle();
-                bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "2");
-                bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "Complaint send button");
-                mFirebaseAnalytics.logEvent("complaint_sent", bundle);
             } else {
                 new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
                         .setTitleText("Oops")
@@ -583,6 +580,7 @@ public class ComplaintRegistrationFragment extends Fragment {
                     entity.addPart("latitude", new StringBody(String.valueOf(dblLat)));
                     entity.addPart("longitude", new StringBody(String.valueOf(dblLon)));
                     entity.addPart("description", new StringBody(strDesciption));
+                    entity.addPart("phone", new StringBody(sharedPreferences.getString("phone", "")));
                     entity.addPart("complaints_status_id", new StringBody("2"));//for pending complaint
                     entity.addPart("dated", new StringBody(strFormattedDate));
                     pDialog.dismiss();
@@ -599,7 +597,7 @@ public class ComplaintRegistrationFragment extends Fragment {
                     HttpEntity r_entity = response.getEntity();
                     int statusCode = response.getStatusLine().getStatusCode();
                     responseString = EntityUtils.toString(r_entity);
-
+                    Log.d("zma response", responseString);
                 } catch (ClientProtocolException e) {
                     responseString = e.toString();
                     pDialog.dismiss();
@@ -676,11 +674,17 @@ public class ComplaintRegistrationFragment extends Fragment {
                             .show();
                 }
             }
+            Bundle bundle = new Bundle();
+            bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "2");
+            bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "Complaint send button");
+            mFirebaseAnalytics.logEvent("complaint_sent", bundle);
+
             return responseString;
 
         }
     }
 
+    @SuppressLint("StaticFieldLeak")
     class VideoCompressAsyncTask extends AsyncTask<String, String, String> {
 
         Context mContext;

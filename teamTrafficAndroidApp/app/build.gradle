@@ -30,7 +30,7 @@ android {
         applicationId "com.kptrafficpolice.trafficapp"
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode 18
+        versionCode 22
         versionName "Emergency contacts disabled"
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"

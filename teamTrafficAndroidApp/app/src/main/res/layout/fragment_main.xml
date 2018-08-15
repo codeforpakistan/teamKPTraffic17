@@ -56,8 +56,8 @@
                 android:orientation="vertical">
 
                 <ImageView
-                    android:layout_width="64dp"
-                    android:layout_height="64dp"
+                    android:layout_width="@dimen/main_buttons_dimens"
+                    android:layout_height="@dimen/main_buttons_dimens"
                     android:layout_gravity="center"
                     app:srcCompat="@drawable/complaint_system_icon" />
 
@@ -66,7 +66,8 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="Complaint\nSystem"
-                    android:textSize="12sp" />
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
             </LinearLayout>
 
             <LinearLayout
@@ -78,8 +79,8 @@
                 android:orientation="vertical">
 
                 <ImageView
-                    android:layout_width="64dp"
-                    android:layout_height="64dp"
+                    android:layout_width="@dimen/main_buttons_dimens"
+                    android:layout_height="@dimen/main_buttons_dimens"
                     android:layout_gravity="center"
                     android:layout_weight="1"
                     app:srcCompat="@drawable/live_updates_icon" />
@@ -89,7 +90,9 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="Traffic\n Status"
-                    android:textSize="12sp" />
+
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
             </LinearLayout>
 
             <LinearLayout
@@ -101,8 +104,8 @@
                 android:orientation="vertical">
 
                 <ImageView
-                    android:layout_width="64dp"
-                    android:layout_height="64dp"
+                    android:layout_width="@dimen/main_buttons_dimens"
+                    android:layout_height="@dimen/main_buttons_dimens"
                     android:layout_gravity="center"
                     android:layout_weight="1"
                     app:srcCompat="@drawable/license_verification_icon" />
@@ -114,7 +117,9 @@
                     android:gravity="center"
                     android:text="License\nVerification"
 
-                    android:textSize="12sp" />
+                    android:textSize="12sp"
+
+                    android:textStyle="bold" />
             </LinearLayout>
 
         </LinearLayout>
@@ -135,8 +140,9 @@
                 android:orientation="vertical">
 
                 <ImageView
-                    android:layout_width="64dp"
-                    android:layout_height="64dp"
+                    android:id="@+id/iv_traffic_education"
+                    android:layout_width="@dimen/main_buttons_dimens"
+                    android:layout_height="@dimen/main_buttons_dimens"
                     android:layout_gravity="center"
                     app:srcCompat="@drawable/traffic_education_icon" />
 
@@ -146,7 +152,9 @@
                     android:gravity="center"
                     android:text="Traffic\nEducation"
 
-                    android:textSize="12sp" />
+                    android:textSize="12sp"
+
+                    android:textStyle="bold" />
             </LinearLayout>
 
             <LinearLayout
@@ -158,8 +166,9 @@
                 android:orientation="vertical">
 
                 <ImageView
-                    android:layout_width="64dp"
-                    android:layout_height="64dp"
+                    android:id="@+id/iv_challan_tracking"
+                    android:layout_width="@dimen/main_buttons_dimens"
+                    android:layout_height="@dimen/main_buttons_dimens"
                     android:layout_gravity="center"
                     android:layout_weight="1"
                     app:srcCompat="@drawable/challan_tracking_icon" />
@@ -171,7 +180,9 @@
                     android:gravity="center"
                     android:text="Challan\nTracking"
 
-                    android:textSize="12sp" />
+                    android:textSize="12sp"
+
+                    android:textStyle="bold" />
             </LinearLayout>
 
             <LinearLayout
@@ -203,26 +214,26 @@
     </LinearLayout>
 
     <!--<LinearLayout-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="40dp"-->
-        <!--android:background="@color/colorPrimary"-->
-        <!--android:orientation="horizontal">-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="40dp"-->
+    <!--android:background="@color/colorPrimary"-->
+    <!--android:orientation="horizontal">-->
 
-        <!--<ImageView-->
-            <!--android:id="@+id/iv_website_link"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_weight="1"-->
-            <!--android:padding="5dp"-->
-            <!--android:src="@drawable/footer_web_icon" />-->
+    <!--<ImageView-->
+    <!--android:id="@+id/iv_website_link"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_weight="1"-->
+    <!--android:padding="5dp"-->
+    <!--android:src="@drawable/footer_web_icon" />-->
 
-        <!--<ImageView-->
-            <!--android:id="@+id/iv_setting_menu"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_weight="1"-->
-            <!--android:padding="5dp"-->
-            <!--android:src="@drawable/footer_settings_icon" />-->
+    <!--<ImageView-->
+    <!--android:id="@+id/iv_setting_menu"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_weight="1"-->
+    <!--android:padding="5dp"-->
+    <!--android:src="@drawable/footer_settings_icon" />-->
     <!--</LinearLayout>-->
 
 </LinearLayout>

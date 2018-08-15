@@ -198,6 +198,7 @@ public class RegistrationFragment extends Fragment {
                                     .setTitleText("Success")
                                     .setContentText("You have been registered")
                                     .show();
+                            editor.putString("phone", strPhoneNumber).commit();
                             fragment = new LoginFragment();
                             getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
                             etCNIC.setText("");
