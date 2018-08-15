@@ -29,9 +29,9 @@ android {
     defaultConfig {
         applicationId "com.kptrafficpolice.trafficapp"
         minSdkVersion 16
-        targetSdkVersion 25
-        versionCode 22
-        versionName "Emergency contacts disabled"
+        targetSdkVersion 26
+        versionCode 24
+        versionName "Some bugs fixed"
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
