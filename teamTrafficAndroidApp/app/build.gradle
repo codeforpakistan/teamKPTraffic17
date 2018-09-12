@@ -40,8 +40,8 @@ android {
     defaultConfig {
         applicationId "com.kptrafficpolice.trafficapp"
         minSdkVersion 16
-        targetSdkVersion 26
-        versionCode 26
+        targetSdkVersion 27
+        versionCode 29
         versionName "driving test module added"
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"

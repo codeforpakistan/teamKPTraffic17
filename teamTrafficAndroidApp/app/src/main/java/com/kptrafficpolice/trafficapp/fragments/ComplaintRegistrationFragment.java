@@ -860,11 +860,7 @@ public class ComplaintRegistrationFragment extends Fragment {
                 }
             } else {
 
-                Log.d("api", "video");
-
-                Log.d("zma flag else", String.valueOf(flag));
                 HttpClient httpclient = new DefaultHttpClient();
-
                 HttpPost httppost = new HttpPost(Configuration.END_POINT_LIVE + "complaints/video");
 
                 try {
@@ -900,13 +896,11 @@ public class ComplaintRegistrationFragment extends Fragment {
                     // Making server call
                     HttpResponse response = httpclient.execute(httppost);
                     HttpEntity r_entity = response.getEntity();
-                    Log.d("zma response comp video", String.valueOf(response));
                     fragment = new MainFragment();
                     MainFragment.SUCCESS_DIALOG = true;
                     getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
                     int statusCode = response.getStatusLine().getStatusCode();
                     responseString = EntityUtils.toString(r_entity);
-                    Log.d("zma response comp image", responseString);
                     pDialog.dismiss();
 
 
