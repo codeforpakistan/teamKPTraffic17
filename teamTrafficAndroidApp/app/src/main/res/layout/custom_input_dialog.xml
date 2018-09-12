@@ -26,7 +26,7 @@
             android:layout_gravity="center"
             android:layout_marginLeft="10sp"
             android:backgroundTint="#fff"
-            android:hint="1234567890123"
+            android:hint="Enter CNIC without dashes(-)"
             android:inputType="number"
             android:maxLength="13"
             android:textColor="#ffffff"

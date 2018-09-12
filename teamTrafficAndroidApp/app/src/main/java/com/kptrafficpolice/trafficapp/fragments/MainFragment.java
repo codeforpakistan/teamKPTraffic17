@@ -3,6 +3,7 @@ package com.kptrafficpolice.trafficapp.fragments;
 import android.Manifest;
 import android.app.Dialog;
 import android.app.Fragment;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -28,6 +29,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -37,6 +39,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.analytics.Tracker;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.karumi.dexter.Dexter;
@@ -46,6 +49,7 @@ import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.kptrafficpolice.trafficapp.R;
 import com.kptrafficpolice.trafficapp.activities.MainDrawerActivity;
+import com.kptrafficpolice.trafficapp.fragments.ETest.Test_MainFragment;
 import com.kptrafficpolice.trafficapp.utilities.CheckNetwork;
 import com.kptrafficpolice.trafficapp.utilities.Configuration;
 
@@ -59,6 +63,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
+import io.fabric.sdk.android.Fabric;
 import io.nlopez.smartlocation.OnLocationUpdatedListener;
 import io.nlopez.smartlocation.SmartLocation;
 
@@ -89,7 +94,7 @@ public class MainFragment extends Fragment {
     EditText etLicNumber;
     Button btnShowRecord;
     double dblLat, dblLon;
-    ImageView ivSettingButton, ivWebsiteButton, ivTrafficEducation, ivChallanTracking;
+    ImageView ivSettingButton, ivWebsiteButton;
     String strCityName, strChallanTrackingID, strCheckLatLon, strLicenseNumber, strCNIC, strResponseLicenseID, strResponseDLNumber,
             strResponseCNIC, strResponseLicHolderName, strResponseLicHolderFatherName, strResponseLicType,
             strResponseExpiryDate, strResponseLicHolderDistrict;
@@ -98,7 +103,7 @@ public class MainFragment extends Fragment {
     SweetAlertDialog pDialog;
     Animation shake;
     LinearLayout btnComplaintSystem, btnLiveTrafficUpdates, btnChallanTracking, btnTrafficEducation,
-            btnLicenseVerification, btnEmergencyContacts;
+            btnLicenseVerification, btnEmergencyContacts, btnTest;
     SweetAlertDialog myDialog;
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -124,6 +129,9 @@ public class MainFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Fabric.with(getContext(), new Crashlytics());
+
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
@@ -136,6 +144,7 @@ public class MainFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_main, container, false);
+
         Dexter.withActivity(getActivity())
                 .withPermissions(
                         Manifest.permission.ACCESS_COARSE_LOCATION,
@@ -176,63 +185,63 @@ public class MainFragment extends Fragment {
             SUCCESS_DIALOG = false;
         }
         setHasOptionsMenu(true);
-//to get address against a specific coordinates
-//        try {
-//            SmartLocation.with(getActivity()).location()
-//                    .start(new OnLocationUpdatedListener() {
-//
-//                        @Override
-//                        public void onLocationUpdated(Location location) {
-//                            dblLat = location.getLatitude();
-//                            dblLon = location.getLongitude();
-//                            Log.d("Location : ", "" + dblLat + " " + dblLon);
-//                            Geocoder geoCoder = null;
-//                            try {
-//
-//
-//                                geoCoder = new Geocoder(getActivity(), Locale.getDefault());
-//                            } catch (Exception e) {
-//                                e.printStackTrace();
-//                            }
-//                            StringBuilder builder = new StringBuilder();
-//
-//                            try {
-//                                List<Address> address = geoCoder.getFromLocation(dblLat, dblLon, 1);
-//                                int maxLines = address.get(0).getMaxAddressLineIndex();
-//                                for (int i = 0; i < maxLines; i++) {
-//                                    String addressStr = address.get(0).getAddressLine(i);
-//                                    String city = address.get(0).getLocality();
-//                                    String state = address.get(0).getAdminArea();
-//                                    String country = address.get(0).getCountryName();
-//                                    String postalCode = address.get(0).getPostalCode();
-//                                    String knownName = address.get(0).getFeatureName();
-//                                    String subadmin = address.get(0).getSubLocality();
-//                                    Log.d("zma city 2", "city " + city + "\nstate " + state + "\n country " +
-//                                            country + "\n postal code " + postalCode + "\nknow name " + knownName + "get sub admin area" + subadmin);
-//                                    builder.append(addressStr);
-//                                    builder.append(" ");
-//                                }
-//
-//                                strCityName = builder.toString(); //This is the complete address.
-//                                mTitleTextView.setText(strCityName);
-//                                if (strCityName.equals("")) {
-//                                    mTitleTextView.setText("Our Services");
-//                                }
-//                                // Log.d("zma city", strCityName);
-//                                if (address.size() > 0) {
-//                                    System.out.println(address.get(0).getCountryName());
-//                                    System.out.println(address.get(0).getAdminArea());
-//                                    System.out.println(address.get(0).getSubLocality());
-//                                }
-//                            } catch (IOException e) {
-//                            } catch (NullPointerException e) {
-//                            }
-//
-//                        }
-//                    });
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }//
+
+        try {
+            SmartLocation.with(getActivity()).location()
+                    .start(new OnLocationUpdatedListener() {
+
+                        @Override
+                        public void onLocationUpdated(Location location) {
+                            dblLat = location.getLatitude();
+                            dblLon = location.getLongitude();
+                            Log.d("Location : ", "" + dblLat + " " + dblLon);
+                            Geocoder geoCoder = null;
+                            try {
+
+
+                                geoCoder = new Geocoder(getActivity(), Locale.getDefault());
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            StringBuilder builder = new StringBuilder();
+
+                            try {
+                                List<Address> address = geoCoder.getFromLocation(dblLat, dblLon, 1);
+                                int maxLines = address.get(0).getMaxAddressLineIndex();
+                                for (int i = 0; i < maxLines; i++) {
+                                    String addressStr = address.get(0).getAddressLine(i);
+                                    String city = address.get(0).getLocality();
+                                    String state = address.get(0).getAdminArea();
+                                    String country = address.get(0).getCountryName();
+                                    String postalCode = address.get(0).getPostalCode();
+                                    String knownName = address.get(0).getFeatureName();
+                                    String subadmin = address.get(0).getSubLocality();
+                                    Log.d("zma city 2", "city " + city + "\nstate " + state + "\n country " +
+                                            country + "\n postal code " + postalCode + "\nknow name " + knownName + "get sub admin area" + subadmin);
+                                    builder.append(addressStr);
+                                    builder.append(" ");
+                                }
+
+                                strCityName = builder.toString(); //This is the complete address.
+                                mTitleTextView.setText(strCityName);
+                                if (strCityName.equals("")) {
+                                    mTitleTextView.setText("Our Services");
+                                }
+                                // Log.d("zma city", strCityName);
+                                if (address.size() > 0) {
+                                    System.out.println(address.get(0).getCountryName());
+                                    System.out.println(address.get(0).getAdminArea());
+                                    System.out.println(address.get(0).getSubLocality());
+                                }
+                            } catch (IOException e) {
+                            } catch (NullPointerException e) {
+                            }
+
+                        }
+                    });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
 
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
@@ -241,16 +250,15 @@ public class MainFragment extends Fragment {
         bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "Main Module Screen");
         mFirebaseAnalytics.logEvent("Main_Screen", bundle);
 
-        tvUserName = (TextView) view.findViewById(R.id.tv_user_name);
-        ivTrafficEducation = (ImageView) view.findViewById(R.id.iv_traffic_education);
-        ivChallanTracking = (ImageView) view.findViewById(R.id.iv_challan_tracking);
+//        Fabric.with(getContext(), new Crashlytics());
 
+        tvUserName = view.findViewById(R.id.tv_user_name);
         pDialog = new SweetAlertDialog(getActivity(), SweetAlertDialog.PROGRESS_TYPE);
         pDialog.getProgressHelper().setBarColor(Color.parseColor("#179e99"));
         pDialog.setCancelable(false);
 
         sharedPreferences = getActivity().getSharedPreferences("com.ghosttech.kptraffic", 0);
-        String user_name_from_reg = sharedPreferences.getString("user_name", "");
+        String user_name_from_reg = sharedPreferences.getString("name", "");
         Log.d("zma reg name", user_name_from_reg);
         tvUserName.setText(user_name_from_reg);
         MultiDex.install(getActivity());
@@ -303,19 +311,36 @@ public class MainFragment extends Fragment {
     }
 
     public void onButtonClick() {
-        btnComplaintSystem = (LinearLayout) view.findViewById(R.id.linear_layout_cs);
-//        btnChallanTracking = (LinearLayout) view.findViewById(R.id.linear_layout_ct);
-        btnEmergencyContacts = (LinearLayout) view.findViewById(R.id.linear_layout_ec);
+        btnComplaintSystem = view.findViewById(R.id.linear_layout_cs);
+        btnChallanTracking = view.findViewById(R.id.linear_layout_ct);
+        btnEmergencyContacts = view.findViewById(R.id.linear_layout_ec);
+        btnTest = view.findViewById(R.id.linear_layout_test);
         btnEmergencyContacts.setEnabled(false);
-        btnLicenseVerification = (LinearLayout) view.findViewById(R.id.linear_layout_lv);
-        btnLiveTrafficUpdates = (LinearLayout) view.findViewById(R.id.linear_layout_lu);
-//        btnTrafficEducation = (LinearLayout) view.findViewById(R.id.linear_layout_te);
+        btnLicenseVerification = view.findViewById(R.id.linear_layout_lv);
+        btnLiveTrafficUpdates = view.findViewById(R.id.linear_layout_lu);
+        btnTrafficEducation = view.findViewById(R.id.linear_layout_te);
         btnComplaintSystem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                fragment = new ComplaintRegistrationFragment();
-                getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).
-                        addToBackStack("tag").commit();
+//                mTracker.send(new HitBuilders.EventBuilder()
+//                        .setCategory("Complaint Module")
+//                        .setAction("Opening Complaint")
+//                        .build());
+
+                SharedPreferences sharedPreferences = getActivity().getSharedPreferences
+                        ("com.ghosttech.kptraffic", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                String timer = sharedPreferences.getString("timer", "");
+
+                if (timer.equals("yes")) {
+                    Toast.makeText(getActivity(), "Wait for 30 mins to send another complaint", Toast.LENGTH_SHORT).show();
+                } else {
+
+                    fragment = new ComplaintRegistrationFragment();
+                    getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).
+                            addToBackStack("tag").commit();
+
+                }
             }
         });
         btnLiveTrafficUpdates.setOnClickListener(new View.OnClickListener() {
@@ -324,6 +349,14 @@ public class MainFragment extends Fragment {
                 fragment = new LiveUpdateFragment();
                 getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).
                         addToBackStack("tag").commit();
+            }
+        });
+        btnTest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                fragment = new Test_MainFragment();
+                getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).
+                        addToBackStack("test").commit();
             }
         });
         btnLicenseVerification.setOnClickListener(new View.OnClickListener() {
@@ -342,7 +375,7 @@ public class MainFragment extends Fragment {
                         addToBackStack("tag").commit();
             }
         });
-        ivTrafficEducation.setOnClickListener(new View.OnClickListener() {
+        btnTrafficEducation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (CheckNetwork.isInternetAvailable(getActivity())) {
@@ -374,26 +407,13 @@ public class MainFragment extends Fragment {
                 }
             }
         });
-        ivChallanTracking.setOnClickListener(new View.OnClickListener() {
+        btnChallanTracking.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 customDialogChallanStatus();
             }
         });
 
-    }
-    public void customDialogLicenseVerification() {
-        dialog = new Dialog(getActivity());
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.custom_input_dialog);
-        dialog.setCancelable(true);
-        etLicNumber = (EditText) dialog.findViewById(R.id.et_verify_license);
-        btnShowRecord = (Button) dialog.findViewById(R.id.btn_search_license_record);
-        ImageView ivInputIcon = (ImageView) dialog.findViewById(R.id.iv_input_dialog);
-        ivInputIcon.setImageResource(R.drawable.search_license_icon);
-        dialog.show();
-        dialog.getWindow().getDecorView().setBackgroundResource(android.R.color.transparent);
-        inputValidationLicense();
     }
 
     @Override
@@ -414,25 +434,36 @@ public class MainFragment extends Fragment {
         mActionBar.setDisplayShowTitleEnabled(false);
         LayoutInflater mInflater = LayoutInflater.from(getActivity());
         View mCustomView = mInflater.inflate(R.layout.custom_action_bar, null);
-        mTitleTextView = (TextView) mCustomView.findViewById(R.id.title_text);
+        mTitleTextView = mCustomView.findViewById(R.id.title_text);
         mTitleTextView.setText("Our Services");
         mActionBar.setCustomView(mCustomView);
         mActionBar.setDisplayShowCustomEnabled(true);
     }
 
-
-
+    public void customDialogLicenseVerification() {
+        dialog = new Dialog(getActivity());
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.custom_input_dialog);
+        dialog.setCancelable(true);
+        etLicNumber = dialog.findViewById(R.id.et_verify_license);
+        btnShowRecord = dialog.findViewById(R.id.btn_search_license_record);
+        ImageView ivInputIcon = dialog.findViewById(R.id.iv_input_dialog);
+        ivInputIcon.setImageResource(R.drawable.search_license_icon);
+        dialog.show();
+        dialog.getWindow().getDecorView().setBackgroundResource(android.R.color.transparent);
+        inputValidationLicense();
+    }
 
     public void customDialogChallanStatus() {
         dialog = new Dialog(getActivity());
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.custom_input_dialog);
         dialog.setCancelable(true);
-        ImageView ivInputIcon = (ImageView) dialog.findViewById(R.id.iv_input_dialog);
+        ImageView ivInputIcon = dialog.findViewById(R.id.iv_input_dialog);
         ivInputIcon.setImageResource(R.drawable.search_challam_icon);
-        etLicNumber = (EditText) dialog.findViewById(R.id.et_verify_license);
-        etLicNumber.setHint("123");
-        btnShowRecord = (Button) dialog.findViewById(R.id.btn_search_license_record);
+        etLicNumber = dialog.findViewById(R.id.et_verify_license);
+        etLicNumber.setHint("Enter Challan Number");
+        btnShowRecord = dialog.findViewById(R.id.btn_search_license_record);
         dialog.show();
         dialog.getWindow().getDecorView().setBackgroundResource(android.R.color.transparent);
         inputValidationChallan();

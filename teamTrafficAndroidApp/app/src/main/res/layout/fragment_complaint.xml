@@ -62,12 +62,60 @@
                         android:id="@+id/spinner"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        />
+                        android:gravity="start"
+                        android:hint="select me"
+                        android:textColor="#a4a4a4" />
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1.7dp"
                         android:background="#EEEEEE" />
+
+                    <!--<com.jaredrummler.materialspinner.MaterialSpinner-->
+                    <!--android:id="@+id/spinner2"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--/>-->
+
+                    <!--<View-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="1.7dp"-->
+                    <!--android:background="#EEEEEE" />-->
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+
+                        <TextView
+                            android:id="@+id/spinner2"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:drawableRight="@drawable/ic_drop"
+                            android:editable="false"
+                            android:gravity="start"
+                            android:hint="Select District"
+                            android:paddingLeft="22dp"
+                            android:paddingRight="7dp"
+                            android:paddingTop="10dp"
+                            android:textColor="#a4a4a4"
+                            android:textColorHint="#a4a4a4"
+                            android:textSize="13dp" />
+
+
+                    </LinearLayout>
+
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1.7dp"
+                        android:background="#EEEEEE" />
+
+
                     <EditText
                         android:id="@+id/et_description"
                         android:layout_width="match_parent"

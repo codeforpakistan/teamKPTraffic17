@@ -73,7 +73,7 @@ public class LoginFragment extends Fragment {
     View view;
     Fragment fragment;
     RequestQueue mRequestQueue;
-    String strCNIC, strUserID;
+    String strCNIC, strUserID, Username;
     SweetAlertDialog pDialog;
     TextView tvNewUser;
     SharedPreferences sharedPreferences;
@@ -141,7 +141,7 @@ public class LoginFragment extends Fragment {
         sharedPreferences = getActivity().getSharedPreferences("com.ghosttech.kptraffic", 0);
         editor = sharedPreferences.edit();
         customActionBar();
-        tvNewUser = (TextView) view.findViewById(R.id.tv_new_user_registere_here);
+        tvNewUser = view.findViewById(R.id.tv_new_user_registere_here);
         SpannableString contentRegister = new SpannableString("New user? Register Here");
         contentRegister.setSpan(new UnderlineSpan(), 0, contentRegister.length(), 0);
         tvNewUser.setText(contentRegister);
@@ -159,7 +159,7 @@ public class LoginFragment extends Fragment {
             }
         });
         onButtonClick();
-        ScrollView scrollView = (ScrollView) view.findViewById(R.id.sv_login);
+        ScrollView scrollView = view.findViewById(R.id.sv_login);
         scrollView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -223,7 +223,7 @@ public class LoginFragment extends Fragment {
     }
 
     public void onButtonClick() {
-        btnSubmit = (Button) view.findViewById(R.id.btn_submit);
+        btnSubmit = view.findViewById(R.id.btn_submit);
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -233,7 +233,7 @@ public class LoginFragment extends Fragment {
     }
 
     public void formValidation() {
-        etCNIC = (EditText) view.findViewById(R.id.et_cnic_login);
+        etCNIC = view.findViewById(R.id.et_cnic_login);
         strCNIC = etCNIC.getText().toString();
         Animation shake = AnimationUtils.loadAnimation(getActivity(), R.anim.shake);
         if (strCNIC.equals("") || strCNIC.length() < 13 || strCNIC.contains("-")) {
@@ -277,12 +277,14 @@ public class LoginFragment extends Fragment {
                                 for (int i = 0; i < jsonArray.length(); i++) {
                                     JSONObject temp = jsonArray.getJSONObject(i);
                                     strUserID = temp.getString("user_id");
+                                    Username = temp.getString("name");
                                     Log.d("zma user id login", strUserID);
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
                             editor.putString("user_id", strUserID).commit();
+                            editor.putString("name", Username).commit();
                             editor.putString("true", strCNIC).commit();
                             startActivity(new Intent(getActivity(), MainDrawerActivity.class));
                             getActivity().finish();
@@ -334,7 +336,7 @@ public class LoginFragment extends Fragment {
         mActionBar.setDisplayShowTitleEnabled(false);
         LayoutInflater mInflater = LayoutInflater.from(getActivity());
         View mCustomView = mInflater.inflate(R.layout.custom_action_bar, null);
-        TextView mTitleTextView = (TextView) mCustomView.findViewById(R.id.title_text);
+        TextView mTitleTextView = mCustomView.findViewById(R.id.title_text);
         mTitleTextView.setText("Sign In");
         mActionBar.setCustomView(mCustomView);
         mActionBar.setDisplayShowCustomEnabled(true);

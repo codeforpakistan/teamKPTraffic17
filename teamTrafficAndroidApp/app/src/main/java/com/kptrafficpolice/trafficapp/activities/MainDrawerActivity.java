@@ -45,6 +45,7 @@ public class MainDrawerActivity extends AppCompatActivity
         fragment = new MainFragment();
         getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
 
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
        // customActionBar();
@@ -60,6 +61,7 @@ public class MainDrawerActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
@@ -129,7 +131,7 @@ public class MainDrawerActivity extends AppCompatActivity
         mActionBar.setDisplayShowTitleEnabled(true);
         LayoutInflater mInflater = LayoutInflater.from(MainDrawerActivity.this);
         View mCustomView = mInflater.inflate(R.layout.custom_action_bar, null);
-        TextView mTitleTextView = (TextView) mCustomView.findViewById(R.id.title_text);
+        TextView mTitleTextView = mCustomView.findViewById(R.id.title_text);
         mTitleTextView.setText("Write a complaint here");
         mActionBar.setCustomView(mCustomView);
         mActionBar.setDisplayShowCustomEnabled(true);

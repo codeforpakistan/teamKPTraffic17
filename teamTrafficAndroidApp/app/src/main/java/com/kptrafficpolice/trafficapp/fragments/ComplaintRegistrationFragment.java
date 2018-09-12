@@ -1,9 +1,10 @@
 package com.kptrafficpolice.trafficapp.fragments;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.Fragment;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -15,12 +16,14 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.location.Location;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Looper;
+import android.os.SystemClock;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -46,6 +49,7 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 import com.iceteck.silicompressorr.SiliCompressor;
 import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.kptrafficpolice.trafficapp.R;
+import com.kptrafficpolice.trafficapp.utilities.BackgroundService;
 import com.kptrafficpolice.trafficapp.utilities.CheckNetwork;
 import com.kptrafficpolice.trafficapp.utilities.Configuration;
 import com.kptrafficpolice.trafficapp.utilities.GPSTracker;
@@ -68,9 +72,13 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
+import in.galaxyofandroid.spinerdialog.OnSpinerItemClick;
+import in.galaxyofandroid.spinerdialog.SpinnerDialog;
 import io.nlopez.smartlocation.OnLocationUpdatedListener;
 import io.nlopez.smartlocation.SmartLocation;
 
@@ -79,10 +87,7 @@ import static com.thefinestartist.utils.content.ContextUtil.getSharedPreferences
 import static com.thefinestartist.utils.service.ServiceUtil.getSystemService;
 
 //raabta
-//rabta
 public class ComplaintRegistrationFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private static final String TAG = ComplaintRegistrationFragment.class.getSimpleName();
@@ -91,10 +96,47 @@ public class ComplaintRegistrationFragment extends Fragment {
     final int RESULT_LOAD_IMAGE = 2;
     final int CAMERA_VIDEO_CAPTURE = 3;
     final int RESULT_LOAD_VIDEO = 4;
+    // TODO: Rename parameter arguments, choose names that match
+    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+    String[] district_list = {"Select District", "Abbottabad",
+            "Bajaur",
+            "Bannu",
+            "Batagram",
+            "Buner",
+            "Charsadda",
+            "Chitral",
+            "Dera Ismail Khan",
+            "Hangu",
+            "Haripur",
+            "Karak",
+            "Khyber",
+            "Kohat",
+            "Kohistan",
+            "Kurram",
+            "Lakki Marwat",
+            "Lower Dir",
+            "Lower Kohistan",
+            "Mansehra",
+            "Mardan",
+            "Mohmand",
+            "North Waziristan",
+            "Nowshera",
+            "Orakzai",
+            "Peshawar",
+            "Shangla",
+            "South Waziristan",
+            "Swabi",
+            "Swat",
+            "Tank",
+            "Tor Ghar",
+            "Upper Dir"};
+    ArrayList<String> districts_names;
     View view;
+    SpinnerDialog spinnerDialog;
     long totalSize = 0;
     MaterialSpinner spComlaintType;
-    String spinnerID, strDesciption, strUserID, strFormattedDate;
+    TextView district;
+    String spinnerID, spinnerDistrictID, strDesciption, strUserID, strFormattedDate;
     double dblLat, dblLon;
     Fragment fragment;
     Animation shake;
@@ -114,6 +156,7 @@ public class ComplaintRegistrationFragment extends Fragment {
     boolean isImage = false;
     boolean isVideo = false;
     File videoCaptureSourceFile;
+    int service_time;
     private ProgressBar progressBar;
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -143,6 +186,8 @@ public class ComplaintRegistrationFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+
         SmartLocation.with(getActivity()).location()
                 .start(new OnLocationUpdatedListener() {
 
@@ -155,9 +200,10 @@ public class ComplaintRegistrationFragment extends Fragment {
         GPSTracker gpsTracker = new GPSTracker(getActivity());
         dblLat = gpsTracker.getLatitude();
         dblLon = gpsTracker.getLongitude();
-
+        Log.d("zma compl Location : ", "" + dblLat + " " + dblLon);
 
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -165,17 +211,22 @@ public class ComplaintRegistrationFragment extends Fragment {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_complaint, container, false);
         Base.initialize(getActivity());
+
+
         sharedPreferences = getSharedPreferences("com.ghosttech.kptraffic", 0);
         editor = sharedPreferences.edit();
-
         System.out.println("Current time => " + calendar.getTime());
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         strFormattedDate = df.format(calendar.getTime());
+        Log.d("zma date", strFormattedDate);
         strUserID = sharedPreferences.getString("user_id", "");
         requestQueue = Volley.newRequestQueue(getActivity());
 
+        //add districts names into arraylist
+        districts_names = new ArrayList<>(Arrays.asList(district_list));
+
         Base.initialize(getActivity());
-        ScrollView scrollView = (ScrollView) view.findViewById(R.id.sv_complaint);
+        ScrollView scrollView = view.findViewById(R.id.sv_complaint);
         scrollView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -185,18 +236,46 @@ public class ComplaintRegistrationFragment extends Fragment {
             }
         });
         getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED);
-        linearLayout = (LinearLayout) view.findViewById(R.id.llayout_camera);
-        tvTakePic = (TextView) view.findViewById(R.id.tv_take_pic);
-        ivCrossImage = (ImageView) view.findViewById(R.id.iv_cross_image);
+        linearLayout = view.findViewById(R.id.llayout_camera);
+        tvTakePic = view.findViewById(R.id.tv_take_pic);
+        ivCrossImage = view.findViewById(R.id.iv_cross_image);
         ivCrossImage.setVisibility(View.GONE);
-        tvRecordVideo = (TextView) view.findViewById(R.id.tv_record_video);
-        ivCrossVideo = (ImageView) view.findViewById(R.id.iv_cross_video);
+        tvRecordVideo = view.findViewById(R.id.tv_record_video);
+        ivCrossVideo = view.findViewById(R.id.iv_cross_video);
         ivCrossVideo.setVisibility(View.GONE);
-        spComlaintType = (MaterialSpinner) view.findViewById(R.id.spinner);
+        spComlaintType = view.findViewById(R.id.spinner);
+        district = view.findViewById(R.id.spinner2);
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
-        btnSendComplaint = (Button) view.findViewById(R.id.btn_send_complaint);
-//        ivImagePreview = (ImageView) view.findViewById(R.id.iv_image_preview);
+        btnSendComplaint = view.findViewById(R.id.btn_send_complaint);
+
+
+        spinnerDialog = new SpinnerDialog(getActivity(), districts_names, "Select District",
+                R.style.DialogAnimations_SmileWindow);// With 	Animation
+
+        spinnerDialog.bindOnSpinerListener(new OnSpinerItemClick() {
+            @Override
+            public void onClick(String item, int position) {
+                district.setText(item);
+            }
+        });
+
+
+        district.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                spinnerDialog.showSpinerDialog();
+
+                GPSTracker gpsTracker = new GPSTracker(getActivity());
+                dblLat = gpsTracker.getLatitude();
+                dblLon = gpsTracker.getLongitude();
+                Log.d("zma compl Location : ", "" + dblLat + " " + dblLon);
+
+            }
+        });
+
         spComlaintType.setItems("Complaint Type", "Traffic Jam", "Complaint against Wardens", "Illegal Parking", "Others");
+
         shake = AnimationUtils.loadAnimation(getActivity(), R.anim.shake);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
                 getActivity().checkSelfPermission(Manifest.permission.CAMERA)
@@ -209,8 +288,8 @@ public class ComplaintRegistrationFragment extends Fragment {
             requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
                     Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, 1);
         }
-        ivTakePicture = (ImageView) view.findViewById(R.id.iv_take_picture);
-        ivRecordVideo = (ImageView) view.findViewById(R.id.iv_record_video);
+        ivTakePicture = view.findViewById(R.id.iv_take_picture);
+        ivRecordVideo = view.findViewById(R.id.iv_record_video);
         ivRecordVideo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -291,13 +370,17 @@ public class ComplaintRegistrationFragment extends Fragment {
         pDialog = new SweetAlertDialog(getActivity(), SweetAlertDialog.PROGRESS_TYPE);
         pDialog.getProgressHelper().setBarColor(Color.parseColor("#179e99"));
         pDialog.setTitleText("Sending complaint");
+
         spComlaintType.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
             @Override
             public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
                 // Snackbar.make(view, "Clicked " + item, Snackbar.LENGTH_LONG).show();
                 spinnerID = String.valueOf(position);
+                Log.d("zma spinner id", spinnerID);
             }
         });
+
+
         customActionBar();
 
 
@@ -333,6 +416,26 @@ public class ComplaintRegistrationFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+
+        SmartLocation.with(getActivity()).location()
+                .start(new OnLocationUpdatedListener() {
+
+                    @Override
+                    public void onLocationUpdated(Location location) {
+                        dblLat = location.getLatitude();
+                        dblLon = location.getLongitude();
+                    }
+                });
+
+        final LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            buildAlertMessageNoGps();
+        }
+
+        GPSTracker gpsTracker = new GPSTracker(getActivity());
+        dblLat = gpsTracker.getLatitude();
+        dblLon = gpsTracker.getLongitude();
+        Log.d("zma compl Location : ", "" + dblLat + " " + dblLon);
         getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
     }
 
@@ -363,20 +466,50 @@ public class ComplaintRegistrationFragment extends Fragment {
     }
 
     public void inputValidation() {
-        etDescription = (EditText) view.findViewById(R.id.et_description);
+
+        etDescription = view.findViewById(R.id.et_description);
         strDesciption = etDescription.getText().toString();
+        spinnerDistrictID = district.getText().toString().trim();
 
         if (spComlaintType.getText().equals("Complaint Type")) {
             spComlaintType.startAnimation(shake);
+        } else if (district.getText().equals("")) {
+            district.startAnimation(shake);
         } else if (strDesciption.length() < 10) {
             etDescription.startAnimation(shake);
-        } else if (sourceFile == null && compressedVideoPath == null) {
-            linearLayout.startAnimation(shake);
+//        } else if (sourceFile == null && compressedVideoPath == null) {
+//            linearLayout.startAnimation(shake);
+        } else if (dblLat == 0 || dblLon == 0) {
+            final LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+            if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                buildAlertMessageNoGps();
+            } else {
+
+                SmartLocation.with(getActivity()).location()
+                        .start(new OnLocationUpdatedListener() {
+
+                            @Override
+                            public void onLocationUpdated(Location location) {
+                                dblLat = location.getLatitude();
+                                dblLon = location.getLongitude();
+                            }
+                        });
+                GPSTracker gpsTracker = new GPSTracker(getActivity());
+                dblLat = gpsTracker.getLatitude();
+                dblLon = gpsTracker.getLongitude();
+                Log.d("zma compl Location : ", "" + dblLat + " " + dblLon);
+                getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            }
 
         } else {
             if (CheckNetwork.isInternetAvailable(getActivity())) {
+
                 pDialog.show();
                 new UploadFileToServer().execute();
+                Bundle bundle = new Bundle();
+                bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "2");
+                bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "Complaint send button");
+                mFirebaseAnalytics.logEvent("complaint_sent", bundle);
             } else {
                 new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
                         .setTitleText("Oops")
@@ -408,7 +541,7 @@ public class ComplaintRegistrationFragment extends Fragment {
         mActionBar.setDisplayShowTitleEnabled(false);
         LayoutInflater mInflater = LayoutInflater.from(getActivity());
         View mCustomView = mInflater.inflate(R.layout.custom_action_bar, null);
-        TextView mTitleTextView = (TextView) mCustomView.findViewById(R.id.title_text);
+        TextView mTitleTextView = mCustomView.findViewById(R.id.title_text);
         mTitleTextView.setText("Write a complaint here");
         mActionBar.setCustomView(mCustomView);
         mActionBar.setDisplayShowCustomEnabled(true);
@@ -530,6 +663,43 @@ public class ComplaintRegistrationFragment extends Fragment {
         } else return null;
     }
 
+    //show dialog if gps is off
+    private void buildAlertMessageNoGps() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.AlertDialogTheme);
+        builder.setMessage("Turn On your Location")
+                .setCancelable(true)
+                .setPositiveButton("Turn On", new DialogInterface.OnClickListener() {
+                    public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                    }
+                });
+
+        final AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    public void StartCountdown() {
+
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences
+                ("com.ghosttech.kptraffic", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("timer", "yes");
+        editor.apply();
+
+        ///////////////////////////
+
+        service_time = (int) (SystemClock.elapsedRealtime() + 1800000);
+        AlarmManager processTimer = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(getActivity(), BackgroundService.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        processTimer.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, service_time, pendingIntent);
+
+        //////////////////////////
+
+
+    }
+
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
@@ -554,7 +724,11 @@ public class ComplaintRegistrationFragment extends Fragment {
         @SuppressWarnings("deprecation")
         private String uploadFile() {
             String responseString;
-            if (flag) {
+
+
+            if (sourceFile == null && compressedVideoPath == null) {
+
+                Log.d("api", "no image");
 
                 Log.d("zma flag if", String.valueOf(flag));
                 HttpClient httpclient = new DefaultHttpClient();
@@ -572,17 +746,21 @@ public class ComplaintRegistrationFragment extends Fragment {
                             });
                     // Adding file data to http body
                     // Extra parameters if you want to pass to server
-                    File msourceFile = new File(sourceFile.getPath());
-                    entity.addPart("image", new FileBody(msourceFile));
-                    Looper.prepare();
+
+                    //strat timer to restrict user to send another complaint for 30 mins
+                    StartCountdown();
+
+//                    File msourceFile = new File(sourceFile.getPath());
+//                    entity.addPart("image", new FileBody(msourceFile));
+//                    Looper.prepare();
                     entity.addPart("complaint_type_id", new StringBody(spinnerID));
+                    entity.addPart("district", new StringBody(spinnerDistrictID));
                     entity.addPart("signup_id", new StringBody(strUserID));
                     entity.addPart("latitude", new StringBody(String.valueOf(dblLat)));
                     entity.addPart("longitude", new StringBody(String.valueOf(dblLon)));
                     entity.addPart("description", new StringBody(strDesciption));
-                    entity.addPart("phone", new StringBody(sharedPreferences.getString("phone", "")));
                     entity.addPart("complaints_status_id", new StringBody("2"));//for pending complaint
-                    entity.addPart("dated", new StringBody(strFormattedDate));
+//                    entity.addPart("dated", new StringBody(strFormattedDate));
                     pDialog.dismiss();
                     Bundle args = new Bundle();
                     fragment = new MainFragment();
@@ -597,7 +775,74 @@ public class ComplaintRegistrationFragment extends Fragment {
                     HttpEntity r_entity = response.getEntity();
                     int statusCode = response.getStatusLine().getStatusCode();
                     responseString = EntityUtils.toString(r_entity);
-                    Log.d("zma response", responseString);
+
+
+                } catch (ClientProtocolException e) {
+                    responseString = e.toString();
+                    pDialog.dismiss();
+                    new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
+                            .setTitleText("Oops...")
+                            .setContentText("Something went wrong!")
+                            .show();
+                } catch (IOException e) {
+                    responseString = e.toString();
+                    pDialog.dismiss();
+                    new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
+                            .setTitleText("Oops...")
+                            .setContentText("Something went wrong!")
+                            .show();
+                }
+
+            } else if (flag) {
+
+                Log.d("api", "image");
+
+                Log.d("zma flag if", String.valueOf(flag));
+                HttpClient httpclient = new DefaultHttpClient();
+
+                HttpPost httppost = new HttpPost(Configuration.END_POINT_LIVE + "complaints/image");
+
+                try {
+                    HTTPMultiPartEntity entity = new HTTPMultiPartEntity(
+                            new HTTPMultiPartEntity.ProgressListener() {
+
+                                @Override
+                                public void transferred(long num) {
+                                    publishProgress((int) ((num / (float) totalSize) * 100));
+                                }
+                            });
+                    // Adding file data to http body
+                    // Extra parameters if you want to pass to server
+
+                    StartCountdown();
+
+                    File msourceFile = new File(sourceFile.getPath());
+                    entity.addPart("image", new FileBody(msourceFile));
+                    Looper.prepare();
+                    entity.addPart("complaint_type_id", new StringBody(spinnerID));
+                    entity.addPart("district", new StringBody(spinnerDistrictID));
+                    entity.addPart("signup_id", new StringBody(strUserID));
+                    entity.addPart("latitude", new StringBody(String.valueOf(dblLat)));
+                    entity.addPart("longitude", new StringBody(String.valueOf(dblLon)));
+                    entity.addPart("description", new StringBody(strDesciption));
+                    entity.addPart("complaints_status_id", new StringBody("2"));//for pending complaint
+//                    entity.addPart("dated", new StringBody(strFormattedDate));
+                    pDialog.dismiss();
+                    Bundle args = new Bundle();
+                    fragment = new MainFragment();
+                    args.putBoolean("status", true);
+                    fragment.setArguments(args);
+                    MainFragment.SUCCESS_DIALOG = true;
+                    getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
+                    totalSize = entity.getContentLength();
+                    httppost.setEntity(entity);
+                    // Making server call
+                    HttpResponse response = httpclient.execute(httppost);
+                    HttpEntity r_entity = response.getEntity();
+                    int statusCode = response.getStatusLine().getStatusCode();
+                    responseString = EntityUtils.toString(r_entity);
+
+
                 } catch (ClientProtocolException e) {
                     responseString = e.toString();
                     pDialog.dismiss();
@@ -614,6 +859,9 @@ public class ComplaintRegistrationFragment extends Fragment {
                             .show();
                 }
             } else {
+
+                Log.d("api", "video");
+
                 Log.d("zma flag else", String.valueOf(flag));
                 HttpClient httpclient = new DefaultHttpClient();
 
@@ -636,13 +884,17 @@ public class ComplaintRegistrationFragment extends Fragment {
                     }
                     // Adding file data to http body
                     // Extra parameters if you want to pass to server
+
+                    StartCountdown();
+
                     entity.addPart("complaint_type_id", new StringBody(spinnerID));
+                    entity.addPart("district", new StringBody(spinnerDistrictID));
                     entity.addPart("signup_id", new StringBody(strUserID));
                     entity.addPart("latitude", new StringBody(String.valueOf(dblLat)));
                     entity.addPart("longitude", new StringBody(String.valueOf(dblLon)));
                     entity.addPart("description", new StringBody(strDesciption));
                     entity.addPart("complaints_status_id", new StringBody("2"));
-                    entity.addPart("dated", new StringBody(strFormattedDate));
+//                    entity.addPart("dated", new StringBody(strFormattedDate));
                     totalSize = entity.getContentLength();
                     httppost.setEntity(entity);
                     // Making server call
@@ -656,6 +908,7 @@ public class ComplaintRegistrationFragment extends Fragment {
                     responseString = EntityUtils.toString(r_entity);
                     Log.d("zma response comp image", responseString);
                     pDialog.dismiss();
+
 
                 } catch (ClientProtocolException e) {
                     responseString = e.toString();
@@ -674,17 +927,12 @@ public class ComplaintRegistrationFragment extends Fragment {
                             .show();
                 }
             }
-            Bundle bundle = new Bundle();
-            bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "2");
-            bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "Complaint send button");
-            mFirebaseAnalytics.logEvent("complaint_sent", bundle);
-
             return responseString;
 
         }
+
     }
 
-    @SuppressLint("StaticFieldLeak")
     class VideoCompressAsyncTask extends AsyncTask<String, String, String> {
 
         Context mContext;
@@ -718,4 +966,6 @@ public class ComplaintRegistrationFragment extends Fragment {
             Log.e(TAG, "Compressed Successflly! ");
         }
     }
+
+
 }

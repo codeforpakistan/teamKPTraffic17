@@ -33,7 +33,7 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyCZBc3tKoUmoctNHPe9g-I639pdOahrL74" />
+            android:value="AIzaSyAR17zC7qz4Dp1irl_YuvTUqaB76b5Xgko" />
 
         <receiver
             android:name=".utilities.NetworkChangeReceiver"
@@ -50,15 +50,15 @@
             android:screenOrientation="sensor"
             android:theme="@style/FinestWebViewTheme.Light" />
 
-        <meta-data
-            android:name="io.fabric.ApiKey"
-            android:value="ee1f08b5743d3ee09e64490e912213800a73c20d" />
 
         <activity
             android:name=".activities.AppIntroActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen">
 
         </activity>
+        <activity
+            android:name=".fragments.ETest.ConductTest"
+            android:label="Licence Test"></activity>
         <activity
             android:name=".activities.SplashScreenActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -70,6 +70,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <receiver android:name=".utilities.BackgroundService">
+            <intent-filter>
+                <action android:name="processTimerReceiver"></action>
+            </intent-filter>
+        </receiver>
+
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="f6be19f0dd38c1a4b5d774d9fa906f8b7d108859" />
+
     </application>
 
 </manifest>

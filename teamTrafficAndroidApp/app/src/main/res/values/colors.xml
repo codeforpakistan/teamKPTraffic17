@@ -10,4 +10,6 @@
     <color name="status_blue">#22A7F0</color>
 
     <color name="blue_btn_bg_color">#22A7F0</color>
+
+    <color name="progressbar">#17b988</color>
 </resources>

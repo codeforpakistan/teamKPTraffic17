@@ -67,8 +67,8 @@ public class LiveUpdateResultFragment extends Fragment {
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_live_update_result, container, false);
 
-        mMapView = (MapView) view.findViewById(R.id.mapView);
-        cardView = (CardView) view.findViewById(R.id.card_view_live_update);
+        mMapView = view.findViewById(R.id.mapView);
+        cardView = view.findViewById(R.id.card_view_live_update);
         mMapView.onCreate(savedInstanceState);
         args = getArguments();
         strStatus = args.getString("status");
@@ -182,7 +182,7 @@ public class LiveUpdateResultFragment extends Fragment {
         mActionBar.setDisplayShowTitleEnabled(false);
         LayoutInflater mInflater = LayoutInflater.from(getActivity());
         View mCustomView = mInflater.inflate(R.layout.custom_action_bar, null);
-        TextView mTitleTextView = (TextView) mCustomView.findViewById(R.id.title_text);
+        TextView mTitleTextView = mCustomView.findViewById(R.id.title_text);
         mTitleTextView.setText(args.getString("clicked_road_name") + " Status");
         mActionBar.setCustomView(mCustomView);
         mActionBar.setDisplayShowCustomEnabled(true);
@@ -190,11 +190,10 @@ public class LiveUpdateResultFragment extends Fragment {
     }
 
     public void setText() {
-        tvRoadStatus = (TextView) view.findViewById(R.id.tv_road_status);
-        tvUpdateTime = (TextView) view.findViewById(R.id.tv_status_time);
+        tvRoadStatus = view.findViewById(R.id.tv_road_status);
+        tvUpdateTime = view.findViewById(R.id.tv_status_time);
         Bundle args = new Bundle(getArguments());
-        tvUpdateTime.setText("Live Roads Updates");
-//        tvUpdateTime.setText(String.valueOf(args.get("response_time")));
+        tvUpdateTime.setText(String.valueOf(args.get("response_time")));
         tvRoadStatus.setText(String.valueOf(args.get("status")));
     }
 
