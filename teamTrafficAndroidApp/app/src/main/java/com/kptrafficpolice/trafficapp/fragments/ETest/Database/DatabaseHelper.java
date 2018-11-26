@@ -35,7 +35,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + "(" + COLUMN_ID +
                 " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_Score +
                 " VARCHAR, " + COLUMN_DATE +
-                " VARCHAR, " + COLUMN_USER_ID + " INTEGER);";
+        " VARCHAR, " + COLUMN_USER_ID + " INTEGER);";
         db.execSQL(sql);
     }
 
@@ -65,7 +65,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public Cursor getNames(int id) {
 
         SQLiteDatabase db = this.getReadableDatabase();
-        String sql = "SELECT * FROM " + TABLE_NAME + " WHERE " + COLUMN_USER_ID + " = " + id + " ;";
+        String sql = "SELECT * FROM " + TABLE_NAME + " WHERE " + COLUMN_USER_ID + " = "+id+" ;";
         Cursor c = db.rawQuery(sql, null);
         return c;
     }

@@ -22,9 +22,12 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.os.Looper;
 import android.os.SystemClock;
 import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -41,6 +44,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
@@ -49,6 +53,9 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 import com.iceteck.silicompressorr.SiliCompressor;
 import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.kptrafficpolice.trafficapp.R;
+import com.kptrafficpolice.trafficapp.activities.AppIntroActivity;
+import com.kptrafficpolice.trafficapp.activities.MainActivity;
+import com.kptrafficpolice.trafficapp.activities.SplashScreenActivity;
 import com.kptrafficpolice.trafficapp.utilities.BackgroundService;
 import com.kptrafficpolice.trafficapp.utilities.CheckNetwork;
 import com.kptrafficpolice.trafficapp.utilities.Configuration;
@@ -83,19 +90,12 @@ import io.nlopez.smartlocation.OnLocationUpdatedListener;
 import io.nlopez.smartlocation.SmartLocation;
 
 import static android.app.Activity.RESULT_OK;
+import static android.content.Context.LOCATION_SERVICE;
 import static com.thefinestartist.utils.content.ContextUtil.getSharedPreferences;
 import static com.thefinestartist.utils.service.ServiceUtil.getSystemService;
 
 //raabta
 public class ComplaintRegistrationFragment extends Fragment {
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-    private static final String TAG = ComplaintRegistrationFragment.class.getSimpleName();
-    private static final int CAMERA_RECORD_VIDEO_REQUEST_CODE = 200;
-    final int CAMERA_CAPTURE = 1;
-    final int RESULT_LOAD_IMAGE = 2;
-    final int CAMERA_VIDEO_CAPTURE = 3;
-    final int RESULT_LOAD_VIDEO = 4;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     String[] district_list = {"Select District", "Abbottabad",
@@ -131,6 +131,14 @@ public class ComplaintRegistrationFragment extends Fragment {
             "Tor Ghar",
             "Upper Dir"};
     ArrayList<String> districts_names;
+    private static final String ARG_PARAM1 = "param1";
+    private static final String ARG_PARAM2 = "param2";
+    private static final String TAG = ComplaintRegistrationFragment.class.getSimpleName();
+    private static final int CAMERA_RECORD_VIDEO_REQUEST_CODE = 200;
+    final int CAMERA_CAPTURE = 1;
+    final int RESULT_LOAD_IMAGE = 2;
+    final int CAMERA_VIDEO_CAPTURE = 3;
+    final int RESULT_LOAD_VIDEO = 4;
     View view;
     SpinnerDialog spinnerDialog;
     long totalSize = 0;
@@ -156,7 +164,6 @@ public class ComplaintRegistrationFragment extends Fragment {
     boolean isImage = false;
     boolean isVideo = false;
     File videoCaptureSourceFile;
-    int service_time;
     private ProgressBar progressBar;
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -164,6 +171,8 @@ public class ComplaintRegistrationFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
     private String compressedVideoPath = null;
     private FirebaseAnalytics mFirebaseAnalytics;
+    int service_time;
+    Handler handler;
 
     public ComplaintRegistrationFragment() {
         // Required empty public constructor
@@ -186,22 +195,6 @@ public class ComplaintRegistrationFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-
-
-        SmartLocation.with(getActivity()).location()
-                .start(new OnLocationUpdatedListener() {
-
-                    @Override
-                    public void onLocationUpdated(Location location) {
-                        dblLat = location.getLatitude();
-                        dblLon = location.getLongitude();
-                    }
-                });
-        GPSTracker gpsTracker = new GPSTracker(getActivity());
-        dblLat = gpsTracker.getLatitude();
-        dblLon = gpsTracker.getLongitude();
-        Log.d("zma compl Location : ", "" + dblLat + " " + dblLon);
-
     }
 
 
@@ -212,6 +205,8 @@ public class ComplaintRegistrationFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_complaint, container, false);
         Base.initialize(getActivity());
 
+        getLocation();
+        handler = new Handler();
 
         sharedPreferences = getSharedPreferences("com.ghosttech.kptraffic", 0);
         editor = sharedPreferences.edit();
@@ -226,7 +221,7 @@ public class ComplaintRegistrationFragment extends Fragment {
         districts_names = new ArrayList<>(Arrays.asList(district_list));
 
         Base.initialize(getActivity());
-        ScrollView scrollView = view.findViewById(R.id.sv_complaint);
+        ScrollView scrollView = (ScrollView) view.findViewById(R.id.sv_complaint);
         scrollView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -236,17 +231,17 @@ public class ComplaintRegistrationFragment extends Fragment {
             }
         });
         getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED);
-        linearLayout = view.findViewById(R.id.llayout_camera);
-        tvTakePic = view.findViewById(R.id.tv_take_pic);
-        ivCrossImage = view.findViewById(R.id.iv_cross_image);
+        linearLayout = (LinearLayout) view.findViewById(R.id.llayout_camera);
+        tvTakePic = (TextView) view.findViewById(R.id.tv_take_pic);
+        ivCrossImage = (ImageView) view.findViewById(R.id.iv_cross_image);
         ivCrossImage.setVisibility(View.GONE);
-        tvRecordVideo = view.findViewById(R.id.tv_record_video);
-        ivCrossVideo = view.findViewById(R.id.iv_cross_video);
+        tvRecordVideo = (TextView) view.findViewById(R.id.tv_record_video);
+        ivCrossVideo = (ImageView) view.findViewById(R.id.iv_cross_video);
         ivCrossVideo.setVisibility(View.GONE);
-        spComlaintType = view.findViewById(R.id.spinner);
-        district = view.findViewById(R.id.spinner2);
+        spComlaintType = (MaterialSpinner) view.findViewById(R.id.spinner);
+        district = (TextView) view.findViewById(R.id.spinner2);
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
-        btnSendComplaint = view.findViewById(R.id.btn_send_complaint);
+        btnSendComplaint = (Button) view.findViewById(R.id.btn_send_complaint);
 
 
         spinnerDialog = new SpinnerDialog(getActivity(), districts_names, "Select District",
@@ -288,8 +283,8 @@ public class ComplaintRegistrationFragment extends Fragment {
             requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
                     Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, 1);
         }
-        ivTakePicture = view.findViewById(R.id.iv_take_picture);
-        ivRecordVideo = view.findViewById(R.id.iv_record_video);
+        ivTakePicture = (ImageView) view.findViewById(R.id.iv_take_picture);
+        ivRecordVideo = (ImageView) view.findViewById(R.id.iv_record_video);
         ivRecordVideo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -417,26 +412,38 @@ public class ComplaintRegistrationFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        SmartLocation.with(getActivity()).location()
-                .start(new OnLocationUpdatedListener() {
+        LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
-                    @Override
-                    public void onLocationUpdated(Location location) {
-                        dblLat = location.getLatitude();
-                        dblLon = location.getLongitude();
-                    }
-                });
+        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            Log.e("gps", "enabled");
 
-        final LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            getLocation();
+
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+
+                    SmartLocation.with(getActivity()).location()
+                            .start(new OnLocationUpdatedListener() {
+
+                                @Override
+                                public void onLocationUpdated(Location location) {
+                                    dblLat = location.getLatitude();
+                                    dblLon = location.getLongitude();
+                                }
+                            });
+                    GPSTracker gpsTracker = new GPSTracker(getActivity());
+                    dblLat = gpsTracker.getLatitude();
+                    dblLon = gpsTracker.getLongitude();
+                    Log.e("onResume", dblLat + "\t" + dblLon);
+                }
+            }, 4000);
+
+        } else {
+            Log.e("gps", "not enabled");
             buildAlertMessageNoGps();
         }
 
-        GPSTracker gpsTracker = new GPSTracker(getActivity());
-        dblLat = gpsTracker.getLatitude();
-        dblLon = gpsTracker.getLongitude();
-        Log.d("zma compl Location : ", "" + dblLat + " " + dblLon);
-        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
     }
 
 
@@ -467,7 +474,7 @@ public class ComplaintRegistrationFragment extends Fragment {
 
     public void inputValidation() {
 
-        etDescription = view.findViewById(R.id.et_description);
+        etDescription = (EditText) view.findViewById(R.id.et_description);
         strDesciption = etDescription.getText().toString();
         spinnerDistrictID = district.getText().toString().trim();
 
@@ -480,26 +487,8 @@ public class ComplaintRegistrationFragment extends Fragment {
 //        } else if (sourceFile == null && compressedVideoPath == null) {
 //            linearLayout.startAnimation(shake);
         } else if (dblLat == 0 || dblLon == 0) {
-            final LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-            if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-                buildAlertMessageNoGps();
-            } else {
 
-                SmartLocation.with(getActivity()).location()
-                        .start(new OnLocationUpdatedListener() {
-
-                            @Override
-                            public void onLocationUpdated(Location location) {
-                                dblLat = location.getLatitude();
-                                dblLon = location.getLongitude();
-                            }
-                        });
-                GPSTracker gpsTracker = new GPSTracker(getActivity());
-                dblLat = gpsTracker.getLatitude();
-                dblLon = gpsTracker.getLongitude();
-                Log.d("zma compl Location : ", "" + dblLat + " " + dblLon);
-                getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-            }
+            getLocation();
 
         } else {
             if (CheckNetwork.isInternetAvailable(getActivity())) {
@@ -541,7 +530,7 @@ public class ComplaintRegistrationFragment extends Fragment {
         mActionBar.setDisplayShowTitleEnabled(false);
         LayoutInflater mInflater = LayoutInflater.from(getActivity());
         View mCustomView = mInflater.inflate(R.layout.custom_action_bar, null);
-        TextView mTitleTextView = mCustomView.findViewById(R.id.title_text);
+        TextView mTitleTextView = (TextView) mCustomView.findViewById(R.id.title_text);
         mTitleTextView.setText("Write a complaint here");
         mActionBar.setCustomView(mCustomView);
         mActionBar.setDisplayShowCustomEnabled(true);
@@ -661,43 +650,6 @@ public class ComplaintRegistrationFragment extends Fragment {
             cursor.moveToFirst();
             return cursor.getString(column_index);
         } else return null;
-    }
-
-    //show dialog if gps is off
-    private void buildAlertMessageNoGps() {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.AlertDialogTheme);
-        builder.setMessage("Turn On your Location")
-                .setCancelable(true)
-                .setPositiveButton("Turn On", new DialogInterface.OnClickListener() {
-                    public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
-                        startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-                    }
-                });
-
-        final AlertDialog alert = builder.create();
-        alert.show();
-    }
-
-    public void StartCountdown() {
-
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences
-                ("com.ghosttech.kptraffic", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("timer", "yes");
-        editor.apply();
-
-        ///////////////////////////
-
-        service_time = (int) (SystemClock.elapsedRealtime() + 1800000);
-        AlarmManager processTimer = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(getActivity(), BackgroundService.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        processTimer.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, service_time, pendingIntent);
-
-        //////////////////////////
-
-
     }
 
     public interface OnFragmentInteractionListener {
@@ -860,7 +812,11 @@ public class ComplaintRegistrationFragment extends Fragment {
                 }
             } else {
 
+                Log.d("api", "video");
+
+                Log.d("zma flag else", String.valueOf(flag));
                 HttpClient httpclient = new DefaultHttpClient();
+
                 HttpPost httppost = new HttpPost(Configuration.END_POINT_LIVE + "complaints/video");
 
                 try {
@@ -896,11 +852,13 @@ public class ComplaintRegistrationFragment extends Fragment {
                     // Making server call
                     HttpResponse response = httpclient.execute(httppost);
                     HttpEntity r_entity = response.getEntity();
+                    Log.d("zma response comp video", String.valueOf(response));
                     fragment = new MainFragment();
                     MainFragment.SUCCESS_DIALOG = true;
                     getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
                     int statusCode = response.getStatusLine().getStatusCode();
                     responseString = EntityUtils.toString(r_entity);
+                    Log.d("zma response comp image", responseString);
                     pDialog.dismiss();
 
 
@@ -959,6 +917,71 @@ public class ComplaintRegistrationFragment extends Fragment {
             super.onPostExecute(compressedFilePath);
             Log.e(TAG, "Compressed Successflly! ");
         }
+    }
+
+
+    public void StartCountdown() {
+
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences
+                ("com.ghosttech.kptraffic", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("timer", "yes");
+        editor.apply();
+
+        ///////////////////////////
+
+        service_time = (int) (SystemClock.elapsedRealtime() + 1800000);
+        AlarmManager processTimer = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(getActivity(), BackgroundService.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        processTimer.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, service_time, pendingIntent);
+
+        //////////////////////////
+
+
+    }
+
+
+    //show dialog if gps is off
+    private void buildAlertMessageNoGps() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.AlertDialogTheme);
+        builder.setMessage("Turn On your Location")
+                .setCancelable(true)
+                .setPositiveButton("Turn On", new DialogInterface.OnClickListener() {
+                    public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                    }
+                });
+
+        builder.create();
+        builder.show();
+    }
+
+    public void getLocation() {
+
+        SmartLocation.with(getActivity()).location()
+                .start(new OnLocationUpdatedListener() {
+
+                    @Override
+                    public void onLocationUpdated(Location location) {
+                        dblLat = location.getLatitude();
+                        dblLon = location.getLongitude();
+                    }
+                });
+        GPSTracker gpsTracker = new GPSTracker(getActivity());
+        dblLat = gpsTracker.getLatitude();
+        dblLon = gpsTracker.getLongitude();
+
+        Log.e("zma compl Location : ", "" + dblLat + " " + dblLon);
+    }
+
+
+    @Override
+    public void onDestroy() {
+        //remove pending handler
+        handler.removeCallbacksAndMessages(null);
+        super.onDestroy();
     }
 
 

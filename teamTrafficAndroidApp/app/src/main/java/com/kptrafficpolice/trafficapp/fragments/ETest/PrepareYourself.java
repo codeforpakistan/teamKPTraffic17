@@ -13,9 +13,13 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.kptrafficpolice.trafficapp.R;
 import com.kptrafficpolice.trafficapp.fragments.ETest.Database.TestPreviewCustomAdapter;
+
+import org.w3c.dom.Text;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -28,19 +32,19 @@ import jxl.Workbook;
 
 public class PrepareYourself extends Fragment {
 
-    public ArrayList<TestResultListModel> resultModelsArraylist = new ArrayList<TestResultListModel>();
     TestPreviewCustomAdapter testPreviewCustomAdapter;
     ListView listView;
     Sheet sheet;
     int row, column;
     String complete_String = "";
-    int j = 1, i, pos, max;
+    int j=1,i, pos, max;
+    public ArrayList<TestResultListModel> resultModelsArraylist = new ArrayList<TestResultListModel>();
     TestResultListModel testResultListModel;
     String op1_status, op2_status, op3_status;
     FirebaseAnalytics mFirebaseAnalytics;
 
     Button left, right;
-    TextView op1, op2, op3, ques;
+    TextView op1,op2,op3,ques;
 
     public PrepareYourself() {
         // Required empty public constructor
@@ -105,7 +109,7 @@ public class PrepareYourself extends Fragment {
         mFirebaseAnalytics.logEvent("E_Test_Preparation", bundle);
 
 
-        listView = view.findViewById(R.id.list);
+        listView = (ListView) view.findViewById(R.id.list);
 
         customActionBar();
 
@@ -116,17 +120,19 @@ public class PrepareYourself extends Fragment {
     }
 
 
+
     public void customActionBar() {
         android.support.v7.app.ActionBar mActionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         mActionBar.setDisplayShowHomeEnabled(false);
         mActionBar.setDisplayShowTitleEnabled(false);
         LayoutInflater mInflater = LayoutInflater.from(getActivity());
         View mCustomView = mInflater.inflate(R.layout.custom_action_bar, null);
-        TextView mTitleTextView = mCustomView.findViewById(R.id.title_text);
+        TextView mTitleTextView = (TextView) mCustomView.findViewById(R.id.title_text);
         mTitleTextView.setText("Test Preparation");
         mActionBar.setCustomView(mCustomView);
         mActionBar.setDisplayShowCustomEnabled(true);
     }
+
 
 
     public void load_excelSheet() {
@@ -153,15 +159,17 @@ public class PrepareYourself extends Fragment {
                 String answer = stringTokenizer.nextToken();
                 String image = stringTokenizer.nextToken();
 
-                if (answer.equals(one)) {
+                if (answer.equals(one)){
                     op1_status = "right";
                     op2_status = "na";
                     op3_status = "na";
-                } else if (answer.equals(two)) {
+                }
+                else if (answer.equals(two)){
                     op1_status = "na";
                     op2_status = "right";
                     op3_status = "na";
-                } else if (answer.equals(three)) {
+                }
+                else if (answer.equals(three)){
                     op1_status = "na";
                     op2_status = "na";
                     op3_status = "right";
@@ -170,6 +178,7 @@ public class PrepareYourself extends Fragment {
                 testResultListModel = new TestResultListModel(ques, one, two, three, op1_status,
                         op2_status, op3_status, image);
                 resultModelsArraylist.add(testResultListModel);
+
 
 
                 complete_String = "";
@@ -197,7 +206,8 @@ public class PrepareYourself extends Fragment {
     }
 
 
-    public void run_excelSheet() {
+
+    public void run_excelSheet(){
 
 
         try {
@@ -216,17 +226,22 @@ public class PrepareYourself extends Fragment {
 
         } catch (Exception e) {
 
-            Toast.makeText(getActivity(), e + "\n" + "error", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), e+"\n"+"error", Toast.LENGTH_SHORT).show();
         }
 
 
     }
 
 
+
+
     @Override
     public void onDetach() {
         super.onDetach();
     }
+
+
+
 
 
 }

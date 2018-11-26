@@ -1,7 +1,6 @@
 package com.kptrafficpolice.trafficapp.fragments;
 
 import android.Manifest;
-import android.app.Fragment;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Criteria;
@@ -9,6 +8,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.app.Fragment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -71,22 +72,22 @@ public class EmergencyFragmentList extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    public static String CATEGORY_NAME = "";
-    public static boolean DistanceORDivision = false;
     RecyclerView recyclerView;
     List<EmergencyHelper> list;
     EmergencyListAdapter emergencyListAdapter;
-    double dblLat, dblLon;
-    SweetAlertDialog pDialog;
-    GPSTracker gpsTracker;
-    Location location;
-    TextView tvNoDataFound;
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
     private String strEmergencyTypeID;
+    double dblLat, dblLon;
+    SweetAlertDialog pDialog;
+    public static String CATEGORY_NAME = "";
+    GPSTracker gpsTracker;
+    Location location;
     private OnFragmentInteractionListener mListener;
     private FirebaseAnalytics mFirebaseAnalytics;
+    TextView tvNoDataFound;
+    public static boolean DistanceORDivision = false;
 
     public EmergencyFragmentList() {
         // Required empty public constructor
@@ -125,7 +126,7 @@ public class EmergencyFragmentList extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.emergency_fragment_list, container, false);
-        tvNoDataFound = view.findViewById(R.id.tv_no_data_found);
+        tvNoDataFound = (TextView) view.findViewById(R.id.tv_no_data_found);
         tvNoDataFound.setVisibility(View.GONE);
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
         Base.initialize(getActivity());
@@ -152,7 +153,7 @@ public class EmergencyFragmentList extends Fragment {
         }
         customActionBar();
         _getLocation();
-        recyclerView = view.findViewById(R.id.recycler_view);
+        recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(mLayoutManager);
         Log.d("zma emergency type", strEmergencyTypeID);
@@ -175,6 +176,7 @@ public class EmergencyFragmentList extends Fragment {
         }
 
         list = new ArrayList<>();
+        Log.d("zma Location out : ", "" + dblLat + " " + dblLon);
         emergencyListAdapter = new EmergencyListAdapter(getActivity(), list);
         recyclerView.setAdapter(emergencyListAdapter);
         return view;
@@ -192,6 +194,21 @@ public class EmergencyFragmentList extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    /**
+     * This interface must be implemented by activities that contain this
+     * fragment to allow an interaction in this fragment to be communicated
+     * to the activity and potentially other fragments contained in that
+     * activity.
+     * <p>
+     * See the Android Training lesson <a href=
+     * "http://developer.android.com/training/basics/fragments/communicating.html"
+     * >Communicating with Other Fragments</a> for more information.
+     */
+    public interface OnFragmentInteractionListener {
+        // TODO: Update argument type and name
+        void onFragmentInteraction(Uri uri);
     }
 
     private void _getLocation() {
@@ -357,32 +374,17 @@ public class EmergencyFragmentList extends Fragment {
 
     }
 
+
     public void customActionBar() {
         android.support.v7.app.ActionBar mActionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         mActionBar.setDisplayShowHomeEnabled(false);
         mActionBar.setDisplayShowTitleEnabled(false);
         LayoutInflater mInflater = LayoutInflater.from(getActivity());
         View mCustomView = mInflater.inflate(R.layout.custom_action_bar, null);
-        TextView mTitleTextView = mCustomView.findViewById(R.id.title_text);
+        TextView mTitleTextView = (TextView) mCustomView.findViewById(R.id.title_text);
         mTitleTextView.setText(CATEGORY_NAME);
         mActionBar.setCustomView(mCustomView);
         mActionBar.setDisplayShowCustomEnabled(true);
 
-    }
-
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
     }
 }

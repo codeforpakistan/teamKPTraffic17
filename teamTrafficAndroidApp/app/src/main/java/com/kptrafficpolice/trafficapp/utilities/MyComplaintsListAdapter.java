@@ -78,7 +78,7 @@ public class MyComplaintsListAdapter extends RecyclerView.Adapter<MyComplaintsLi
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
         final MyComplaintsHelper helper = complaintsHelperList.get(position);
-        holder.tvComplaintsID.setText(helper.getStrComplaintID());
+        holder.tvComplaintsID.setText(helper.getStrComplaintType());
         final String strComplaintStatus = helper.getStrComplaintStatus();
         if (strComplaintStatus.equals("Pending")) {
             holder.tvComplaintStatus.setTextColor(Color.parseColor("#F22613"));
@@ -150,6 +150,7 @@ public class MyComplaintsListAdapter extends RecyclerView.Adapter<MyComplaintsLi
                 args.putString("video",String.valueOf(helper.getStrVideo()));
                 args.putString("lat",helper.getStrLatitude());
                 args.putString("lon",helper.getStrLongitude());
+                args.putString("complaint_id",helper.getStrComplaintID());
                 fragment.setArguments(args);
                 ((AppCompatActivity) context).getFragmentManager().beginTransaction()
                         .replace(R.id.fragment_container, fragment).addToBackStack("tag").commit();

@@ -132,7 +132,7 @@ public class RegistrationFragment extends Fragment {
     }
 
     public void onSubmitButton() {
-        btnSubmit = view.findViewById(R.id.btn_submit);
+        btnSubmit = (Button) view.findViewById(R.id.btn_submit);
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -145,10 +145,10 @@ public class RegistrationFragment extends Fragment {
     }
 
     public void formValidation() {
-        etName = view.findViewById(R.id.et_name);
-        etCNIC = view.findViewById(R.id.et_cnic);
-        etEmail = view.findViewById(R.id.et_email);
-        etPhoneNumber = view.findViewById(R.id.et_phone_number);
+        etName = (EditText) view.findViewById(R.id.et_name);
+        etCNIC = (EditText) view.findViewById(R.id.et_cnic);
+        etEmail = (EditText) view.findViewById(R.id.et_email);
+        etPhoneNumber = (EditText) view.findViewById(R.id.et_phone_number);
 
         strName = etName.getText().toString().trim();
         strEmail = etEmail.getText().toString().trim();
@@ -262,7 +262,7 @@ public class RegistrationFragment extends Fragment {
         mActionBar.setDisplayShowTitleEnabled(false);
         LayoutInflater mInflater = LayoutInflater.from(getActivity());
         View mCustomView = mInflater.inflate(R.layout.custom_action_bar, null);
-        TextView mTitleTextView = mCustomView.findViewById(R.id.title_text);
+        TextView mTitleTextView = (TextView) mCustomView.findViewById(R.id.title_text);
         mTitleTextView.setText("Sign Up");
         mActionBar.setCustomView(mCustomView);
         mActionBar.setDisplayShowCustomEnabled(true);

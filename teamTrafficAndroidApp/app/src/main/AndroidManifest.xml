@@ -56,8 +56,7 @@
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen">
 
         </activity>
-        <activity
-            android:name=".fragments.ETest.ConductTest"
+        <activity android:name=".fragments.ETest.ConductTest"
             android:label="Licence Test"></activity>
         <activity
             android:name=".activities.SplashScreenActivity"
@@ -71,15 +70,17 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".utilities.BackgroundService">
+        <receiver android:name=".utilities.BackgroundService" >
             <intent-filter>
-                <action android:name="processTimerReceiver"></action>
+                <action android:name="processTimerReceiver" >
+                </action>
             </intent-filter>
         </receiver>
 
         <meta-data
             android:name="io.fabric.ApiKey"
-            android:value="f6be19f0dd38c1a4b5d774d9fa906f8b7d108859" />
+        android:value="f6be19f0dd38c1a4b5d774d9fa906f8b7d108859"
+        />
 
     </application>
 
