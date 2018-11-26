@@ -258,8 +258,9 @@ class Admin extends CI_Controller {
         $data['title']      =   'Traffic Police | Complaints';
         $data['heading']    =   'Complaints';
         $data['page_name']  =   'admin/complaints/complaints-list';
-
-        //Json Complete list
+        $data['data']	    =	$this->Admin_model->get_complaints('complaints');
+        //echo '<pre>';print_r($data['data']);
+        //echo 'Dashboard here.';
         $this->load->view('template', $data);
     }
     
@@ -272,6 +273,7 @@ class Admin extends CI_Controller {
         $data['title']      =   'Traffic Police | Complaints';
         $data['heading']    =   'Complaints';
         $data['page_name']  =   'admin/complaints/completed-list';
+        $data['data']	    =	$this->Admin_model->completed_complaints_list('complaints');
         //echo '<pre>';print_r($data['data']);
         //echo 'Dashboard here.';
         $this->load->view('template', $data);
@@ -286,219 +288,30 @@ class Admin extends CI_Controller {
         $data['title']      =   'Traffic Police | Complaints';
         $data['heading']    =   'Complaints';
         $data['page_name']  =   'admin/complaints/inprogress-list';
+        $data['data']	    =	$this->Admin_model->inprogress_complaints_list('complaints');
+        //echo '<pre>';print_r($data['data']);
+        //echo 'Dashboard here.';
         $this->load->view('template', $data);
     }
-
-    function complaintList()
-    {
-        $allComplaints      =   $this->Admin_model->get_complaints('complaints');
-
-        // Making a json from the list
-        $i = 1;
-        foreach ($allComplaints as $each) {
-            // Status 
-            $Status = '';
-            if($each->status == 'Completed'):
-                $Status .= '<span class="label label-success">Completed</span> ';
-            elseif($each->status == 'Pending'):
-                $Status .= '<span class="label label-danger">Pending</span>';
-            elseif($each->status == 'In Progress'):
-                $Status .= '<span class="label label-warning">In Progress</span>';
-            endif;
-
-            // Action Buttons
-            $Button = '<div class="btn-group"> 
-                <a onclick="viewDetails('.$each->complaint_id.')" class="btn btn-success btn-xs"><i class="fa fa-eye" data-toggle="modal" data-target="#exampleModalLong"></i></a>
-                <a href="admin/edit_complaint/'.$each->complaint_id.'" class="btn btn-primary btn-xs"><i class="fa fa-pencil-square-o"></i></a>';
-            if($each->status == 'Completed'){ 
-                $Button .= '<a onclick="return confirm("Are you sure you want to delete this?"");" href="admin/delete_complaint/'.$each->complaint_id.'" class="btn btn-danger"><i class="fa fa-trash-o"></i></a>';
-            } else {
-                $Button .= '<a onclick="return confirm("Are you sure you want to delete this?");" href="admin/delete_complaint/'.$each->complaint_id.'" class="btn btn-danger disabled-link btn-xs"><i class="fa fa-trash-o"></i></a> </div>';
-            } 
- 
-            $fetchAllUsers[] = array(
-                '0'         => $i,
-                '1'         => substr($each->description,0,80).'.....',
-                '5'         => date("d M Y",strtotime($each->dated)),
-                '3'         => $each->name,
-                '4'         => $each->phone_no,
-                '6'         => $each->complaint_type,
-                '8'         => $Status,
-                '7'         => $Button
-            );
-            $i++;
-        }
-        $output = array(
-             "data" => $fetchAllUsers
-        );
-        echo json_encode($output);
-    }
-
-    function inProgressComplaints()
-    {
-        $inProgessComplaints      =   $this->Admin_model->inprogress_complaints_list('complaints');
-
-        // Making a json from the list
-        $i = 1;
-        foreach ($inProgessComplaints as $each) {
-            // Status 
-            $Status = '';
-            if($each->status == 'Completed'):
-                $Status .= '<span class="label label-success">Completed</span> ';
-            elseif($each->status == 'Pending'):
-                $Status .= '<span class="label label-danger">Pending</span>';
-            elseif($each->status == 'In Progress'):
-                $Status .= '<span class="label label-warning">In Progress</span>';
-            endif;
-
-            // Action Buttons
-            $Button = '<div class="btn-group"> 
-                <a onclick="viewDetails('.$each->complaint_id.')" class="btn btn-success btn-xs"><i class="fa fa-eye" data-toggle="modal" data-target="#exampleModalLong"></i></a>
-                <a href="admin/edit_complaint/'.$each->complaint_id.'" class="btn btn-primary btn-xs"><i class="fa fa-pencil-square-o"></i></a>';
-            if($each->status == 'Completed'){ 
-                $Button .= '<a onclick="return confirm("Are you sure you want to delete this?"");" href="admin/delete_complaint/'.$each->complaint_id.'" class="btn btn-danger"><i class="fa fa-trash-o"></i></a>';
-            } else {
-                $Button .= '<a onclick="return confirm("Are you sure you want to delete this?");" href="admin/delete_complaint/'.$each->complaint_id.'" class="btn btn-danger disabled-link btn-xs"><i class="fa fa-trash-o"></i></a> </div>';
-            } 
- 
-            $fetchAllUsers[] = array(
-                '0'         => $i,
-                '1'         => substr($each->description,0,80).'.....',
-                '5'         => date("d M Y",strtotime($each->dated)),
-                '3'         => $each->name,
-                '4'         => $each->phone_no,
-                '6'         => $each->complaint_type,
-                '8'         => $Status,
-                '7'         => $Button
-            );
-            $i++;
-        }
-        $output = array(
-             "data" => $fetchAllUsers
-        );
-        echo json_encode($output);
-    }
     
-
-    function completedList()
-    {
-        $completedList      =   $this->Admin_model->completed_complaints_list('complaints');
-
-        // Making a json from the list
-        $i = 1;
-        foreach ($completedList as $each) {
-            // Status 
-            $Status = '';
-            if($each->status == 'Completed'):
-                $Status .= '<span class="label label-success">Completed</span> ';
-            elseif($each->status == 'Pending'):
-                $Status .= '<span class="label label-danger">Pending</span>';
-            elseif($each->status == 'In Progress'):
-                $Status .= '<span class="label label-warning">In Progress</span>';
-            endif;
-
-            // Action Buttons
-            $Button = '<div class="btn-group"> 
-                <a onclick="viewDetails('.$each->complaint_id.')" class="btn btn-success btn-xs"><i class="fa fa-eye" data-toggle="modal" data-target="#exampleModalLong"></i></a>
-                <a href="admin/edit_complaint/'.$each->complaint_id.'" class="btn btn-primary btn-xs"><i class="fa fa-pencil-square-o"></i></a>';
-            if($each->status == 'Completed'){ 
-                $Button .= '<a onclick="return confirm("Are you sure you want to delete this?"");" href="admin/delete_complaint/'.$each->complaint_id.'" class="btn btn-danger"><i class="fa fa-trash-o"></i></a>';
-            } else {
-                $Button .= '<a onclick="return confirm("Are you sure you want to delete this?");" href="admin/delete_complaint/'.$each->complaint_id.'" class="btn btn-danger disabled-link btn-xs"><i class="fa fa-trash-o"></i></a> </div>';
-            } 
- 
-            $fetchAllUsers[] = array(
-                '0'         => $i,
-                '1'         => substr($each->description,0,80).'.....',
-                '5'         => date("d M Y",strtotime($each->dated)),
-                '3'         => $each->name,
-                '4'         => $each->phone_no,
-                '6'         => $each->complaint_type,
-                '8'         => $Status,
-                '7'         => $Button
-            );
-            $i++;
-        }
-        $output = array(
-             "data" => $fetchAllUsers
-        );
-        echo json_encode($output);
-    }
-    
-    function pendingComplaints()
-    {
-        $pendingComplaints   =   $this->Admin_model->pending_complaints_list('complaints');
-        // Making a json from the list
-        $i = 1;
-        foreach ($pendingComplaints as $each) {
-            // Status 
-            $Status = '';
-            if($each->status == 'Completed'):
-                $Status .= '<span class="label label-success">Completed</span> ';
-            elseif($each->status == 'Pending'):
-                $Status .= '<span class="label label-danger">Pending</span>';
-            elseif($each->status == 'In Progress'):
-                $Status .= '<span class="label label-warning">In Progress</span>';
-            endif;
-
-            // Action Buttons
-            $Button = '<div class="btn-group"> 
-                <a onclick="viewDetails('.$each->complaint_id.')" class="btn btn-success btn-xs"><i class="fa fa-eye" data-toggle="modal" data-target="#exampleModalLong"></i></a>
-                <a href="admin/edit_complaint/'.$each->complaint_id.'" class="btn btn-primary btn-xs"><i class="fa fa-pencil-square-o"></i></a>';
-            if($each->status == 'Completed'){ 
-                $Button .= '<a onclick="return confirm("Are you sure you want to delete this?"");" href="admin/delete_complaint/'.$each->complaint_id.'" class="btn btn-danger"><i class="fa fa-trash-o"></i></a>';
-            } else {
-                $Button .= '<a onclick="return confirm("Are you sure you want to delete this?");" href="admin/delete_complaint/'.$each->complaint_id.'" class="btn btn-danger disabled-link btn-xs"><i class="fa fa-trash-o"></i></a> </div>';
-            } 
- 
-            $fetchAllUsers[] = array(
-                '0'         => $i,
-                '1'         => substr($each->description,0,80).'.....',
-                '5'         => date("d M Y",strtotime($each->dated)),
-                '3'         => $each->name,
-                '4'         => $each->phone_no,
-                '6'         => $each->complaint_type,
-                '8'         => $Status,
-                '7'         => $Button
-            );
-            $i++;
-        }
-        $output = array(
-             "data" => $fetchAllUsers
-        );
-        echo json_encode($output);
-    }
-    
-    // Get Single Complete Complaint
-    function getComplaintDetail()
-    {
-        $complaintID = $this->input->post('id');
-        $this->db->where('complaint_id',$complaintID);
-        $this->db
-            ->select("complaint_id, latitude, longitude, description, image, video,dated, complaint_type, status, signup.name, signup.phone_no")
-            ->from('complaints')
-            ->join('signup', 'signup.signup_id = complaints.signup_id', 'INNER ')
-            ->join('complaint_types','complaint_types.complaint_type_id = complaints.complaint_type_id', 'inner')
-            ->join('complaints_status','complaints_status.complaints_status_id = complaints.complaints_status_id', 'inner');
-        $select_complaints  =   $this->db->get();
-        $data['complaint'] = $select_complaints->result();
-        $this->load->view('admin/complaints/singleComplaint',$data);
-    }
-
     public function pending_complaints()
     {
+        // Prevent from Direct Access
         if (!isset($_SESSION['admin_id'])) {
             redirect('admin/login');
         }
         $data['title']      =   'Traffic Police | Complaints';
         $data['heading']    =   'Complaints';
         $data['page_name']  =   'admin/complaints/pending-list';
-        
+        $data['data']	    =	$this->Admin_model->pending_complaints_list('complaints');
+        //echo '<pre>';print_r($data['data']);
+        //echo 'Dashboard here.';
         $this->load->view('template', $data);
     }
     public function delete_complaint($id)
     {
         $this->Admin_model->delete_complaint('complaints',$id);
+		
 		// Setting message for front end
 		$this->session->set_flashdata('msg','Complaint has been Deleted Successfully!!');
 		redirect('admin/get_complaints');
