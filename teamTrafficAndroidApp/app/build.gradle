@@ -41,8 +41,8 @@ android {
         applicationId "com.kptrafficpolice.trafficapp"
         minSdkVersion 16
         targetSdkVersion 27
-        versionCode 29
-        versionName "driving test module added"
+        versionCode 30
+        versionName "driving test module added and feedback from department"
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -82,9 +82,9 @@ dependencies {
     compile files('libs/httpmime-4.3.6.jar')
 
 
+    compile 'com.tt:whorlviewlibrary:1.0.3'
     compile 'com.crashlytics.sdk.android:crashlytics:2.9.5'
     compile 'com.github.MdFarhanRaja:SearchableSpinner:1.7'
-    compile 'com.iceteck.silicompressorr:silicompressor:2.0'
     compile 'com.iceteck.silicompressorr:silicompressor:2.0'
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support:support-v4:25.3.1'
@@ -120,7 +120,7 @@ dependencies {
     compile 'com.github.hassanusman:CircularDialogs:1.2'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.0.0-RC0'
     compile('com.crashlytics.sdk.android:crashlytics-ndk:2.0.5@aar') {
-        transitive = true
+        transitive = true;
     }
 }
 apply plugin: 'com.google.gms.google-services'

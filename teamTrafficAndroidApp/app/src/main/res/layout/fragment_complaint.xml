@@ -60,11 +60,11 @@
                     android:orientation="vertical">
                     <com.jaredrummler.materialspinner.MaterialSpinner
                         android:id="@+id/spinner"
+                        android:hint="select me"
+                        android:textColor="#a4a4a4"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="start"
-                        android:hint="select me"
-                        android:textColor="#a4a4a4" />
+                        android:gravity="start" />
 
                     <View
                         android:layout_width="match_parent"
@@ -72,23 +72,23 @@
                         android:background="#EEEEEE" />
 
                     <!--<com.jaredrummler.materialspinner.MaterialSpinner-->
-                    <!--android:id="@+id/spinner2"-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--/>-->
+                        <!--android:id="@+id/spinner2"-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--/>-->
 
                     <!--<View-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="1.7dp"-->
-                    <!--android:background="#EEEEEE" />-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="1.7dp"-->
+                        <!--android:background="#EEEEEE" />-->
 
 
                     <LinearLayout
+                        android:layout_marginTop="8dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
 
 
                         <TextView
@@ -107,6 +107,7 @@
                             android:textSize="13dp" />
 
 
+
                     </LinearLayout>
 
 
@@ -114,6 +115,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="1.7dp"
                         android:background="#EEEEEE" />
+
 
 
                     <EditText

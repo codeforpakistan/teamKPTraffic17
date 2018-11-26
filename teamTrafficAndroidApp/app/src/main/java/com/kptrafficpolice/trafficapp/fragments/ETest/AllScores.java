@@ -28,10 +28,10 @@ public class AllScores extends Fragment {
 
     ListView listView;
     DatabaseHelper databaseHelper;
+    private List<ScoresModel> scoresModelList;
     ScoresAdapter scores_adapter;
     FirebaseAnalytics mFirebaseAnalytics;
     String user_id;
-    private List<ScoresModel> scoresModelList;
 
     public AllScores() {
         // Required empty public constructor
@@ -46,7 +46,7 @@ public class AllScores extends Fragment {
 
 
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("com.ghosttech.kptraffic", Context.MODE_PRIVATE);
-        user_id = sharedPreferences.getString("user_id", "0");
+        user_id          = sharedPreferences.getString("user_id", "0");
 
 
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
@@ -56,7 +56,7 @@ public class AllScores extends Fragment {
         mFirebaseAnalytics.logEvent("E_Test_Scores", bundle);
 
 
-        listView = view.findViewById(R.id.list);
+        listView = (ListView) view.findViewById(R.id.list);
 
         databaseHelper = new DatabaseHelper(getActivity());
         scoresModelList = new ArrayList<>();
@@ -89,10 +89,17 @@ public class AllScores extends Fragment {
     }
 
 
+
+
+
+
+
     @Override
     public void onDetach() {
         super.onDetach();
     }
+
+
 
 
 }

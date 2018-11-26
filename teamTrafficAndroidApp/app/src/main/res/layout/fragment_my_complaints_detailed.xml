@@ -123,6 +123,183 @@
             </LinearLayout>
 
 
+            <TextView
+                android:layout_marginTop="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:background="#f1202020"
+                android:padding="12dip"
+                android:text="Responses From Department"
+                android:textColor="#ffffffff"
+                android:textStyle="bold" />
+
+
+            <LinearLayout
+                android:id="@+id/feedbackform1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="@drawable/layout_border_gray_white_bg"
+                android:orientation="vertical">
+
+
+                <TextView
+                    android:id="@+id/response_no1"
+                    android:layout_marginTop="5dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:background="#e213988a"
+                    android:padding="12dip"
+                    android:text="Responses No. 1"
+                    android:textColor="#ffffffff"
+                    android:textStyle="bold" />
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="Status"
+                    android:textColor="#1E824C"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/status1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="status" />
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="Response"
+                    android:textColor="#1E824C"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/response1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="No respone." />
+            </LinearLayout>
+
+
+
+            <LinearLayout
+                android:id="@+id/feedbackform2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="@drawable/layout_border_gray_white_bg"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/response_no2"
+                    android:layout_marginTop="5dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:background="#e213988a"
+                    android:padding="12dip"
+                    android:text="Responses No. 2"
+                    android:textColor="#ffffffff"
+                    android:textStyle="bold" />
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="Status"
+                    android:textColor="#1E824C"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/status2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="status" />
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="Response"
+                    android:textColor="#1E824C"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/response2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="No respone." />
+            </LinearLayout>
+
+
+
+            <LinearLayout
+                android:id="@+id/feedbackform3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="@drawable/layout_border_gray_white_bg"
+                android:orientation="vertical">
+
+
+                <TextView
+                    android:id="@+id/response_no3"
+                    android:layout_marginTop="5dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:background="#e213988a"
+                    android:padding="12dip"
+                    android:text="Responses No. 3"
+                    android:textColor="#ffffffff"
+                    android:textStyle="bold" />
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="Status"
+                    android:textColor="#1E824C"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/status3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="status" />
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="Response"
+                    android:textColor="#1E824C"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/response3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="No respone." />
+            </LinearLayout>
+
         </TableLayout>
     </ScrollView>
 </LinearLayout>

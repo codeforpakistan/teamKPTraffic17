@@ -49,7 +49,7 @@ import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.kptrafficpolice.trafficapp.R;
 import com.kptrafficpolice.trafficapp.activities.MainDrawerActivity;
-import com.kptrafficpolice.trafficapp.fragments.ETest.Test_MainFragment;
+import com.kptrafficpolice.trafficapp.fragments.ETest.TestMainFragment;
 import com.kptrafficpolice.trafficapp.utilities.CheckNetwork;
 import com.kptrafficpolice.trafficapp.utilities.Configuration;
 
@@ -130,7 +130,7 @@ public class MainFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Fabric.with(getContext(), new Crashlytics());
+        Fabric.with(getActivity(), new Crashlytics());
 
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
@@ -250,9 +250,9 @@ public class MainFragment extends Fragment {
         bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "Main Module Screen");
         mFirebaseAnalytics.logEvent("Main_Screen", bundle);
 
-//        Fabric.with(getContext(), new Crashlytics());
+        Fabric.with(getActivity(), new Crashlytics());
 
-        tvUserName = view.findViewById(R.id.tv_user_name);
+        tvUserName = (TextView) view.findViewById(R.id.tv_user_name);
         pDialog = new SweetAlertDialog(getActivity(), SweetAlertDialog.PROGRESS_TYPE);
         pDialog.getProgressHelper().setBarColor(Color.parseColor("#179e99"));
         pDialog.setCancelable(false);
@@ -290,7 +290,6 @@ public class MainFragment extends Fragment {
                     .show();
         }
         customActionBar();
-        //((AppCompatActivity) getActivity()).getSupportActionBar().hide();
 
 
         return view;
@@ -311,14 +310,14 @@ public class MainFragment extends Fragment {
     }
 
     public void onButtonClick() {
-        btnComplaintSystem = view.findViewById(R.id.linear_layout_cs);
-        btnChallanTracking = view.findViewById(R.id.linear_layout_ct);
-        btnEmergencyContacts = view.findViewById(R.id.linear_layout_ec);
-        btnTest = view.findViewById(R.id.linear_layout_test);
+        btnComplaintSystem = (LinearLayout) view.findViewById(R.id.linear_layout_cs);
+        btnChallanTracking = (LinearLayout) view.findViewById(R.id.linear_layout_ct);
+        btnEmergencyContacts = (LinearLayout) view.findViewById(R.id.linear_layout_ec);
+        btnTest = (LinearLayout) view.findViewById(R.id.linear_layout_test);
         btnEmergencyContacts.setEnabled(false);
-        btnLicenseVerification = view.findViewById(R.id.linear_layout_lv);
-        btnLiveTrafficUpdates = view.findViewById(R.id.linear_layout_lu);
-        btnTrafficEducation = view.findViewById(R.id.linear_layout_te);
+        btnLicenseVerification = (LinearLayout) view.findViewById(R.id.linear_layout_lv);
+        btnLiveTrafficUpdates = (LinearLayout) view.findViewById(R.id.linear_layout_lu);
+        btnTrafficEducation = (LinearLayout) view.findViewById(R.id.linear_layout_te);
         btnComplaintSystem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -346,7 +345,7 @@ public class MainFragment extends Fragment {
         btnLiveTrafficUpdates.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                fragment = new LiveUpdateFragment();
+                fragment = new LiveUpdateResultFragment();
                 getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).
                         addToBackStack("tag").commit();
             }
@@ -354,7 +353,7 @@ public class MainFragment extends Fragment {
         btnTest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                fragment = new Test_MainFragment();
+                fragment = new TestMainFragment();
                 getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).
                         addToBackStack("test").commit();
             }
@@ -434,7 +433,7 @@ public class MainFragment extends Fragment {
         mActionBar.setDisplayShowTitleEnabled(false);
         LayoutInflater mInflater = LayoutInflater.from(getActivity());
         View mCustomView = mInflater.inflate(R.layout.custom_action_bar, null);
-        mTitleTextView = mCustomView.findViewById(R.id.title_text);
+        mTitleTextView = (TextView) mCustomView.findViewById(R.id.title_text);
         mTitleTextView.setText("Our Services");
         mActionBar.setCustomView(mCustomView);
         mActionBar.setDisplayShowCustomEnabled(true);
@@ -445,9 +444,9 @@ public class MainFragment extends Fragment {
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.custom_input_dialog);
         dialog.setCancelable(true);
-        etLicNumber = dialog.findViewById(R.id.et_verify_license);
-        btnShowRecord = dialog.findViewById(R.id.btn_search_license_record);
-        ImageView ivInputIcon = dialog.findViewById(R.id.iv_input_dialog);
+        etLicNumber = (EditText) dialog.findViewById(R.id.et_verify_license);
+        btnShowRecord = (Button) dialog.findViewById(R.id.btn_search_license_record);
+        ImageView ivInputIcon = (ImageView) dialog.findViewById(R.id.iv_input_dialog);
         ivInputIcon.setImageResource(R.drawable.search_license_icon);
         dialog.show();
         dialog.getWindow().getDecorView().setBackgroundResource(android.R.color.transparent);
@@ -459,11 +458,11 @@ public class MainFragment extends Fragment {
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.custom_input_dialog);
         dialog.setCancelable(true);
-        ImageView ivInputIcon = dialog.findViewById(R.id.iv_input_dialog);
+        ImageView ivInputIcon = (ImageView) dialog.findViewById(R.id.iv_input_dialog);
         ivInputIcon.setImageResource(R.drawable.search_challam_icon);
-        etLicNumber = dialog.findViewById(R.id.et_verify_license);
+        etLicNumber = (EditText) dialog.findViewById(R.id.et_verify_license);
         etLicNumber.setHint("Enter Challan Number");
-        btnShowRecord = dialog.findViewById(R.id.btn_search_license_record);
+        btnShowRecord = (Button) dialog.findViewById(R.id.btn_search_license_record);
         dialog.show();
         dialog.getWindow().getDecorView().setBackgroundResource(android.R.color.transparent);
         inputValidationChallan();
@@ -616,7 +615,7 @@ public class MainFragment extends Fragment {
             public void onErrorResponse(VolleyError error) {
                 pDialog.dismiss();
                 new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
-                        .setTitleText("CNIC not found.")
+                        .setTitleText("Server Not Responding.")
                         .setContentText("")
                         .show();
             }

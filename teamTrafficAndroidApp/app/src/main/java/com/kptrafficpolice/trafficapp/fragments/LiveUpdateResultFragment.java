@@ -1,10 +1,16 @@
 package com.kptrafficpolice.trafficapp.fragments;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.app.Fragment;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
@@ -13,22 +19,34 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.kptrafficpolice.trafficapp.R;
-import com.kptrafficpolice.trafficapp.utilities.LiveUpdateMapCoordinates;
+import com.kptrafficpolice.trafficapp.utilities.GPSTracker;
+import com.thefinestartist.Base;
+import com.tt.whorlviewlibrary.WhorlView;
 
 import java.util.ArrayList;
 
-import cn.pedant.SweetAlert.SweetAlertDialog;
+import io.nlopez.smartlocation.OnLocationUpdatedListener;
+import io.nlopez.smartlocation.SmartLocation;
+
+import static android.content.Context.LOCATION_SERVICE;
+import static com.thefinestartist.utils.service.ServiceUtil.getSystemService;
 
 //raabta
 //rabta
@@ -42,11 +60,16 @@ public class LiveUpdateResultFragment extends Fragment {
     Fragment fragment;
     Polyline polyline;
     View view;
-    TextView tvRoadStatus, tvUpdateTime;
+    TextView tvRoadStatus, tvUpdateTime, tv_getting_location;
     ImageView ivHomeButton, ivSettingButton, ivWebsiteButton;
     CardView cardView;
     boolean timeFlag = false;
     private GoogleMap googleMap;
+    double dblLat, dblLon;
+    RelativeLayout fade_layout;
+    WhorlView whorlView;
+    Handler handler;
+
 
     public LiveUpdateResultFragment() {
     }
@@ -66,13 +89,20 @@ public class LiveUpdateResultFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_live_update_result, container, false);
+        Base.initialize(getActivity());
 
-        mMapView = view.findViewById(R.id.mapView);
-        cardView = view.findViewById(R.id.card_view_live_update);
+        handler = new Handler();
+
+        fade_layout = (RelativeLayout) view.findViewById(R.id.fade_layout);
+        tv_getting_location  = (TextView) view.findViewById(R.id.textView3);
+        whorlView = (WhorlView) view.findViewById(R.id.whorl);
+        whorlView.start();
+        getLocation();
+
+        mMapView = (MapView) view.findViewById(R.id.mapView);
+        cardView = (CardView) view.findViewById(R.id.card_view_live_update);
         mMapView.onCreate(savedInstanceState);
-        args = getArguments();
-        strStatus = args.getString("status");
-        strRoadName = args.getString("road_name");
+
         customActionBar();
         Log.d("zma road and status", strRoadName + "\n" + strStatus);
         mMapView.onResume(); // needed to get the map to display immediately
@@ -103,7 +133,7 @@ public class LiveUpdateResultFragment extends Fragment {
                 googleMap.setMyLocationEnabled(true);
                 googleMap.setIndoorEnabled(true);
                 googleMap.setTrafficEnabled(true);
-                pickMapView();
+
             }
         });
 
@@ -111,68 +141,17 @@ public class LiveUpdateResultFragment extends Fragment {
     }
 
     public void pickMapView() {
-        googleMap.clear();
-        switch (strRoadName) {
-            case "gt_road":
-                setPolylineOptions(LiveUpdateMapCoordinates.getArrayGtRoad());
-                break;
-            case "khyber_road":
-                setPolylineOptions(LiveUpdateMapCoordinates.getArrayKhyberRoad());
-                break;
-            case "charsadda_road":
-                setPolylineOptions(LiveUpdateMapCoordinates.getArrayCharsaddaRoad());
-                break;
-            case "jail_road":
-                setPolylineOptions(LiveUpdateMapCoordinates.getArrayJailRoad());
-                break;
-            case "university_road":
-                setPolylineOptions(LiveUpdateMapCoordinates.getArrayUniversityRoad());
-                break;
-            case "dalazak_road":
-                setPolylineOptions(LiveUpdateMapCoordinates.getArrayDalazakRoad());
-                break;
-            case "saddar_road":
-                setPolylineOptions(LiveUpdateMapCoordinates.getArraySaddarRoad());
-                break;
-            case "baghenaran_road":
-                setPolylineOptions(LiveUpdateMapCoordinates.getArrayBaghENaranRoad());
-                break;
-            case "warsak_road":
-                setPolylineOptions(LiveUpdateMapCoordinates.getArrayWarsakRoad());
-                break;
-            case "kohat_road":
-                setPolylineOptions(LiveUpdateMapCoordinates.getArrayKohatRoad());
-                break;
-        }
 
-    }
+        //moving camera to marker
+        CameraPosition cameraPosition = new CameraPosition.Builder().target(
+                new LatLng(dblLat, dblLon)).zoom(12).build();
+        googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
-    private void setPolylineOptions(ArrayList<LatLng> roadCoordinates) {
-        try {
-            PolylineOptions options = new PolylineOptions();
-            options.addAll(roadCoordinates);
-            options.geodesic(true);
-            options.width(10);
-            if (strStatus.equals("Clear")) {
-                cardView.setBackgroundResource(R.drawable.border_green_clear_live_status);
-                options.color(Color.parseColor("#019875"));
-            } else if (strStatus.equals("Busy")) {
-                options.color(Color.RED);
-                cardView.setBackgroundResource(R.drawable.border_busy_red_live_status);
-            } else if (strStatus.equals("Congested")) {
-                options.color(Color.parseColor("#22A7F0"));
-                cardView.setBackgroundResource(R.drawable.border_congested_blue_live_status);
-            }
-            googleMap.addPolyline(options);
-            setText();
-            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(roadCoordinates.get(0), 12));
-        } catch (Exception e) {
-            new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
-                    .setTitleText("Oops...")
-                    .setContentText("No path available")
-                    .show();
-            e.printStackTrace();
-        }
+        final LatLng latLng = new LatLng(dblLat, dblLon);
+        Marker marker = googleMap.addMarker(new MarkerOptions()
+                .position(latLng)
+                .title("Your Location"));
+
     }
 
 
@@ -182,19 +161,112 @@ public class LiveUpdateResultFragment extends Fragment {
         mActionBar.setDisplayShowTitleEnabled(false);
         LayoutInflater mInflater = LayoutInflater.from(getActivity());
         View mCustomView = mInflater.inflate(R.layout.custom_action_bar, null);
-        TextView mTitleTextView = mCustomView.findViewById(R.id.title_text);
-        mTitleTextView.setText(args.getString("clicked_road_name") + " Status");
+        TextView mTitleTextView = (TextView) mCustomView.findViewById(R.id.title_text);
+        mTitleTextView.setText("Traffic Status");
         mActionBar.setCustomView(mCustomView);
         mActionBar.setDisplayShowCustomEnabled(true);
 
     }
 
     public void setText() {
-        tvRoadStatus = view.findViewById(R.id.tv_road_status);
-        tvUpdateTime = view.findViewById(R.id.tv_status_time);
+        tvRoadStatus = (TextView) view.findViewById(R.id.tv_road_status);
+        tvUpdateTime = (TextView) view.findViewById(R.id.tv_status_time);
         Bundle args = new Bundle(getArguments());
         tvUpdateTime.setText(String.valueOf(args.get("response_time")));
         tvRoadStatus.setText(String.valueOf(args.get("status")));
     }
 
+
+
+    //show dialog if gps is off
+    private void buildAlertMessageNoGps() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.AlertDialogTheme);
+        builder.setMessage("Turn On your Location")
+                .setCancelable(true)
+                .setPositiveButton("Turn On", new DialogInterface.OnClickListener() {
+                    public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                    }
+                });
+
+        builder.create();
+        builder.show();
+    }
+
+    public void getLocation() {
+
+        SmartLocation.with(getActivity()).location()
+                .start(new OnLocationUpdatedListener() {
+
+                    @Override
+                    public void onLocationUpdated(Location location) {
+                        dblLat = location.getLatitude();
+                        dblLon = location.getLongitude();
+                    }
+                });
+        GPSTracker gpsTracker = new GPSTracker(getActivity());
+        dblLat = gpsTracker.getLatitude();
+        dblLon = gpsTracker.getLongitude();
+
+        Log.e("zma compl Location : ", "" + dblLat + " " + dblLon);
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+
+        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            Log.e("gps", "enabled");
+
+            getLocation();
+
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+
+                    SmartLocation.with(getActivity()).location()
+                            .start(new OnLocationUpdatedListener() {
+
+                                @Override
+                                public void onLocationUpdated(Location location) {
+                                    dblLat = location.getLatitude();
+                                    dblLon = location.getLongitude();
+                                }
+                            });
+                    GPSTracker gpsTracker = new GPSTracker(getActivity());
+                    dblLat = gpsTracker.getLatitude();
+                    dblLon = gpsTracker.getLongitude();
+
+                    pickMapView();
+                    Log.e("onResume", dblLat + "\t" + dblLon);
+
+                    if (dblLat == 0){
+                        getLocation();
+                    }
+                    else {
+                        fade_layout.setVisibility(View.INVISIBLE);
+                        whorlView.stop();
+                        tv_getting_location.setVisibility(View.INVISIBLE);
+                        whorlView.setVisibility(View.INVISIBLE);
+                    }
+
+                }
+            }, 4000);
+
+        } else {
+            Log.e("gps", "not enabled");
+            buildAlertMessageNoGps();
+        }
+
+    }
+
+
+    @Override
+    public void onDestroy() {
+        //remove pending handler
+        handler.removeCallbacksAndMessages(null);
+        super.onDestroy();
+    }
 }

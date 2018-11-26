@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+
 import com.kptrafficpolice.trafficapp.R;
 
 import java.util.List;
@@ -17,10 +18,10 @@ import java.util.List;
 
 public class ScoresAdapter extends ArrayAdapter<ScoresModel> {
 
-    ScoresModel scoresModel;
     //storing all the modelList in the list
     private List<ScoresModel> modelList;
     private Context context;
+    ScoresModel scoresModel;
 
     public ScoresAdapter(Context context, int resource, List<ScoresModel> modelList) {
         super(context, resource, modelList);
@@ -41,8 +42,8 @@ public class ScoresAdapter extends ArrayAdapter<ScoresModel> {
 
         //getting listview itmes
         View listViewItem = inflater.inflate(R.layout.scores_item, null, true);
-        TextView score = listViewItem.findViewById(R.id.score);
-        TextView date = listViewItem.findViewById(R.id.date);
+        TextView score = (TextView) listViewItem.findViewById(R.id.score);
+        TextView date = (TextView) listViewItem.findViewById(R.id.date);
 
         //getting the current scoresModel
         scoresModel = modelList.get(position);

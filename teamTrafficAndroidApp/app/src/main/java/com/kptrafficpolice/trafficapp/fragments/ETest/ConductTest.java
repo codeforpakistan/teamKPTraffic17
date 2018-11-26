@@ -16,9 +16,9 @@ import android.widget.TextView;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.kptrafficpolice.trafficapp.R;
+import com.kptrafficpolice.trafficapp.fragments.ETest.Database.TestPreviewCustomAdapter;
 import com.kptrafficpolice.trafficapp.fragments.ETest.Database.DatabaseHelper;
 import com.kptrafficpolice.trafficapp.fragments.ETest.Database.ScoresModel;
-import com.kptrafficpolice.trafficapp.fragments.ETest.Database.TestPreviewCustomAdapter;
 
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
@@ -39,28 +39,32 @@ import jxl.Workbook;
 
 public class ConductTest extends AppCompatActivity {
 
-    public ArrayList<TestResultListModel> listModelArrayList = new ArrayList<TestResultListModel>();
     TextView tv_qustion, tv_option1, tv_option2, tv_option3;
+
     Sheet s;
     int row, progress, column, j = 1, right = 0, wrong = 0;
     String complete_String = "", status_op1, status_op2, status_op3, answer, questions_group,
             ques_group_name, formattedDate, op1_clicked = "", op2_clicked = "", op3_clicked = "",
             image, questions_group1, questions_group2;
+    public ArrayList<TestResultListModel> listModelArrayList = new ArrayList<TestResultListModel>();
     TestResultListModel testResultListModel;
     DatabaseHelper db;
+    private List<ScoresModel> modelList;
     ImageView imageView;
     TextView tv_percentage, tv_total_score;
     LinearLayout card_layout;
     int question_no = 1;
+
     Date date;
     SimpleDateFormat dateFormat;
+
     ListView listView;
     TestPreviewCustomAdapter testPreviewCustomAdapter;
     LinearLayout linearLayout;
     ProgressBar customProgress;
-    String category, user_id;
+    String category,user_id;
     FirebaseAnalytics mFirebaseAnalytics;
-    private List<ScoresModel> modelList;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,8 +80,8 @@ public class ConductTest extends AppCompatActivity {
 
 
         SharedPreferences sharedPreferences = this.getSharedPreferences("com.ghosttech.kptraffic", Context.MODE_PRIVATE);
-        questions_group = sharedPreferences.getString("group", "1");
-        user_id = sharedPreferences.getString("user_id", "0");
+        questions_group  = sharedPreferences.getString("group", "1");
+        user_id          = sharedPreferences.getString("user_id", "0");
         questions_group1 = sharedPreferences.getString("images_questions_group", "1");
         questions_group2 = sharedPreferences.getString("text_questions_group", "1");
 
@@ -431,11 +435,11 @@ public class ConductTest extends AppCompatActivity {
                     })
                     .setCancelText("No")
                     .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                        @Override
-                        public void onClick(SweetAlertDialog sweetAlertDialog) {
+                @Override
+                public void onClick(SweetAlertDialog sweetAlertDialog) {
                             sweetAlertDialog.dismissWithAnimation();
-                        }
-                    }).show();
+                }
+            }).show();
 
         } else
             super.onBackPressed();

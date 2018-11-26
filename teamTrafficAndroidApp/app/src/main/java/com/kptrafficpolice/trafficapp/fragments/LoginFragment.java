@@ -141,7 +141,7 @@ public class LoginFragment extends Fragment {
         sharedPreferences = getActivity().getSharedPreferences("com.ghosttech.kptraffic", 0);
         editor = sharedPreferences.edit();
         customActionBar();
-        tvNewUser = view.findViewById(R.id.tv_new_user_registere_here);
+        tvNewUser = (TextView) view.findViewById(R.id.tv_new_user_registere_here);
         SpannableString contentRegister = new SpannableString("New user? Register Here");
         contentRegister.setSpan(new UnderlineSpan(), 0, contentRegister.length(), 0);
         tvNewUser.setText(contentRegister);
@@ -159,7 +159,7 @@ public class LoginFragment extends Fragment {
             }
         });
         onButtonClick();
-        ScrollView scrollView = view.findViewById(R.id.sv_login);
+        ScrollView scrollView = (ScrollView) view.findViewById(R.id.sv_login);
         scrollView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -223,7 +223,7 @@ public class LoginFragment extends Fragment {
     }
 
     public void onButtonClick() {
-        btnSubmit = view.findViewById(R.id.btn_submit);
+        btnSubmit = (Button) view.findViewById(R.id.btn_submit);
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -233,7 +233,7 @@ public class LoginFragment extends Fragment {
     }
 
     public void formValidation() {
-        etCNIC = view.findViewById(R.id.et_cnic_login);
+        etCNIC = (EditText) view.findViewById(R.id.et_cnic_login);
         strCNIC = etCNIC.getText().toString();
         Animation shake = AnimationUtils.loadAnimation(getActivity(), R.anim.shake);
         if (strCNIC.equals("") || strCNIC.length() < 13 || strCNIC.contains("-")) {
@@ -336,7 +336,7 @@ public class LoginFragment extends Fragment {
         mActionBar.setDisplayShowTitleEnabled(false);
         LayoutInflater mInflater = LayoutInflater.from(getActivity());
         View mCustomView = mInflater.inflate(R.layout.custom_action_bar, null);
-        TextView mTitleTextView = mCustomView.findViewById(R.id.title_text);
+        TextView mTitleTextView = (TextView) mCustomView.findViewById(R.id.title_text);
         mTitleTextView.setText("Sign In");
         mActionBar.setCustomView(mCustomView);
         mActionBar.setDisplayShowCustomEnabled(true);

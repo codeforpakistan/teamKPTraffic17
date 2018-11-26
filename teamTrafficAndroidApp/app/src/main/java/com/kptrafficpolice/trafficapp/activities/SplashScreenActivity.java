@@ -35,6 +35,12 @@ public class SplashScreenActivity extends AppCompatActivity {
     private static final int AUTO_HIDE_DELAY_MILLIS = 500;
     private static final int UI_ANIMATION_DELAY = 300;
     private final Handler mHideHandler = new Handler();
+    private final Runnable mHideRunnable = new Runnable() {
+        @Override
+        public void run() {
+            hide();
+        }
+    };
     /**
      * Touch listener to use for in-layout UI controls to delay hiding the
      * system UI. This is to prevent the jarring behavior of controls going away
@@ -54,7 +60,7 @@ public class SplashScreenActivity extends AppCompatActivity {
      */
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
-    private Crashlytics mFirebaseAnalytics;
+    private FirebaseAnalytics mFirebaseAnalytics;
     private View mContentView;
     private final Runnable mHidePart2Runnable = new Runnable() {
         @SuppressLint("InlinedApi")
@@ -85,12 +91,6 @@ public class SplashScreenActivity extends AppCompatActivity {
             mControlsView.setVisibility(View.VISIBLE);
         }
     };
-    private final Runnable mHideRunnable = new Runnable() {
-        @Override
-        public void run() {
-            hide();
-        }
-    };
     private boolean mVisible;
 
     @Override
@@ -99,16 +99,16 @@ public class SplashScreenActivity extends AppCompatActivity {
         delayedHide(AUTO_HIDE_DELAY_MILLIS);
         setContentView(R.layout.activity_splash_screen);
 
-        Fabric.with(this, new Crashlytics(), new CrashlyticsNdk());
+        Fabric.with(this, new Crashlytics());
 
         sharedPreferences = getSharedPreferences("com.kptraficpolice.trafficapp", 0);
         editor = sharedPreferences.edit();
 
-        mFirebaseAnalytics = Crashlytics.getInstance();
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         Bundle bundle = new Bundle();
         bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "1");
         bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "SplashScreen");
-        mFirebaseAnalytics.log(String.valueOf(bundle));
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
 
         new Handler().postDelayed(new Runnable() {
             @Override
