@@ -269,7 +269,7 @@ public class ComplaintRegistrationFragment extends Fragment {
             }
         });
 
-        spComlaintType.setItems("Complaint Type", "Traffic Jam", "Complaint against Wardens", "Illegal Parking", "Others");
+        spComlaintType.setItems("Complaint Type", "Traffic Jam", "Complaint against Wardens", "Illegal Parking", "Against Highway Wardens" ,"Others");
 
         shake = AnimationUtils.loadAnimation(getActivity(), R.anim.shake);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
@@ -477,6 +477,7 @@ public class ComplaintRegistrationFragment extends Fragment {
         etDescription = (EditText) view.findViewById(R.id.et_description);
         strDesciption = etDescription.getText().toString();
         spinnerDistrictID = district.getText().toString().trim();
+
 
         if (spComlaintType.getText().equals("Complaint Type")) {
             spComlaintType.startAnimation(shake);
