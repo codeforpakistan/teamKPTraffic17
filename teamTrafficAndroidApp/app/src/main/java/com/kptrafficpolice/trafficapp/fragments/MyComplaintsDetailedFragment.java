@@ -256,6 +256,7 @@ public class MyComplaintsDetailedFragment extends Fragment {
 
                         if (complaint_status.length == 3){
                             feedbackfrom3.setVisibility(View.VISIBLE);
+                            feedbackfrom2.setVisibility(View.VISIBLE);
                             TvStatus3.setText(complaint_status[2]);
                             TvResponse3.setText(complaint_response[2]);
                             TvStatus2.setText(complaint_status[1]);
