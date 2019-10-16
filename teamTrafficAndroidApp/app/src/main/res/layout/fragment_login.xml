@@ -67,6 +67,44 @@
                 </android.support.design.widget.TextInputLayout>
             </LinearLayout>
 
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="18dp"
+                    android:src="@drawable/password"
+                    android:tint="#fff"/>
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColorHint="#ffffff">
+
+                    <EditText
+                        android:id="@+id/et_pass"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="#fff"
+                        android:hint="Enter Password"
+                        android:inputType="textPassword"
+                        android:maxLength="13"
+                        android:nextFocusLeft="@id/et_cnic_login"
+                        android:nextFocusUp="@id/et_cnic_login"
+                        android:textColor="#fff"
+                        android:textColorHint="#fff" />
+                </android.support.design.widget.TextInputLayout>
+            </LinearLayout>
+
             <Button
                 android:id="@+id/btn_submit"
                 android:layout_width="250dp"
@@ -78,16 +116,31 @@
                 android:textColor="#fff"
                 android:textSize="18sp" />
 
+
+
+            <TextView
+                android:id="@+id/forgot"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="20dp"
+                android:layout_toEndOf="@+id/btnSubmit"
+                android:layout_toRightOf="@+id/btnSubmit"
+                android:text="Forgot Password?"
+                android:textAllCaps="true"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#fff" />
+
+
             <TextView
                 android:id="@+id/tv_new_user_registere_here"
                 android:layout_width="wrap_content"
-                android:layout_height="40dp"
+                android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_gravity="center_horizontal"
-                android:layout_margin="30dp"
-                android:layout_toEndOf="@+id/btnSubmit"
-                android:layout_toRightOf="@+id/btnSubmit"
-                android:text="REGISTER HERE"
+                android:layout_marginTop="20dp"
+                android:text="REGISTER HERE."
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="#fff" />
         </LinearLayout>

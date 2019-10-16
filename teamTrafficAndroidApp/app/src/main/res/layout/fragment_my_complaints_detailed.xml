@@ -187,6 +187,35 @@
                     android:layout_height="wrap_content"
                     android:padding="5dp"
                     android:text="No response." />
+
+                <TextView
+                    android:id="@+id/my_response"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="My Response"
+                    android:textColor="#1E824C"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/et_response1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:hint="write here..."/>
+
+                <TextView
+                    android:textColor="#000"
+                    android:layout_marginTop="5dp"
+                    android:drawableRight="@drawable/reply"
+                    android:id="@+id/reply"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="Reply"
+                    android:gravity="end|center_vertical" />
+
+
             </LinearLayout>
 
 
@@ -242,6 +271,33 @@
                     android:layout_height="wrap_content"
                     android:padding="5dp"
                     android:text="No response." />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="My Response"
+                    android:textColor="#1E824C"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/et_response2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:hint="write here..."/>
+
+                <TextView
+                    android:layout_marginTop="5dp"
+                    android:drawableRight="@drawable/reply"
+                    android:id="@+id/reply2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="Reply"
+                    android:gravity="end|center_vertical" />
+
+
             </LinearLayout>
 
 
@@ -298,6 +354,34 @@
                     android:layout_height="wrap_content"
                     android:padding="5dp"
                     android:text="No response." />
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="My Response"
+                    android:textColor="#1E824C"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/et_response3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:hint="write here..."/>
+
+                <TextView
+                    android:layout_marginTop="5dp"
+                    android:drawableRight="@drawable/reply"
+                    android:id="@+id/reply3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text="Reply"
+                    android:gravity="end|center_vertical" />
+
+
             </LinearLayout>
 
         </TableLayout>

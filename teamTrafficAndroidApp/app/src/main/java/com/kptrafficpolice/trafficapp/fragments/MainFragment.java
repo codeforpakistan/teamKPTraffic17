@@ -570,16 +570,21 @@ public class MainFragment extends Fragment {
                             pDialog.dismiss();
                             dialog.dismiss();
                             JSONObject jsonResponseObject = new JSONObject(response);
-                            JSONObject fullResponseObject = new JSONObject(response).getJSONObject("LICENSE_DATA");
-                            int error = jsonResponseObject.getInt("error");
-                            if (error == 0) {
-                                strResponseLicHolderName = String.valueOf(fullResponseObject.get("name"));
-                                strResponseDLNumber = String.valueOf(fullResponseObject.get("license_no"));
+                            String fullResponseObject = jsonResponseObject.get("LICENSE_DATA").toString();
 
-                                strResponseLicHolderFatherName = String.valueOf(fullResponseObject.get("father_name"));
-                                strResponseLicType = String.valueOf(fullResponseObject.get("license_type"));
-                                strResponseExpiryDate = String.valueOf(fullResponseObject.get("expiry_date"));
-                                strResponseLicHolderDistrict = String.valueOf(fullResponseObject.get("district"));
+                            Log.e("jObject", response);
+                            Log.e("string", fullResponseObject);
+
+                            if (jsonResponseObject.get("error").equals("0")) {
+
+                                JSONObject obj = new JSONObject(fullResponseObject);
+
+                                strResponseLicHolderName = obj.getString("name");
+                                strResponseDLNumber = obj.getString("license_no");
+                                strResponseLicHolderFatherName = obj.getString("father_name");
+                                strResponseLicType = obj.getString("license_type");
+                                strResponseExpiryDate = obj.getString("expiry_date");
+                                strResponseLicHolderDistrict = obj.getString("district");
 
                                 args.putString("name", strResponseLicHolderName);
                                 args.putString("f_name", strResponseLicHolderFatherName);

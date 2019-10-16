@@ -53,8 +53,8 @@ public class RegistrationFragment extends Fragment {
     View view;
     Button btnSubmit;
     Fragment fragment;
-    String strEmail, strCNIC, strPhoneNumber, strName;
-    EditText etName, etPhoneNumber, etCNIC, etEmail;
+    String strEmail, strCNIC, strPhoneNumber, strName, strPassword;
+    EditText etName, etPhoneNumber, etCNIC, etEmail, etPassword;
     Animation shake;
     SweetAlertDialog pDialog;
     SharedPreferences sharedPreferences;
@@ -148,17 +148,21 @@ public class RegistrationFragment extends Fragment {
         etName = (EditText) view.findViewById(R.id.et_name);
         etCNIC = (EditText) view.findViewById(R.id.et_cnic);
         etEmail = (EditText) view.findViewById(R.id.et_email);
+        etPassword = (EditText) view.findViewById(R.id.et_pass);
         etPhoneNumber = (EditText) view.findViewById(R.id.et_phone_number);
 
         strName = etName.getText().toString().trim();
         strEmail = etEmail.getText().toString().trim();
         strCNIC = etCNIC.getText().toString().trim();
         strPhoneNumber = etPhoneNumber.getText().toString().trim();
+        strPassword = etPassword.getText().toString().trim();
 
         if (strName.equals("") || strName.length() < 3) {
             etName.startAnimation(shake);
         } else if (strPhoneNumber.equals("") || strPhoneNumber.length() < 5) {
             etPhoneNumber.startAnimation(shake);
+        }else if (strPassword.equals("") ) {
+            etPassword.startAnimation(shake);
         } else if (strCNIC.equals("") || strCNIC.length() < 13 || strCNIC.contains("-")) {
             etCNIC.startAnimation(shake);
         } else if ((!android.util.Patterns.EMAIL_ADDRESS.matcher(strEmail).matches())) {
@@ -242,6 +246,7 @@ public class RegistrationFragment extends Fragment {
                 params.put("email", strEmail);
                 params.put("name", strName);
                 params.put("cnic", strCNIC);
+                params.put("password", strPassword);
                 params.put("phone_no", strPhoneNumber);
                 editor.putString("user_name", strName).commit();
                 Log.d("zma reg name",strName);

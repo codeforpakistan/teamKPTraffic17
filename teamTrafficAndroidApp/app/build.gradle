@@ -41,8 +41,8 @@ android {
         applicationId "com.kptrafficpolice.trafficapp"
         minSdkVersion 16
         targetSdkVersion 27
-        versionCode 32
-        versionName "driving test module added and feedback from department"
+        versionCode 36
+        versionName "license verification api updated"
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }

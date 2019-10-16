@@ -15,6 +15,7 @@
     <permission
         android:name="android.permission.INTERACT_ACROSS_USERS_FULL"
         android:protectionLevel="signature" />
+
     <application
         android:name=".utilities.MyApplication"
         android:allowBackup="true"
@@ -23,9 +24,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:icon">
+        <activity android:name=".activities.ForgotPassword"></activity>
         <activity
             android:name=".activities.MainActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.MainDrawerActivity"
             android:screenOrientation="portrait"
@@ -49,15 +51,12 @@
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="sensor"
             android:theme="@style/FinestWebViewTheme.Light" />
-
-
         <activity
             android:name=".activities.AppIntroActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen">
-
-        </activity>
-        <activity android:name=".fragments.ETest.ConductTest"
-            android:label="Licence Test"></activity>
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"></activity>
+        <activity
+            android:name=".fragments.ETest.ConductTest"
+            android:label="Licence Test" />
         <activity
             android:name=".activities.SplashScreenActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -70,18 +69,15 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".utilities.BackgroundService" >
+        <receiver android:name=".utilities.BackgroundService">
             <intent-filter>
-                <action android:name="processTimerReceiver" >
-                </action>
+                <action android:name="processTimerReceiver"></action>
             </intent-filter>
         </receiver>
 
         <meta-data
             android:name="io.fabric.ApiKey"
-        android:value="f6be19f0dd38c1a4b5d774d9fa906f8b7d108859"
-        />
-
+            android:value="f6be19f0dd38c1a4b5d774d9fa906f8b7d108859" />
     </application>
 
 </manifest>
