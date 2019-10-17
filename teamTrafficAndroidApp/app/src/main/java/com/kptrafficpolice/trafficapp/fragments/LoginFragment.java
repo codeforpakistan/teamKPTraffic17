@@ -37,7 +37,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.googlecode.mp4parser.authoring.Edit;
 import com.kptrafficpolice.trafficapp.R;
+import com.kptrafficpolice.trafficapp.activities.ForgotPassword;
 import com.kptrafficpolice.trafficapp.activities.MainActivity;
 import com.kptrafficpolice.trafficapp.activities.MainDrawerActivity;
 import com.kptrafficpolice.trafficapp.utilities.CheckNetwork;
@@ -69,13 +71,13 @@ public class LoginFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     Button btnSubmit;
-    EditText etCNIC;
+    EditText etCNIC, etPassword;
     View view;
     Fragment fragment;
     RequestQueue mRequestQueue;
-    String strCNIC, strUserID, Username;
+    String strCNIC, strUserID, Username, strPassword;
     SweetAlertDialog pDialog;
-    TextView tvNewUser;
+    TextView tvNewUser, tvForgotPass;
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
     double dblLat, dblLon;
@@ -142,20 +144,27 @@ public class LoginFragment extends Fragment {
         editor = sharedPreferences.edit();
         customActionBar();
         tvNewUser = (TextView) view.findViewById(R.id.tv_new_user_registere_here);
+        etPassword = (EditText) view.findViewById(R.id.et_pass);
+        tvForgotPass = (TextView) view.findViewById(R.id.forgot);
         SpannableString contentRegister = new SpannableString("New user? Register Here");
         contentRegister.setSpan(new UnderlineSpan(), 0, contentRegister.length(), 0);
         tvNewUser.setText(contentRegister);
         mRequestQueue = Volley.newRequestQueue(getActivity());
-        pDialog = new SweetAlertDialog(getActivity(), SweetAlertDialog.PROGRESS_TYPE);
-        pDialog.getProgressHelper().setBarColor(Color.parseColor("#179e99"));
-        pDialog.setTitleText("Getting Login");
-        pDialog.setCancelable(false);
+
         tvNewUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 fragment = new RegistrationFragment();
                 getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).addToBackStack("tag")
                         .commit();
+            }
+        });
+
+        tvForgotPass.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), ForgotPassword.class);
+                startActivity(intent);
             }
         });
         onButtonClick();
@@ -235,13 +244,21 @@ public class LoginFragment extends Fragment {
     public void formValidation() {
         etCNIC = (EditText) view.findViewById(R.id.et_cnic_login);
         strCNIC = etCNIC.getText().toString();
+        strPassword = etPassword.getText().toString();
         Animation shake = AnimationUtils.loadAnimation(getActivity(), R.anim.shake);
         if (strCNIC.equals("") || strCNIC.length() < 13 || strCNIC.contains("-")) {
             etCNIC.startAnimation(shake);
             Snackbar.make(view, "Wrong CNIC ", Snackbar.LENGTH_LONG).show();
+        }else if (strPassword.equals("")) {
+            etPassword.startAnimation(shake);
+            Snackbar.make(view, "Enter Password ", Snackbar.LENGTH_LONG).show();
         } else {
-            pDialog.show();
             if (CheckNetwork.isInternetAvailable(getActivity())) {
+                pDialog = new SweetAlertDialog(getActivity(), SweetAlertDialog.PROGRESS_TYPE);
+                pDialog.getProgressHelper().setBarColor(Color.parseColor("#179e99"));
+                pDialog.setTitleText("Getting Login");
+                pDialog.setCancelable(false);
+                pDialog.show();
                 apiCall();
             } else {
                 new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
@@ -295,7 +312,7 @@ public class LoginFragment extends Fragment {
                             pDialog.dismiss();
                             new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
                                     .setTitleText("Oops...")
-                                    .setContentText("Invalid CNIC!")
+                                    .setContentText("Invalid CNIC or Password!")
                                     .show();
                         }
 
@@ -303,6 +320,7 @@ public class LoginFragment extends Fragment {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                pDialog.dismiss();
                 new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
                         .setTitleText("Oops...")
                         .setContentText("Something went wrong!")
@@ -320,6 +338,7 @@ public class LoginFragment extends Fragment {
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
                 params.put("cnic", strCNIC);
+                params.put("password", strPassword);
                 return params;
             }
 

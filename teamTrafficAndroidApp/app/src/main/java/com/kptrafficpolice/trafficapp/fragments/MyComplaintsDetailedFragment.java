@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.MediaController;
@@ -34,6 +35,7 @@ import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.kptrafficpolice.trafficapp.R;
+import com.kptrafficpolice.trafficapp.activities.MainDrawerActivity;
 import com.kptrafficpolice.trafficapp.utilities.Configuration;
 import com.kptrafficpolice.trafficapp.utilities.MyComplaintsHelper;
 
@@ -49,6 +51,7 @@ import java.util.Map;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 //raabta
 //rabta
+
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
@@ -63,10 +66,12 @@ public class MyComplaintsDetailedFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     ImageView ivComplaintImage, ivMapPointer;
+    RequestQueue mRequestQueue;
     VideoView vvMyComplaints;
-    TextView tvComplaintType, tvComplaintDescription, tvComplaintDate, tvComplaintStatus
-            ,TvStatus1, TvStatus2, TvStatus3, TvResponse1, TvResponse2, TvResponse3;
-    String complaint_id, arg_status;
+    TextView tvComplaintType, tvComplaintDescription, tvComplaintDate, tvComplaintStatus, TvStatus1, TvStatus2, TvStatus3, TvResponse1, TvResponse2, TvResponse3, reply
+            ,reply2, reply3;
+    EditText etResponse, etResponse2, etResponse3;
+    String complaint_id, arg_status, feedback;
     SweetAlertDialog pDialog;
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -77,7 +82,7 @@ public class MyComplaintsDetailedFragment extends Fragment {
     List<MyComplaintsHelper> list;
     StringRequest stringRequest;
     RequestQueue requestQueue;
-    String[] complaint_response, complaint_status;
+    String[] complaint_response, complaint_status, user_feedback, response_id;
 
     public MyComplaintsDetailedFragment() {
         // Required empty public constructor
@@ -133,6 +138,14 @@ public class MyComplaintsDetailedFragment extends Fragment {
         TvStatus1 = (TextView) view.findViewById(R.id.status1);
         TvStatus2 = (TextView) view.findViewById(R.id.status2);
         TvStatus3 = (TextView) view.findViewById(R.id.status3);
+        etResponse = (EditText) view.findViewById(R.id.et_response1);
+        etResponse2 = (EditText) view.findViewById(R.id.et_response2);
+        etResponse3 = (EditText) view.findViewById(R.id.et_response3);
+        reply = (TextView) view.findViewById(R.id.reply);
+        reply2 = (TextView) view.findViewById(R.id.reply2);
+        reply3 = (TextView) view.findViewById(R.id.reply3);
+
+        mRequestQueue = Volley.newRequestQueue(getActivity());
 
         feedbackfrom2.setVisibility(View.GONE);
         feedbackfrom3.setVisibility(View.GONE);
@@ -146,12 +159,70 @@ public class MyComplaintsDetailedFragment extends Fragment {
 
         customActionBar();
 
+
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
         Bundle bundle = new Bundle();
 
         bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "2");
         bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "My Complaint List");
         mFirebaseAnalytics.logEvent("My_Complaint_screen", bundle);
+
+
+
+        reply.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                feedback = etResponse.getText().toString().trim();
+                if (feedback.equals("")){
+                    etResponse.setError("Enter your Feedback");
+                }else {
+                    pDialog.getProgressHelper().setBarColor(Color.parseColor("#179e99"));
+                    pDialog.setTitleText("Sending your Feedback");
+                    pDialog.setCancelable(false);
+                    pDialog.show();
+                    sendResponse(response_id[0], feedback);
+                }
+            }
+        });
+
+
+        reply2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                feedback = etResponse2.getText().toString().trim();
+                if (feedback.equals("")){
+                    etResponse2.setError("Enter your Feedback");
+                }else {
+                    pDialog.getProgressHelper().setBarColor(Color.parseColor("#179e99"));
+                    pDialog.setTitleText("Sending your Feedback");
+                    pDialog.setCancelable(false);
+                    pDialog.show();
+                    sendResponse(response_id[1], feedback);
+                }
+            }
+        });
+
+
+        reply3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                feedback = etResponse3.getText().toString().trim();
+                if (feedback.equals("")){
+                    etResponse3.setError("Enter your Feedback");
+                }else {
+                    pDialog.getProgressHelper().setBarColor(Color.parseColor("#179e99"));
+                    pDialog.setTitleText("Sending your Feedback");
+                    pDialog.setCancelable(false);
+                    pDialog.show();
+                    sendResponse(response_id[2], feedback);
+                }
+            }
+        });
+
+
 
         pDialog = new SweetAlertDialog(getActivity(), SweetAlertDialog.PROGRESS_TYPE);
         pDialog.getProgressHelper().setBarColor(Color.parseColor("#179e99"));
@@ -176,8 +247,9 @@ public class MyComplaintsDetailedFragment extends Fragment {
                             getActivity());
                     mediacontroller.setAnchorView(vvMyComplaints);
                     // Get the URL from String VideoURL
-                    Uri video = Uri.parse("http://103.240.220.76/kptraffic/uploads/videos/" + args.getString("video"));
-                    Log.d("zma video uri",String.valueOf(video));
+//                    Uri video = Uri.parse("http://103.240.220.76/kptraffic/uploads/videos/" + args.getString("video"));
+                    Uri video = Uri.parse(Configuration.END_POINT_LIVE+"uploads/videos/" + args.getString("video"));
+                    Log.d("zma video uri", String.valueOf(video));
                     vvMyComplaints.setMediaController(mediacontroller);
                     vvMyComplaints.setVideoURI(video);
 
@@ -190,13 +262,13 @@ public class MyComplaintsDetailedFragment extends Fragment {
                 vvMyComplaints.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                     // Close the progress bar and play the video
                     public void onPrepared(MediaPlayer mp) {
-                         pDialog.dismiss();
+                        pDialog.dismiss();
                     }
                 });
 
             } else if (!args.getString("image").equals("")) {
                 ivComplaintImage.setVisibility(View.VISIBLE);
-                Glide.with(getActivity()).load(Configuration.END_POINT_LIVE+"uploads/images/" + args.getString("image")).into(ivComplaintImage);
+                Glide.with(getActivity()).load(Configuration.END_POINT_LIVE + "uploads/images/" + args.getString("image")).into(ivComplaintImage);
             }
         }
 
@@ -219,7 +291,6 @@ public class MyComplaintsDetailedFragment extends Fragment {
     }
 
 
-
     public void getData(final String strUserID) {
         final String url = Configuration.END_POINT_LIVE + "complaints/complaint_response?complaint_id=" + strUserID;
         Log.d("zma url try na", url);
@@ -240,21 +311,32 @@ public class MyComplaintsDetailedFragment extends Fragment {
                             helper.setStrComplaintID(complaintObject.getString("complaint_id"));
                             helper.setStrDescription(complaintObject.getString("complaint_response"));
                             helper.setStrComplaintStatus(complaintObject.getString("response_status"));
+                            helper.setStrUserFeedback(complaintObject.getString("user_feedback"));
+                            helper.setStrId(complaintObject.getString("id"));
 
                             list.add(helper);
                         }
 
                         complaint_response = new String[list.size()];
                         complaint_status = new String[list.size()];
+                        user_feedback = new String[list.size()];
+                        response_id = new String[list.size()];
+
 
                         int list_size = list.size();
-                        for (int i=0; i<list_size; i++){
+                        for (int i = 0; i < list_size; i++) {
 
                             complaint_response[i] = list.get(i).getStrDescription();
+                            user_feedback[i] = list.get(i).getStrUserFeedback();
+                            response_id[i] = list.get(i).getStrId();
                             setStatus(i);
+
                         }
 
-                        if (complaint_status.length == 3){
+
+
+
+                        if (complaint_status.length == 3) {
                             feedbackfrom3.setVisibility(View.VISIBLE);
                             feedbackfrom2.setVisibility(View.VISIBLE);
                             TvStatus3.setText(complaint_status[2]);
@@ -263,17 +345,50 @@ public class MyComplaintsDetailedFragment extends Fragment {
                             TvResponse2.setText(complaint_response[1]);
                             TvStatus1.setText(complaint_status[0]);
                             TvResponse1.setText(complaint_response[0]);
-                        }
-                        else if (complaint_status.length == 2){
+
+                            if (!user_feedback[2].equals("")) {
+                                etResponse3.setEnabled(false);
+                                reply3.setVisibility(View.GONE);
+                                etResponse3.setText(user_feedback[2]);
+                            }
+                            if (!user_feedback[1].equals("")) {
+                                etResponse2.setEnabled(false);
+                                reply2.setVisibility(View.GONE);
+                                etResponse2.setText(user_feedback[1]);
+                            }
+                            if (!user_feedback[0].equals("")) {
+                                etResponse.setEnabled(false);
+                                reply.setVisibility(View.GONE);
+                                etResponse.setText(user_feedback[0]);
+                            }
+
+                        } else if (complaint_status.length == 2) {
                             feedbackfrom2.setVisibility(View.VISIBLE);
                             TvStatus2.setText(complaint_status[1]);
                             TvResponse2.setText(complaint_response[1]);
                             TvStatus1.setText(complaint_status[0]);
                             TvResponse1.setText(complaint_response[0]);
-                        }
-                        else {
+
+                            if (!user_feedback[1].equals("")) {
+                                etResponse2.setEnabled(false);
+                                reply2.setVisibility(View.GONE);
+                                etResponse2.setText(user_feedback[1]);
+                            }
+                            if (!user_feedback[0].equals("")) {
+                                etResponse.setEnabled(false);
+                                reply.setVisibility(View.GONE);
+                                etResponse.setText(user_feedback[0]);
+                            }
+
+                        } else {
                             TvStatus1.setText(complaint_status[0]);
                             TvResponse1.setText(complaint_response[0]);
+
+                            if (!user_feedback[0].equals("")) {
+                                etResponse.setEnabled(false);
+                                reply.setVisibility(View.GONE);
+                                etResponse.setText(user_feedback[0]);
+                            }
                         }
 
                     } else {
@@ -339,6 +454,86 @@ public class MyComplaintsDetailedFragment extends Fragment {
     }
 
 
+
+
+
+
+
+    public void sendResponse(final String responseID, final String feedback) {
+        String url = Configuration.END_POINT_LIVE +  "complaints/user_response_to_complaint";
+        StringRequest jsonObjRequest = new StringRequest(Request.Method.POST,
+                url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        if (response.contains("true")) {
+                            pDialog.dismiss();
+//                            try {
+//                                JSONObject jsonObject = new JSONObject(response);
+//                                JSONArray jsonArray = jsonObject.getJSONArray("data");
+//                                for (int i = 0; i < jsonArray.length(); i++) {
+//                                    JSONObject temp = jsonArray.getJSONObject(i);
+//                                    strUserID = temp.getString("user_id");
+//                                    Username = temp.getString("name");
+//                                    Log.d("zma user id login", strUserID);
+//                                }
+//                            } catch (JSONException e) {
+//                                e.printStackTrace();
+//                            }
+//                            editor.putString("user_id", strUserID).commit();
+//                            editor.putString("name", Username).commit();
+//                            editor.putString("true", strCNIC).commit();
+                            Toast.makeText(getActivity(), "Feedback Sent", Toast.LENGTH_SHORT).show();
+                            Fragment fragment = new MyComplaintsFragment();
+                            getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
+
+//
+                            Log.d("Zma response", response );
+
+                        } else if (response.contains("false")) {
+                            pDialog.dismiss();
+                            new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
+                                    .setTitleText("Oops...")
+                                    .setContentText("Try Again")
+                                    .show();
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                pDialog.dismiss();
+                new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE)
+                        .setTitleText("Oops...")
+                        .setContentText("Something went wrong!")
+                        .show();
+                Log.d("zma error registration", String.valueOf(error));
+
+            }
+        }) {
+            @Override
+            public String getBodyContentType() {
+                return "application/x-www-form-urlencoded;charset=UTF-8";
+            }
+
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("response_id", responseID);
+                params.put("user_response", feedback);
+                return params;
+            }
+
+        };
+        jsonObjRequest.setRetryPolicy(new DefaultRetryPolicy(200000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        mRequestQueue.add(jsonObjRequest);
+    }
+
+
+
+
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
@@ -364,6 +559,7 @@ public class MyComplaintsDetailedFragment extends Fragment {
         mActionBar.setCustomView(mCustomView);
         mActionBar.setDisplayShowCustomEnabled(true);
     }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -380,17 +576,17 @@ public class MyComplaintsDetailedFragment extends Fragment {
     }
 
 
-    public  void setStatus(int position){
+    public void setStatus(int position) {
 
-        if (list.get(position).getStrComplaintStatus().equals("1")){
+        if (list.get(position).getStrComplaintStatus().equals("1")) {
             complaint_status[position] = "Completed";
-        }else if (list.get(position).getStrComplaintStatus().equals("2")){
+        } else if (list.get(position).getStrComplaintStatus().equals("2")) {
             complaint_status[position] = "Pending";
-        }else if (list.get(position).getStrComplaintStatus().equals("3")){
+        } else if (list.get(position).getStrComplaintStatus().equals("3")) {
             complaint_status[position] = "In Progress";
-        }else if (list.get(position).getStrComplaintStatus().equals("4")){
+        } else if (list.get(position).getStrComplaintStatus().equals("4")) {
             complaint_status[position] = "Irrelevant";
-        }else if (list.get(position).getStrComplaintStatus().equals("5")){
+        } else if (list.get(position).getStrComplaintStatus().equals("5")) {
             complaint_status[position] = "Not Understandable";
         }
     }
